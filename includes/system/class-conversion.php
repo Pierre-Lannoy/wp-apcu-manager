@@ -9,7 +9,7 @@
  * @since   1.0.0
  */
 
-namespace WPPluginBoilerplate\System;
+namespace APCuManager\System;
 
 /**
  * Define the conversion functionality.
@@ -43,12 +43,12 @@ class Conversion {
 	public static function number_shorten( $number, $precision = 2, $detail = false, $separator = '' ) {
 		$divisors = [
 			pow( 1000, 0 ) => '',
-			pow( 1000, 1 ) => esc_html_x( 'K', 'Abbreviation - Stands for "thousand".', 'wp-plugin-boilerplate' ),
-			pow( 1000, 2 ) => esc_html_x( 'M', 'Abbreviation - Stands for "million".', 'wp-plugin-boilerplate' ),
-			pow( 1000, 3 ) => esc_html_x( 'B', 'Abbreviation - Stands for "billion".', 'wp-plugin-boilerplate' ),
-			pow( 1000, 4 ) => esc_html_x( 'T', 'Abbreviation - Stands for "trillion".', 'wp-plugin-boilerplate' ),
-			pow( 1000, 5 ) => esc_html_x( 'Qa', 'Abbreviation - Stands for "quadrillion".', 'wp-plugin-boilerplate' ),
-			pow( 1000, 6 ) => esc_html_x( 'Qi', 'Abbreviation - Stands for "quintillion".', 'wp-plugin-boilerplate' ),
+			pow( 1000, 1 ) => esc_html_x( 'K', 'Abbreviation - Stands for "thousand".', 'apcu-manager' ),
+			pow( 1000, 2 ) => esc_html_x( 'M', 'Abbreviation - Stands for "million".', 'apcu-manager' ),
+			pow( 1000, 3 ) => esc_html_x( 'B', 'Abbreviation - Stands for "billion".', 'apcu-manager' ),
+			pow( 1000, 4 ) => esc_html_x( 'T', 'Abbreviation - Stands for "trillion".', 'apcu-manager' ),
+			pow( 1000, 5 ) => esc_html_x( 'Qa', 'Abbreviation - Stands for "quadrillion".', 'apcu-manager' ),
+			pow( 1000, 6 ) => esc_html_x( 'Qi', 'Abbreviation - Stands for "quintillion".', 'apcu-manager' ),
 		];
 		foreach ( $divisors as $divisor => $shorthand ) {
 			if ( abs( $number ) < ( $divisor * 1000 ) ) {
@@ -79,13 +79,13 @@ class Conversion {
 	 */
 	public static function data_shorten( $number, $precision = 2, $detail = false, $separator = '' ) {
 		$divisors = [
-			pow( 1024, 0 ) => esc_html_x( 'B', 'Abbreviation - Stands for "byte".', 'wp-plugin-boilerplate' ),
-			pow( 1024, 1 ) => esc_html_x( 'KB', 'Abbreviation - Stands for "kilobytes".', 'wp-plugin-boilerplate' ),
-			pow( 1024, 2 ) => esc_html_x( 'MB', 'Abbreviation - Stands for "megabytes".', 'wp-plugin-boilerplate' ),
-			pow( 1024, 3 ) => esc_html_x( 'GB', 'Abbreviation - Stands for "gigabytes".', 'wp-plugin-boilerplate' ),
-			pow( 1024, 4 ) => esc_html_x( 'TB', 'Abbreviation - Stands for "terabytes".', 'wp-plugin-boilerplate' ),
-			pow( 1024, 5 ) => esc_html_x( 'PB', 'Abbreviation - Stands for "petabytes".', 'wp-plugin-boilerplate' ),
-			pow( 1024, 6 ) => esc_html_x( 'EB', 'Abbreviation - Stands for "exabytes".', 'wp-plugin-boilerplate' ),
+			pow( 1024, 0 ) => esc_html_x( 'B', 'Abbreviation - Stands for "byte".', 'apcu-manager' ),
+			pow( 1024, 1 ) => esc_html_x( 'KB', 'Abbreviation - Stands for "kilobytes".', 'apcu-manager' ),
+			pow( 1024, 2 ) => esc_html_x( 'MB', 'Abbreviation - Stands for "megabytes".', 'apcu-manager' ),
+			pow( 1024, 3 ) => esc_html_x( 'GB', 'Abbreviation - Stands for "gigabytes".', 'apcu-manager' ),
+			pow( 1024, 4 ) => esc_html_x( 'TB', 'Abbreviation - Stands for "terabytes".', 'apcu-manager' ),
+			pow( 1024, 5 ) => esc_html_x( 'PB', 'Abbreviation - Stands for "petabytes".', 'apcu-manager' ),
+			pow( 1024, 6 ) => esc_html_x( 'EB', 'Abbreviation - Stands for "exabytes".', 'apcu-manager' ),
 		];
 		foreach ( $divisors as $divisor => $shorthand ) {
 			if ( abs( $number ) < ( $divisor * 1024 ) ) {

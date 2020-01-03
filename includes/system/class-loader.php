@@ -7,7 +7,7 @@
  * @since   1.0.0
  */
 
-namespace WPPluginBoilerplate\System;
+namespace APCuManager\System;
 
 /**
  * Register all actions and filters for the plugin.

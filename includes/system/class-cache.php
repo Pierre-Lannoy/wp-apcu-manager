@@ -8,7 +8,9 @@
  * @noinspection PhpCSValidationInspection
  */
 
-namespace WPPluginBoilerplate\System;
+namespace APCuManager\System;
+
+use APCuManager\System\Conversion;
 
 /**
  * The class responsible to handle cache management.
@@ -25,7 +27,7 @@ class Cache {
 	 * @since  1.0.0
 	 * @var    string    $pool_name    The pool's name.
 	 */
-	private static $pool_name = WPPB_SLUG;
+	private static $pool_name = APCM_SLUG;
 
 	/**
 	 * Available TTLs.
@@ -100,8 +102,8 @@ class Cache {
 			wp_cache_add_global_groups( self::$pool_name );
 		}
 		self::$apcu_available = function_exists( 'apcu_delete' ) && function_exists( 'apcu_fetch' ) && function_exists( 'apcu_store' );
-		add_action( 'shutdown', [ 'WPPluginBoilerplate\System\Cache', 'log_debug' ], 10, 0 );
-		add_filter( 'perfopsone_icache_introspection', [ 'WPPluginBoilerplate\System\Cache', 'introspection' ] );
+		add_action( 'shutdown', [ 'APCuManager\System\Cache', 'log_debug' ], 10, 0 );
+		add_filter( 'perfopsone_icache_introspection', [ 'APCuManager\System\Cache', 'introspection' ] );
 	}
 
 	/**
@@ -110,7 +112,7 @@ class Cache {
 	 * @since 1.0.0
 	 */
 	public static function introspection( $endpoints ) {
-		$endpoints[ WPPB_SLUG ] = [ 'name' => WPPB_PRODUCT_NAME, 'version' => WPPB_VERSION, 'endpoint' => [ 'WPPluginBoilerplate\System\Cache', 'get_analytics' ] ];
+		$endpoints[ APCM_SLUG ] = [ 'name' => APCM_PRODUCT_NAME, 'version' => APCM_VERSION, 'endpoint' => [ 'APCuManager\System\Cache', 'get_analytics' ] ];
 		return $endpoints;
 	}
 

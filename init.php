@@ -7,15 +7,17 @@
  * @since   1.0.0
  */
 
-define( 'WPPB_PRODUCT_NAME', 'WordPress Plugin Boilerplate' );
-define( 'WPPB_PRODUCT_URL', 'https://github.com/Pierre-Lannoy' );
-define( 'WPPB_PRODUCT_SHORTNAME', 'PluginBoilerplate' );
-define( 'WPPB_PRODUCT_ABBREVIATION', 'wppb' );
-define( 'WPPB_SLUG', 'wp-plugin-boilerplate' );
-define( 'WPPB_VERSION', '1.0.0' );
-define( 'WPPB_CODENAME', '"-"' );
+define( 'APCM_PRODUCT_NAME', 'APCu Manager' );
+define( 'APCM_PRODUCT_URL', 'https://github.com/Pierre-Lannoy/wp-apcu-manager' );
+define( 'APCM_PRODUCT_SHORTNAME', 'APCu' );
+define( 'APCM_PRODUCT_ABBREVIATION', 'apcm' );
+define( 'APCM_SLUG', 'apcu-manager' );
+define( 'APCM_VERSION', '1.0.0-dev0' );
+define( 'APCM_CODENAME', '"-"' );
 
-define( 'WPPB_MINIMUM_WP_VERSION', '4.9' );
-define( 'WPPB_MINIMUM_PHP_VERSION', '7.2' );
+define( 'APCM_MINIMUM_WP_VERSION', '4.9' );
+define( 'APCM_MINIMUM_PHP_VERSION', '7.2' );
 
-define( 'WPPB_CDN_AVAILABLE', true );
+define( 'APCM_CDN_AVAILABLE', true );
+
+define( 'APCM_CRON_STATS_NAME', 'apcm_opcache_stats' );

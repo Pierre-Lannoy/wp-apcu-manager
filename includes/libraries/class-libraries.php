@@ -9,9 +9,9 @@
  * @since   1.0.0
  */
 
-namespace WPPluginBoilerplate\Library;
+namespace APCuManager\Library;
 
-use WPPluginBoilerplate\System\L10n;
+use APCuManager\System\L10n;
 
 /**
  * Define the libraries functionality.
@@ -61,10 +61,10 @@ class Libraries {
 		self::$psr4_libraries['feather']   = [
 			'name'    => 'Feather',
 			'prefix'  => 'Feather',
-			'base'    => WPPB_VENDOR_DIR . 'feather/',
+			'base'    => APCM_VENDOR_DIR . 'feather/',
 			'version' => '4.24.1',
 			// phpcs:ignore
-			'author'  => sprintf( esc_html__( '%s & contributors', 'decalog' ), 'Cole Bemis' ),
+			'author'  => sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Cole Bemis' ),
 			'url'     => 'https://feathericons.com',
 			'license' => 'mit',
 			'langs'   => 'en',
@@ -73,10 +73,10 @@ class Libraries {
 		self::$mono_libraries['parsedown'] = [
 			'name'    => 'Parsedown',
 			'detect'  => 'Parsedown',
-			'base'    => WPPB_VENDOR_DIR . 'parsedown/',
+			'base'    => APCM_VENDOR_DIR . 'parsedown/',
 			'version' => '1.8.0-beta-7',
 			// phpcs:ignore
-			'author'  => sprintf( esc_html__( '%s & contributors', 'wp-plugin-boilerplate' ), 'Emanuil Rusev' ),
+			'author'  => sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Emanuil Rusev' ),
 			'url'     => 'https://parsedown.org',
 			'license' => 'mit',
 			'langs'   => 'en',
@@ -113,19 +113,19 @@ class Libraries {
 	private function license_name( $license ) {
 		switch ( $license ) {
 			case 'mit':
-				$result = esc_html__( 'MIT license', 'wp-plugin-boilerplate' );
+				$result = esc_html__( 'MIT license', 'apcu-manager' );
 				break;
 			case 'apl2':
-				$result = esc_html__( 'Apache license, version 2.0', 'wp-plugin-boilerplate' );
+				$result = esc_html__( 'Apache license, version 2.0', 'apcu-manager' );
 				break;
 			case 'gpl2':
-				$result = esc_html__( 'GPL-2.0 license', 'wp-plugin-boilerplate' );
+				$result = esc_html__( 'GPL-2.0 license', 'apcu-manager' );
 				break;
 			case 'gpl3':
-				$result = esc_html__( 'GPL-3.0 license', 'wp-plugin-boilerplate' );
+				$result = esc_html__( 'GPL-3.0 license', 'apcu-manager' );
 				break;
 			default:
-				$result = esc_html__( 'unknown license', 'wp-plugin-boilerplate' );
+				$result = esc_html__( 'unknown license', 'apcu-manager' );
 				break;
 		}
 		return $result;
@@ -160,10 +160,40 @@ class Libraries {
 		}
 		$item            = [];
 		$item['name']    = 'Plugin Boilerplate';
-		$item['version'] = '';
+		$item['version'] = '1.0.0';
 		$item['author']  = 'Pierre Lannoy';
 		$item['url']     = 'https://github.com/Pierre-Lannoy/wp-' . 'plugin-' . 'boilerplate';
 		$item['license'] = $this->license_name( 'gpl3' );
+		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
+		$list[]          = $item;
+		$item            = [];
+		$item['name']    = 'Date Range Picker';
+		$item['version'] = '3.0.5';
+		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Dan Grossman' );
+		$item['url']     = 'https://github.com/dangrossman/daterangepicker';
+		$item['license'] = $this->license_name( 'mit' );
+		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
+		$list[]          = $item;
+		$item            = [];
+		$item['name']    = 'Moment';
+		$item['version'] = '2.24.0';
+		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Tim Wood' );
+		$item['url']     = 'https://github.com/moment/moment';
+		$item['license'] = $this->license_name( 'mit' );
+		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
+		$list[]          = $item;
+		$item['name']    = 'SVG-Loaders';
+		$item['version'] = '1.0.2';
+		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Sam Herbert' );
+		$item['url']     = 'https://github.com/SamHerbert/SVG-Loaders';
+		$item['license'] = $this->license_name( 'mit' );
+		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
+		$list[]          = $item;
+		$item['name']    = 'Chartist-JS';
+		$item['version'] = '0.11.4';
+		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Gion Kunz' );
+		$item['url']     = 'https://github.com/gionkunz/chartist-js';
+		$item['license'] = $this->license_name( 'mit' );
 		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
 		$list[]          = $item;
 		usort( $list, function ( $a, $b ) { return strcmp( strtolower( $a['name'] ), strtolower( $b['name'] ) );} );
@@ -171,7 +201,7 @@ class Libraries {
 			$items = [];
 			foreach ( $list as $library ) {
 				/* translators: as in the sentence "Product W version X by author Y (license Z)" */
-				$items[] = sprintf( __( '<a href="%1$s">%2$s %3$s</a>%4$s by %5$s (%6$s)', 'wp-plugin-boilerplate' ), $library['url'], $library['name'], $library['version'], $library['langs'], $library['author'], $library['license'] );
+				$items[] = sprintf( __( '<a href="%1$s">%2$s %3$s</a>%4$s by %5$s (%6$s)', 'apcu-manager' ), $library['url'], $library['name'], $library['version'], $library['langs'], $library['author'], $library['license'] );
 			}
 			$result = implode( ', ', $items );
 		}

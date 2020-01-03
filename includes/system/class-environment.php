@@ -7,7 +7,7 @@
  * @since   1.0.0
  */
 
-namespace WPPluginBoilerplate\System;
+namespace APCuManager\System;
 
 use Exception;
 
@@ -34,24 +34,24 @@ class Environment {
 	 * @since 1.0.0
 	 */
 	public static function init() {
-		$plugin_path         = str_replace( WPPB_SLUG . '/includes/system/', WPPB_SLUG . '/', plugin_dir_path( __FILE__ ) );
-		$plugin_url          = str_replace( WPPB_SLUG . '/includes/system/', WPPB_SLUG . '/', plugin_dir_url( __FILE__ ) );
+		$plugin_path         = str_replace( APCM_SLUG . '/includes/system/', APCM_SLUG . '/', plugin_dir_path( __FILE__ ) );
+		$plugin_url          = str_replace( APCM_SLUG . '/includes/system/', APCM_SLUG . '/', plugin_dir_url( __FILE__ ) );
 		$plugin_relative_url = str_replace( get_site_url() . '/', '', $plugin_url );
-		define( 'WPPB_PLUGIN_DIR', $plugin_path );
-		define( 'WPPB_PLUGIN_URL', $plugin_url );
-		define( 'WPPB_PLUGIN_RELATIVE_URL', $plugin_relative_url );
-		define( 'WPPB_ADMIN_DIR', WPPB_PLUGIN_DIR . 'admin/' );
-		define( 'WPPB_ADMIN_URL', WPPB_PLUGIN_URL . 'admin/' );
-		define( 'WPPB_PUBLIC_DIR', WPPB_PLUGIN_DIR . 'public/' );
-		define( 'WPPB_PUBLIC_URL', WPPB_PLUGIN_URL . 'public/' );
-		define( 'WPPB_INCLUDES_DIR', WPPB_PLUGIN_DIR . 'includes/' );
-		define( 'WPPB_VENDOR_DIR', WPPB_PLUGIN_DIR . 'includes/libraries/' );
-		define( 'WPPB_LANGUAGES_DIR', WPPB_PLUGIN_DIR . 'languages/' );
-		define( 'WPPB_ADMIN_RELATIVE_URL', self::admin_relative_url() );
-		define( 'WPPB_AJAX_RELATIVE_URL', self::ajax_relative_url() );
-		define( 'WPPB_PLUGIN_SIGNATURE', WPPB_PRODUCT_NAME . ' v' . WPPB_VERSION );
-		define( 'WPPB_PLUGIN_AGENT', WPPB_PRODUCT_NAME . ' (' . self::wordpress_version_id() . '; ' . self::plugin_version_id() . '; +' . WPPB_PRODUCT_URL . ')' );
-		define( 'WPPB_ASSETS_ID', WPPB_PRODUCT_ABBREVIATION . '-assets' );
+		define( 'APCM_PLUGIN_DIR', $plugin_path );
+		define( 'APCM_PLUGIN_URL', $plugin_url );
+		define( 'APCM_PLUGIN_RELATIVE_URL', $plugin_relative_url );
+		define( 'APCM_ADMIN_DIR', APCM_PLUGIN_DIR . 'admin/' );
+		define( 'APCM_ADMIN_URL', APCM_PLUGIN_URL . 'admin/' );
+		define( 'APCM_PUBLIC_DIR', APCM_PLUGIN_DIR . 'public/' );
+		define( 'APCM_PUBLIC_URL', APCM_PLUGIN_URL . 'public/' );
+		define( 'APCM_INCLUDES_DIR', APCM_PLUGIN_DIR . 'includes/' );
+		define( 'APCM_VENDOR_DIR', APCM_PLUGIN_DIR . 'includes/libraries/' );
+		define( 'APCM_LANGUAGES_DIR', APCM_PLUGIN_DIR . 'languages/' );
+		define( 'APCM_ADMIN_RELATIVE_URL', self::admin_relative_url() );
+		define( 'APCM_AJAX_RELATIVE_URL', self::ajax_relative_url() );
+		define( 'APCM_PLUGIN_SIGNATURE', APCM_PRODUCT_NAME . ' v' . APCM_VERSION );
+		define( 'APCM_PLUGIN_AGENT', APCM_PRODUCT_NAME . ' (' . self::wordpress_version_id() . '; ' . self::plugin_version_id() . '; +' . APCM_PRODUCT_URL . ')' );
+		define( 'APCM_ASSETS_ID', APCM_PRODUCT_ABBREVIATION . '-assets' );
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Environment {
 	 * @return string The major version number.
 	 * @since  1.0.0
 	 */
-	public static function major_version( $version = WPPB_VERSION ) {
+	public static function major_version( $version = APCM_VERSION ) {
 		try {
 			$result = substr( $version, 0, strpos( $version, '.' ) );
 		} catch ( Exception $ex ) {
@@ -77,7 +77,7 @@ class Environment {
 	 * @return string The major version number.
 	 * @since  1.0.0
 	 */
-	public static function minor_version( $version = WPPB_VERSION ) {
+	public static function minor_version( $version = APCM_VERSION ) {
 		try {
 			$result = substr( $version, strpos( $version, '.' ) + 1, 1000 );
 			$result = substr( $result, 0, strpos( $result, '.' ) );
@@ -94,7 +94,7 @@ class Environment {
 	 * @return string The major version number.
 	 * @since  1.0.0
 	 */
-	public static function patch_version( $version = WPPB_VERSION ) {
+	public static function patch_version( $version = APCM_VERSION ) {
 		try {
 			$result = substr( $version, strpos( $version, '.' ) + 1, 1000 );
 			$result = substr( $result, strpos( $result, '.' ) + 1, 1000 );
@@ -115,7 +115,7 @@ class Environment {
 	 */
 	public static function is_wordpress_version_ok() {
 		global $wp_version;
-		return ( ! version_compare( $wp_version, DECALOG_MINIMUM_WP_VERSION, '<' ) );
+		return ( ! version_compare( $wp_version, APCM_MINIMUM_WP_VERSION, '<' ) );
 	}
 
 	/**
@@ -169,18 +169,18 @@ class Environment {
 				$debug = true;
 				if ( defined( 'WP_DEBUG_LOG' ) ) {
 					if ( WP_DEBUG_LOG ) {
-						$opt[] = esc_html__( 'log', 'wp-plugin-boilerplate' );
+						$opt[] = esc_html__( 'log', 'apcu-manager' );
 					}
 				}
 				if ( defined( 'WP_DEBUG_DISPLAY' ) ) {
 					if ( WP_DEBUG_DISPLAY ) {
-						$opt[] = esc_html__( 'display', 'wp-plugin-boilerplate' );
+						$opt[] = esc_html__( 'display', 'apcu-manager' );
 					}
 				}
 				$s = implode( ', ', $opt );
 			}
 		}
-		return ( $debug ? esc_html__( 'Debug enabled', 'wp-plugin-boilerplate' ) . ( '' !== $s ? ' (' . $s . ')' : '' ) : esc_html__( 'Debug disabled', 'wp-plugin-boilerplate' ) );
+		return ( $debug ? esc_html__( 'Debug enabled', 'apcu-manager' ) . ( '' !== $s ? ' (' . $s . ')' : '' ) : esc_html__( 'Debug disabled', 'apcu-manager' ) );
 	}
 
 	/**
@@ -190,7 +190,7 @@ class Environment {
 	 * @since  1.0.0
 	 */
 	public static function plugin_version_id() {
-		return WPPB_PRODUCT_SHORTNAME . '/' . WPPB_VERSION;
+		return APCM_PRODUCT_SHORTNAME . '/' . APCM_VERSION;
 	}
 
 	/**
@@ -200,10 +200,10 @@ class Environment {
 	 * @since  1.0.0
 	 */
 	public static function plugin_version_text() {
-		$s = WPPB_PRODUCT_NAME . ' ' . WPPB_VERSION;
-		if ( defined( 'WPPB_CODENAME' ) ) {
-			if ( WPPB_CODENAME !== '"-"' ) {
-				$s .= ' ' . WPPB_CODENAME;
+		$s = APCM_PRODUCT_NAME . ' ' . APCM_VERSION;
+		if ( defined( 'APCM_CODENAME' ) ) {
+			if ( APCM_CODENAME !== '"-"' ) {
+				$s .= ' ' . APCM_CODENAME;
 			}
 		}
 		return $s;
@@ -216,7 +216,7 @@ class Environment {
 	 * @since  1.0.0
 	 */
 	public static function is_plugin_in_dev_mode() {
-		return ( strpos( WPPB_VERSION, 'dev' ) > 0 );
+		return ( strpos( APCM_VERSION, 'dev' ) > 0 );
 	}
 
 	/**
@@ -226,7 +226,7 @@ class Environment {
 	 * @since  1.0.0
 	 */
 	public static function is_plugin_in_rc_mode() {
-		return ( strpos( WPPB_VERSION, 'rc' ) > 0 );
+		return ( strpos( APCM_VERSION, 'rc' ) > 0 );
 	}
 
 	/**
@@ -246,7 +246,7 @@ class Environment {
 	 * @since  1.0.0
 	 */
 	public static function is_php_version_ok() {
-		return ( ! version_compare( PHP_VERSION, WPPB_MINIMUM_PHP_VERSION, '<' ) );
+		return ( ! version_compare( PHP_VERSION, APCM_MINIMUM_PHP_VERSION, '<' ) );
 	}
 
 	/**

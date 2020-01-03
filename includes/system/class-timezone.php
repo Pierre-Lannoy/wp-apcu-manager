@@ -9,9 +9,9 @@
  * @since   1.0.0
  */
 
-namespace WPPluginBoilerplate\System;
+namespace APCuManager\System;
 
-use WPPluginBoilerplate\System\Environment;
+use APCuManager\System\Environment;
 
 /**
  * Define the timezone functionality.

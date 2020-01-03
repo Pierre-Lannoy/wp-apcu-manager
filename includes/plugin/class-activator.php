@@ -7,7 +7,9 @@
  * @since   1.0.0
  */
 
-namespace WPPluginBoilerplate\Plugin;
+namespace APCuManager\Plugin;
+
+use APCuManager\Plugin\Feature\Schema;
 
 /**
  * Fired during plugin activation.
@@ -20,13 +22,14 @@ namespace WPPluginBoilerplate\Plugin;
  */
 class Activator {
 
-
 	/**
 	 * Activate the plugin.
 	 *
 	 * @since 1.0.0
 	 */
 	public static function activate() {
+		$schema = new Schema();
+		$schema->initialize();
 	}
 
 }
