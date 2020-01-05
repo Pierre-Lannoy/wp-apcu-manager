@@ -64,13 +64,13 @@ class Capture {
 		$schema = new Schema();
 		$record = $schema->init_record();
 		$time   = time();
-		if ( function_exists( 'opcache_get_status' ) ) {
+		if ( function_exists( 'apcu_get_status' ) ) {
 			$cache_id = '/Data/LastCheck';
 			$old      = Cache::get_global( $cache_id );
 			if ( ! isset( $old ) ) {
-				Logger::debug( 'No OPcache transient.' );
+				Logger::debug( 'No APCu transient.' );
 			} elseif ( ! array_key_exists( 'timestamp', $old ) ) {
-				Logger::debug( 'No OPcache timestamp.' );
+				Logger::debug( 'No APCu timestamp.' );
 			} elseif ( 300 - self::$delta > $time - $old['timestamp'] ) {
 				Logger::debug( sprintf( 'Delta time too short: %d sec. Launching recycling process.', $time - $old['timestamp'] ) );
 			} elseif ( 300 + self::$delta < $time - $old['timestamp'] ) {
@@ -80,7 +80,7 @@ class Capture {
 				try {
 					$restart            = false;
 					$value              = [];
-					$value['raw']       = opcache_get_status( false );
+					$value['raw']       = apcu_get_status( false );
 					$value['timestamp'] = $time;
 					$record['status']   = 'enabled';
 					// Trying to figure out the status.
@@ -106,20 +106,20 @@ class Capture {
 						}
 					}
 					// Trying to figure out the restart type.
-					if ( array_key_exists( 'opcache_statistics', $old['raw'] ) && array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'oom_restarts', $old['raw']['opcache_statistics'] ) && array_key_exists( 'oom_restarts', $value['raw']['opcache_statistics'] ) ) {
-						if ( (int) $old['raw']['opcache_statistics']['oom_restarts'] !== (int) $value['raw']['opcache_statistics']['oom_restarts'] ) {
+					if ( array_key_exists( 'apcu_statistics', $old['raw'] ) && array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'oom_restarts', $old['raw']['apcu_statistics'] ) && array_key_exists( 'oom_restarts', $value['raw']['apcu_statistics'] ) ) {
+						if ( (int) $old['raw']['apcu_statistics']['oom_restarts'] !== (int) $value['raw']['apcu_statistics']['oom_restarts'] ) {
 							$restart         = true;
 							$record['reset'] = 'oom';
 						}
 					}
-					if ( array_key_exists( 'opcache_statistics', $old['raw'] ) && array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'hash_restarts', $old['raw']['opcache_statistics'] ) && array_key_exists( 'hash_restarts', $value['raw']['opcache_statistics'] ) ) {
-						if ( (int) $old['raw']['opcache_statistics']['hash_restarts'] !== (int) $value['raw']['opcache_statistics']['hash_restarts'] ) {
+					if ( array_key_exists( 'apcu_statistics', $old['raw'] ) && array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'hash_restarts', $old['raw']['apcu_statistics'] ) && array_key_exists( 'hash_restarts', $value['raw']['apcu_statistics'] ) ) {
+						if ( (int) $old['raw']['apcu_statistics']['hash_restarts'] !== (int) $value['raw']['apcu_statistics']['hash_restarts'] ) {
 							$restart         = true;
 							$record['reset'] = 'hash';
 						}
 					}
-					if ( array_key_exists( 'opcache_statistics', $old['raw'] ) && array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'manual_restarts', $old['raw']['opcache_statistics'] ) && array_key_exists( 'manual_restarts', $value['raw']['opcache_statistics'] ) ) {
-						if ( (int) $old['raw']['opcache_statistics']['manual_restarts'] !== (int) $value['raw']['opcache_statistics']['manual_restarts'] ) {
+					if ( array_key_exists( 'apcu_statistics', $old['raw'] ) && array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'manual_restarts', $old['raw']['apcu_statistics'] ) && array_key_exists( 'manual_restarts', $value['raw']['apcu_statistics'] ) ) {
+						if ( (int) $old['raw']['apcu_statistics']['manual_restarts'] !== (int) $value['raw']['apcu_statistics']['manual_restarts'] ) {
 							$restart         = true;
 							$record['reset'] = 'manual';
 						}
@@ -136,11 +136,11 @@ class Capture {
 						$free = 0;
 					}
 					$record['mem_total'] = $free + $record['mem_used'] + $record['mem_wasted'];
-					if ( array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'max_cached_keys', $value['raw']['opcache_statistics'] ) ) {
-						$record['key_total'] = (int) $value['raw']['opcache_statistics']['max_cached_keys'];
+					if ( array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'max_cached_keys', $value['raw']['apcu_statistics'] ) ) {
+						$record['key_total'] = (int) $value['raw']['apcu_statistics']['max_cached_keys'];
 					}
-					if ( array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'num_cached_keys', $value['raw']['opcache_statistics'] ) ) {
-						$record['key_used'] = (int) $value['raw']['opcache_statistics']['num_cached_keys'];
+					if ( array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'num_cached_keys', $value['raw']['apcu_statistics'] ) ) {
+						$record['key_used'] = (int) $value['raw']['apcu_statistics']['num_cached_keys'];
 					}
 					if ( array_key_exists( 'interned_strings_usage', $value['raw'] ) && array_key_exists( 'buffer_size', $value['raw']['interned_strings_usage'] ) ) {
 						$record['buf_total'] = (int) $value['raw']['interned_strings_usage']['buffer_size'];
@@ -149,48 +149,48 @@ class Capture {
 						$record['buf_used'] = (int) $value['raw']['interned_strings_usage']['used_memory'];
 					}
 					if ( $restart ) {
-						if ( array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'hits', $value['raw']['opcache_statistics'] ) ) {
-							$record['hit'] = (int) $value['raw']['opcache_statistics']['hits'];
+						if ( array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'hits', $value['raw']['apcu_statistics'] ) ) {
+							$record['hit'] = (int) $value['raw']['apcu_statistics']['hits'];
 						}
-						if ( array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'misses', $value['raw']['opcache_statistics'] ) ) {
-							$record['miss'] = (int) $value['raw']['opcache_statistics']['misses'];
+						if ( array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'misses', $value['raw']['apcu_statistics'] ) ) {
+							$record['miss'] = (int) $value['raw']['apcu_statistics']['misses'];
 						}
 					} else {
-						if ( array_key_exists( 'opcache_statistics', $old['raw'] ) && array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'hits', $old['raw']['opcache_statistics'] ) && array_key_exists( 'hits', $value['raw']['opcache_statistics'] ) ) {
-							$record['hit'] = (int) $value['raw']['opcache_statistics']['hits'] - (int) $old['raw']['opcache_statistics']['hits'];
+						if ( array_key_exists( 'apcu_statistics', $old['raw'] ) && array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'hits', $old['raw']['apcu_statistics'] ) && array_key_exists( 'hits', $value['raw']['apcu_statistics'] ) ) {
+							$record['hit'] = (int) $value['raw']['apcu_statistics']['hits'] - (int) $old['raw']['apcu_statistics']['hits'];
 						}
-						if ( array_key_exists( 'opcache_statistics', $old['raw'] ) && array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'misses', $old['raw']['opcache_statistics'] ) && array_key_exists( 'misses', $value['raw']['opcache_statistics'] ) ) {
-							$record['miss'] = (int) $value['raw']['opcache_statistics']['misses'] - (int) $old['raw']['opcache_statistics']['misses'];
+						if ( array_key_exists( 'apcu_statistics', $old['raw'] ) && array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'misses', $old['raw']['apcu_statistics'] ) && array_key_exists( 'misses', $value['raw']['apcu_statistics'] ) ) {
+							$record['miss'] = (int) $value['raw']['apcu_statistics']['misses'] - (int) $old['raw']['apcu_statistics']['misses'];
 						}
 					}
-					if ( array_key_exists( 'opcache_statistics', $value['raw'] ) && array_key_exists( 'num_cached_scripts', $value['raw']['opcache_statistics'] ) ) {
-						$record['scripts'] = (int) $value['raw']['opcache_statistics']['num_cached_scripts'];
+					if ( array_key_exists( 'apcu_statistics', $value['raw'] ) && array_key_exists( 'num_cached_scripts', $value['raw']['apcu_statistics'] ) ) {
+						$record['scripts'] = (int) $value['raw']['apcu_statistics']['num_cached_scripts'];
 					}
 					if ( array_key_exists( 'interned_strings_usage', $value['raw'] ) && array_key_exists( 'number_of_strings', $value['raw']['interned_strings_usage'] ) ) {
 						$record['strings'] = (int) $value['raw']['interned_strings_usage']['number_of_strings'];
 					}
 					Cache::set_global( $cache_id, $value, 'check' );
 					$schema->write_statistics_record_to_database( $record );
-					Logger::debug( 'OPcache is enabled. Statistics recorded.' );
+					Logger::debug( 'APCu is enabled. Statistics recorded.' );
 				} catch ( \Throwable $e ) {
-					Logger::error( sprintf( 'Unable to query OPcache status: %s.', $e->getMessage() ), $e->getCode() );
+					Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
 				}
 			} else {
 				try {
 					$value              = [];
-					$value['raw']       = opcache_get_status( false );
+					$value['raw']       = apcu_get_status( false );
 					$value['timestamp'] = $time;
 					Cache::set_global( $cache_id, $value, 'check' );
 					$record['status'] = 'recycle_in_progress';
 					$schema->write_statistics_record_to_database( $record );
-					Logger::debug( 'OPcache is enabled. Recovery cycle.' );
+					Logger::debug( 'APCu is enabled. Recovery cycle.' );
 				} catch ( \Throwable $e ) {
-					Logger::error( sprintf( 'Unable to query OPcache status: %s.', $e->getMessage() ), $e->getCode() );
+					Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
 				}
 			}
 		} else {
 			$schema->write_statistics_record_to_database( $record );
-			Logger::debug( 'OPcache is disabled. No statistics to record.' );
+			Logger::debug( 'APCu is disabled. No statistics to record.' );
 		}
 	}
 

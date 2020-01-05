@@ -16,7 +16,7 @@ use APCuManager\System\Cache;
 use APCuManager\System\Date;
 use APCuManager\System\Conversion;
 use APCuManager\System\L10n;
-use APCuManager\System\OPcache;
+use APCuManager\System\APCu;
 use APCuManager\System\Timezone;
 use APCuManager\System\UUID;
 use APCuManager\System\Logger;
@@ -206,14 +206,14 @@ class Analytics {
 				case 'disabled':
 					if ( array_key_exists( $key - 1, $data ) && 'disabled' !== $data[ $key - 1 ]['status'] ) {
 						$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'power', 'none', '#73879C' ) . '" />';
-						$name = esc_html__( 'OPcache disabled.', 'apcu-manager' );
+						$name = esc_html__( 'APCu disabled.', 'apcu-manager' );
 						$op   = $row['status'];
 					}
 					break;
 				default:
 					if ( array_key_exists( $key - 1, $data ) && 'disabled' === $data[ $key - 1 ]['status'] ) {
 						$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'power', 'none', '#73879C' ) . '" />';
-						$name = esc_html__( 'OPcache enabled.', 'apcu-manager' );
+						$name = esc_html__( 'APCu enabled.', 'apcu-manager' );
 						$op   = 'enabled';
 					}
 			}
@@ -1125,8 +1125,8 @@ class Analytics {
 	 */
 	public function get_title_bar() {
 		$result  = '<div class="apcm-box apcm-box-full-line">';
-		$result .= '<span class="apcm-title">' . esc_html__( 'OPcache Analytics', 'apcu-manager' ) . '</span>';
-		$result .= '<span class="apcm-subtitle">' . OPcache::name() . '</span>';
+		$result .= '<span class="apcm-title">' . esc_html__( 'APCu Analytics', 'apcu-manager' ) . '</span>';
+		$result .= '<span class="apcm-subtitle">' . APCu::name() . '</span>';
 		$result .= '<span class="apcm-datepicker">' . $this->get_date_box() . '</span>';
 		$result .= '</div>';
 		return $result;
@@ -1246,8 +1246,8 @@ class Analytics {
 				break;
 			case 'uptime':
 				$icon  = Feather\Icons::get_base64( 'activity', 'none', '#73879C' );
-				$title = esc_html_x( 'Availability', 'Noun - Ratio of time when OPcache is not disabled.', 'apcu-manager' );
-				$help  = esc_html__( 'Time ratio with an operational OPcache.', 'apcu-manager' );
+				$title = esc_html_x( 'Availability', 'Noun - Ratio of time when APCu is not disabled.', 'apcu-manager' );
+				$help  = esc_html__( 'Time ratio with an operational APCu.', 'apcu-manager' );
 				break;
 		}
 		$top       = '<img style="width:12px;vertical-align:baseline;" src="' . $icon . '" />&nbsp;&nbsp;<span style="cursor:help;" class="apcm-kpi-large-top-text bottom" data-position="bottom" data-tooltip="' . $help . '">' . $title . '</span>';
