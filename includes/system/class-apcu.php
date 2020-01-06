@@ -1,8 +1,8 @@
 <?php
 /**
- * OPcache handling
+ * APCu handling
  *
- * Handles all OPcache operations and detection.
+ * Handles all APCu operations and detection.
  *
  * @package System
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
@@ -16,9 +16,9 @@ use APCuManager\System\Option;
 use APCuManager\System\File;
 
 /**
- * Define the OPcache functionality.
+ * Define the APCu functionality.
  *
- * Handles all OPcache operations and detection.
+ * Handles all APCu operations and detection.
  *
  * @package System
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
@@ -32,21 +32,13 @@ class APCu {
 	 * @since  1.0.0
 	 * @var    array    $status    Maintains the status list.
 	 */
-	public static $status = [ 'disabled', 'enabled', 'cache_full', 'restart_pending', 'restart_in_progress', 'recycle_in_progress', 'warmup', 'reset_warmup' ];
-
-	/**
-	 * The list of reset types.
-	 *
-	 * @since  1.0.0
-	 * @var    array    $status    Maintains the status list.
-	 */
-	public static $resets = [ 'none', 'oom', 'hash', 'manual' ];
+	public static $status = [ 'disabled', 'enabled', 'recycle_in_progress' ];
 
 	/**
 	 * The list of file not compilable/recompilable.
 	 *
 	 * @since  1.0.0
-	 * @var    array    $status    Maintains the file list.
+	 * @var    array    $do_not_compile    Maintains the file list.
 	 */
 	public static $do_not_compile = [ 'includes/plugin.php', 'includes/options.php', 'includes/misc.php', 'includes/menu.php' ];
 

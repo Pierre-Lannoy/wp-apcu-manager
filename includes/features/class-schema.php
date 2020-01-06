@@ -11,7 +11,7 @@
 
 namespace APCuManager\Plugin\Feature;
 
-use APCuManager\System\OPcache;
+use APCuManager\System\APCu;
 
 use APCuManager\System\Option;
 use APCuManager\System\Database;
@@ -154,19 +154,18 @@ class Schema {
 		$charset_collate = 'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
 		$sql             = 'CREATE TABLE IF NOT EXISTS ' . $wpdb->base_prefix . self::$statistics;
 		$sql            .= " (`timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',";
-		$sql            .= " `status` enum('" . implode( "','", OPcache::$status ) . "') NOT NULL DEFAULT 'disabled',";
-		$sql            .= " `reset` enum('" . implode( "','", OPcache::$resets ) . "') NOT NULL DEFAULT 'none',";
-		$sql            .= " `mem_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `mem_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `mem_wasted` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `key_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `key_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `buf_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `buf_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `hit` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `miss` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `strings` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `scripts` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `delta` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `status` enum('" . implode( "','", APCu::$status ) . "') NOT NULL DEFAULT 'disabled',";
+		$sql            .= " `mem_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";           // FREE MEMORY (2).
+		$sql            .= " `mem_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";            // FREE MEMORY (2).
+		$sql            .= " `slot_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // KEYS SATURATION (4).
+		$sql            .= " `slot_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";           // ITEMS (3) / KEYS SATURATION (4).
+		$sql            .= " `frag_small` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // MEMORY FRAGMENTATION (5).
+		$sql            .= " `frag_big` int(11) UNSIGNED NOT NULL DEFAULT '0',";            // MEMORY FRAGMENTATION (5).
+		$sql            .= " `frag_count` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // MEMORY FRAGMENTATION (5).
+		$sql            .= " `hit` int(11) UNSIGNED NOT NULL DEFAULT '0',";                 // HIT RATIO (1).
+		$sql            .= " `miss` int(11) UNSIGNED NOT NULL DEFAULT '0',";                // HIT RATIO (1).
+		$sql            .= " `ins` int(11) UNSIGNED NOT NULL DEFAULT '0',";                 // HIT RATIO (1).
 		$sql            .= " PRIMARY KEY (`timestamp`)";
 		$sql            .= ") $charset_collate;";
 		// phpcs:ignore
@@ -183,18 +182,18 @@ class Schema {
 		$datetime = new \DateTime();
 		$record   = [
 			'timestamp'  => $datetime->format( 'Y-m-d H:i:s' ),
+			'delta'      => 0,
 			'status'     => 'disabled',
-			'reset'      => 'none',
 			'mem_total'  => 0,
 			'mem_used'   => 0,
-			'mem_wasted' => 0,
-			'key_used'   => 0,
-			'buf_total'  => 0,
-			'buf_used'   => 0,
+			'slot_total' => 0,
+			'slot_used'  => 0,
+			'frag_small' => 0,
+			'frag_big'   => 0,
+			'frag_count' => 0,
 			'hit'        => 0,
 			'miss'       => 0,
-			'strings'    => 0,
-			'scripts'    => 0,
+			'ins'        => 0,
 		];
 		return $record;
 	}
