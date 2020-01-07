@@ -74,7 +74,7 @@ class Option {
 		self::$defaults['last_check']       = [];
 		self::$defaults['history']          = 21;
 		self::$defaults['analytics']        = true;
-		self::$network                      = [ 'version', 'use_cdn', 'script_in_footer', 'display_nag', 'analytics', 'history', 'warmup' ];
+		self::$network                      = [ 'version', 'use_cdn', 'script_in_footer', 'display_nag', 'analytics', 'history' ];
 	}
 	/**
 	 * Get the options infos for Site Health "info" tab.
