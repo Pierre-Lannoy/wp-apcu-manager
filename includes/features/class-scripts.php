@@ -15,8 +15,7 @@ use APCuManager\System\Conversion;
 use APCuManager\System\Logger;
 use APCuManager\System\Date;
 use APCuManager\System\Timezone;
-use APCuManager\System\OPcache;
-use APCuManager\System\Environment;
+use APCuManager\System\APCu;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
@@ -125,25 +124,23 @@ class Scripts extends \WP_List_Table {
 		$this->process_args();
 		$this->process_action();
 		$this->scripts = [];
-		if ( function_exists( 'opcache_get_status' ) ) {
+		if ( function_exists( 'apcu_cache_info' ) ) {
 			try {
-				$raw = opcache_get_status( true );
-				if ( array_key_exists( 'scripts', $raw ) ) {
-					foreach ( $raw['scripts'] as $script ) {
-						if ( false === strpos( $script['full_path'], ABSPATH ) ) {
-							continue;
-						}
+				$raw = apcu_cache_info( false );
+				if ( array_key_exists( 'cache_list', $raw ) ) {
+					foreach ( $raw['cache_list'] as $script ) {
 						$item              = [];
-						$item['script']    = str_replace( ABSPATH, './', $script['full_path'] );
-						$item['hit']       = $script['hits'];
-						$item['memory']    = $script['memory_consumption'];
-						$item['timestamp'] = $script['timestamp'];
-						$item['used']      = $script['last_used_timestamp'];
+						$item['script']    = $script['info'];
+						$item['hit']       = $script['num_hits'];
+						$item['memory']    = $script['mem_size'];
+						$item['timestamp'] = $script['mtime'];
+						$item['used']      = $script['access_time'];
+						$item['ttl']       = $script['ttl'];
 						$this->scripts[]   = $item;
 					}
 				}
 			} catch ( \Throwable $e ) {
-				Logger::error( sprintf( 'Unable to query OPcache status: %s.', $e->getMessage() ), $e->getCode() );
+				Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
 			}
 		}
 	}
@@ -183,6 +180,17 @@ class Scripts extends \WP_List_Table {
 	 */
 	protected function column_hit( $item ) {
 		return Conversion::number_shorten( $item['hit'] );
+	}
+
+	/**
+	 * "ttl" column formatter.
+	 *
+	 * @param   array $item   The current item.
+	 * @return  string  The cell formatted, ready to print.
+	 * @since    1.0.0
+	 */
+	protected function column_ttl( $item ) {
+		return implode( ', ', Date::get_age_array_from_seconds( $item['ttl'], true, true ) );
 	}
 
 	/**
@@ -231,8 +239,9 @@ class Scripts extends \WP_List_Table {
 	public function get_columns() {
 		$columns = [
 			'cb'        => '<input type="checkbox" />',
-			'script'    => esc_html__( 'File', 'apcu-manager' ),
+			'script'    => esc_html__( 'Object', 'apcu-manager' ),
 			'timestamp' => esc_html__( 'Timestamp', 'apcu-manager' ),
+			'ttl'       => esc_html__( 'TTL', 'apcu-manager' ),
 			'hit'       => esc_html__( 'Hits', 'apcu-manager' ),
 			'memory'    => esc_html__( 'Memory size', 'apcu-manager' ),
 			'used'      => esc_html__( 'Used', 'apcu-manager' ),
@@ -263,6 +272,7 @@ class Scripts extends \WP_List_Table {
 			'memory'    => [ 'memory', false ],
 			'timestamp' => [ 'timestamp', false ],
 			'used'      => [ 'used', false ],
+			'ttl'       => [ 'ttl', false ],
 		];
 		return $sortable_columns;
 	}
@@ -275,9 +285,7 @@ class Scripts extends \WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return [
-			'invalidate' => esc_html__( 'Invalidate', 'apcu-manager' ),
-			'force'      => esc_html__( 'Force invalidate', 'apcu-manager' ),
-			'recompile'  => esc_html__( 'Recompile', 'apcu-manager' ),
+			'invalidate' => esc_html__( 'Delete', 'apcu-manager' ),
 		];
 	}
 
@@ -365,7 +373,7 @@ class Scripts extends \WP_List_Table {
 			$l          = [];
 			$l['value'] = $d;
 			// phpcs:ignore
-			$l['text']     = sprintf( esc_html__( 'Display %d files per page', 'apcu-manager' ), $d );
+			$l['text']     = sprintf( esc_html__( 'Display %d objects per page', 'apcu-manager' ), $d );
 			$l['selected'] = ( intval( $d ) === intval( $this->limit ) ? 'selected="selected" ' : '' );
 			$result[]      = $l;
 		}
@@ -545,19 +553,8 @@ class Scripts extends \WP_List_Table {
 	 */
 	public function warning() {
 		$message = '';
-		if ( function_exists( 'opcache_get_status' ) ) {
-			$raw = opcache_get_status( false );
-			if ( ! (bool) $raw['opcache_enabled'] ) {
-				$message = esc_html__( 'OPcache is not enabled on this site. There\'s nothing to see here.', 'apcu-manager' );
-			}
-			if ( (bool) $raw['restart_pending'] ) {
-				$message = esc_html__( 'A full reset is currently pending. Displayed values may be inaccurate.', 'apcu-manager' );
-			}
-			if ( (bool) $raw['restart_in_progress'] ) {
-				$message = esc_html__( 'A full reset is currently in progress. Displayed values may be inaccurate.', 'apcu-manager' );
-			}
-		} else {
-			$message = esc_html__( 'OPcache is not enabled on this site. There\'s nothing to see here.', 'apcu-manager' );
+		if ( ! function_exists( 'apcu_cache_info' ) ) {
+			$message = esc_html__( 'APCu is not enabled on this site. There\'s nothing to see here.', 'apcu-manager' );
 		}
 		if ( '' !== $message ) {
 			// phpcs:ignore
@@ -619,9 +616,6 @@ class Scripts extends \WP_List_Table {
 			$this->orderby = 'script';
 		}
 		foreach ( [ 'top', 'bottom' ] as $which ) {
-			if ( wp_verify_nonce( $this->nonce, 'bulk-apcm-tools' ) && array_key_exists( 'dowarmup-' . $which, $_POST ) ) {
-				$this->action = 'warmup';
-			}
 			if ( wp_verify_nonce( $this->nonce, 'bulk-apcm-tools' ) && array_key_exists( 'doinvalidate-' . $which, $_POST ) ) {
 				$this->action = 'reset';
 			}
@@ -650,43 +644,17 @@ class Scripts extends \WP_List_Table {
 	 */
 	public function process_action() {
 		switch ( $this->action ) {
-			case 'warmup':
-				if ( Environment::is_wordpress_multisite() ) {
-					// phpcs:ignore
-					$message = esc_html( sprintf( __( 'Network warm-up has been initiated. %d relevant files.', 'apcu-manager' ), OPcache::warmup( false ) ) );
-				} else {
-					// phpcs:ignore
-					$message = esc_html( sprintf( __( 'Site warm-up has been initiated. %d relevant files.', 'apcu-manager' ), OPcache::warmup( false ) ) );
-				}
-				$code = 0;
-				break;
 			case 'reset':
-				OPcache::reset( false );
-				$message = esc_html__( 'Site invalidation has been initiated. It may take a few seconds to complete.', 'apcu-manager' );
-				$code    = 0;
+				APCu::reset();
+				$message = esc_html__( 'Cache clearing done.', 'apcu-manager' );
 				break;
 			case 'invalidate':
 				// phpcs:ignore
-				$message = esc_html( sprintf( __( 'Invalidation done: %d file(s).', 'apcu-manager' ), OPcache::invalidate( $this->bulk, false ) ) );
-				$code    = 0;
-				break;
-			case 'force':
-				// phpcs:ignore
-				$message = esc_html( sprintf( __( 'Forced invalidation done: %d file(s).', 'apcu-manager' ), OPcache::invalidate( $this->bulk, true ) ) );
-				$code    = 0;
-				break;
-			case 'recompile':
-				// phpcs:ignore
-				$message = esc_html( sprintf( __( 'Recompilation done: %d file(s).', 'apcu-manager' ), OPcache::recompile( $this->bulk, true ) ) );
-				$code    = 0;
+				$message = esc_html( sprintf( __( 'Deletion done: %d object(s).', 'apcu-manager' ), APCu::delete( $this->bulk ) ) );
 				break;
 			default:
 				return;
 		}
-		if ( 0 === $code ) {
-			add_settings_error( 'opcache_manager_no_error', $code, $message, 'updated' );
-		} else {
-			add_settings_error( 'opcache_manager_error', $code, $message, 'error' );
-		}
+		add_settings_error( 'apcu_manager_no_error', 0, $message, 'updated' );
 	}
 }

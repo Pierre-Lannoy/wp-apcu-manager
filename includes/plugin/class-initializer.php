@@ -35,7 +35,10 @@ class Initializer {
 	 * @since 1.0.0
 	 */
 	public function initialize() {
-
+		\APCuManager\System\Logger::init();
+		\APCuManager\System\Cache::init();
+		\APCuManager\System\Sitehealth::init();
+		\APCuManager\System\APCu::init();
 	}
 
 }

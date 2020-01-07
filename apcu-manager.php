@@ -65,10 +65,6 @@ function apcm_uninstall() {
  * @since 1.0.0
  */
 function apcm_run() {
-	APCuManager\System\Logger::init();
-	APCuManager\System\Cache::init();
-	APCuManager\System\Sitehealth::init();
-	APCuManager\System\APCu::init();
 	$plugin = new APCuManager\Plugin\Core();
 	$plugin->run();
 }

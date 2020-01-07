@@ -74,10 +74,4 @@ $note       = sprintf(__('Note: <a href="%s">management tools</a> and <a href="%
 
     <p>&nbsp;</p>
     <em><?php echo $note;?></em>
-
-    <pre><?php print_r(apcu_cache_info(false)); ?></pre>
-
-    <pre><?php print_r(apcu_sma_info(false)); ?></pre>
-
-
 </div>

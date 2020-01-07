@@ -33,7 +33,8 @@
 }
 
 @media (min-width: 783px) {
-    .widefat.fixed.scripts .column-hit{
+    .widefat.fixed.scripts .column-hit,
+    .widefat.fixed.scripts .column-ttl{
         width: 10%;
     }
 

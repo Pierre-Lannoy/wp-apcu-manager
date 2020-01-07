@@ -9,13 +9,6 @@
  * @since   1.0.0
  */
 
-use APCuManager\System\Environment;
-
-if ( Environment::is_wordpress_multisite() ) {
-	$warmup = esc_html__( 'Network Warm-Up', 'apcu-manager' );
-} else {
-	$warmup = esc_html__( 'Site Warm-Up', 'apcu-manager' );
-}
 
 ?>
 
@@ -30,6 +23,5 @@ if ( Environment::is_wordpress_multisite() ) {
 </div>
 
 <div class="alignleft actions bulkactions">
-    <input style="margin-left:10px;" type="submit" name="doinvalidate-<?php echo $which; ?>"  id="doinvalidate-<?php echo $which; ?>" class="button-primary action" value="<?php esc_html_e('Site Invalidation', 'apcu-manager');?>"  />
-    <input style="margin-left:10px;" type="submit" name="dowarmup-<?php echo $which; ?>" id="dowarmup-<?php echo $which; ?>" class="button-primary action" value="<?php echo $warmup;?>"  />
+    <input style="margin-left:10px;" type="submit" name="doinvalidate-<?php echo $which; ?>"  id="doinvalidate-<?php echo $which; ?>" class="button-primary action" value="<?php esc_html_e('Delete All', 'apcu-manager');?>"  />
 </div>
