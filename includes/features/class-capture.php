@@ -56,6 +56,49 @@ class Capture {
 	}
 
 	/**
+	 * Get the items details.
+	 *
+	 * @return array    The details.
+	 * @since 1.0.0
+	 */
+	private static function get_details() {
+		$schema  = new Schema();
+		$result  = [];
+		$details = [];
+		if ( function_exists( 'apcu_cache_info' ) ) {
+			$infos = apcu_cache_info( false );
+			if ( array_key_exists( 'cache_list', $infos ) ) {
+				foreach ( $infos['cache_list'] as $item ) {
+					$name = '';
+					if ( false !== strpos( $item['info'], '_' ) ) {
+						$name = substr( $item['info'], 0, strpos( $item['info'], '_' ) );
+					}
+					if ( '' === $name ) {
+						$name = '-';
+					}
+					if ( array_key_exists( $name, $details ) ) {
+						$details[ $name ]['items'] = $details[ $name ]['items'] + 1;
+						$details[ $name ]['size']  = $details[ $name ]['size'] + (int) $item['mem_size'];
+					} else {
+						$details[ $name ]['items'] = 1;
+						$details[ $name ]['size']  = (int) $item['mem_size'];
+					}
+				}
+			}
+			if ( 20 > count( $details ) ) {
+				foreach ( $details as $key => $detail ) {
+					$d          = $schema->init_detail();
+					$d['id']    = $key;
+					$d['items'] = $detail['items'];
+					$d['size']  = $detail['size'];
+					$result[]   = $d;
+				}
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * Check status and record it if needed.
 	 *
 	 * @since    1.0.0
@@ -65,6 +108,7 @@ class Capture {
 		$record = $schema->init_record();
 		$time   = time();
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_sma_info' ) ) {
+			$details  = self::get_details();
 			$cache_id = '/Data/LastCheck';
 			$old      = Cache::get_global( $cache_id );
 			if ( ! isset( $old ) ) {
@@ -122,7 +166,7 @@ class Capture {
 						}
 					}
 					Cache::set_global( $cache_id, $value, 'check' );
-					$schema->write_statistics_record_to_database( $record );
+					$schema->write_statistics_record_to_database( $record, $details );
 					Logger::debug( 'APCu is enabled. Statistics recorded.' );
 				} catch ( \Throwable $e ) {
 					Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
@@ -135,7 +179,7 @@ class Capture {
 					$value['timestamp'] = $time;
 					Cache::set_global( $cache_id, $value, 'check' );
 					$record['status'] = 'recycle_in_progress';
-					$schema->write_statistics_record_to_database( $record );
+					$schema->write_statistics_record_to_database( $record, $details );
 					Logger::debug( 'APCu is enabled. Recovery cycle.' );
 				} catch ( \Throwable $e ) {
 					Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );

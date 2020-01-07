@@ -74,7 +74,6 @@ class Option {
 		self::$defaults['last_check']       = [];
 		self::$defaults['history']          = 21;
 		self::$defaults['analytics']        = true;
-		self::$defaults['warmup']           = false;
 		self::$network                      = [ 'version', 'use_cdn', 'script_in_footer', 'display_nag', 'analytics', 'history', 'warmup' ];
 	}
 	/**
@@ -226,7 +225,6 @@ class Option {
 		self::network_set( 'display_nag', self::$defaults['display_nag'] );
 		self::network_set( 'analytics', self::$defaults['analytics'] );
 		self::network_set( 'history', self::$defaults['history'] );
-		self::network_set( 'warmup', self::$defaults['warmup'] );
 	}
 
 	/**

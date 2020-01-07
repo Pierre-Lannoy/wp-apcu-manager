@@ -212,7 +212,6 @@ class Apcu_Manager_Admin {
 				Option::network_set( 'display_nag', array_key_exists( 'apcm_plugin_options_nag', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_options_nag' ) : false );
 				Option::network_set( 'analytics', array_key_exists( 'apcm_plugin_features_analytics', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_analytics' ) : false );
 				Option::network_set( 'history', array_key_exists( 'apcm_plugin_features_history', $_POST ) ? (string) filter_input( INPUT_POST, 'apcm_plugin_features_history', FILTER_SANITIZE_NUMBER_INT ) : Option::network_get( 'history' ) );
-				Option::network_set( 'warmup', array_key_exists( 'apcm_plugin_features_warmup', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_warmup' ) : false );
 				if ( ! Option::network_get( 'analytics' ) ) {
 					wp_clear_scheduled_hook( APCM_CRON_STATS_NAME );
 				}
@@ -383,29 +382,6 @@ class Apcu_Manager_Admin {
 			]
 		);
 		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_history' );
-		if ( Environment::is_wordpress_multisite() ) {
-			$warmup      = esc_html__( 'Network warm-up', 'apcu-manager' );
-			$description = esc_html__( 'If checked, APCu Manager will warm-up the full network (all sites) after each automatic site invalidation.', 'apcu-manager' );
-		} else {
-			$warmup      = esc_html__( 'Site warm-up', 'apcu-manager' );
-			$description = esc_html__( 'If checked, APCu Manager will warm-up the full site after each automatic site invalidation.', 'apcu-manager' );
-		}
-		add_settings_field(
-			'apcm_plugin_features_warmup',
-			$warmup,
-			[ $form, 'echo_field_checkbox' ],
-			'apcm_plugin_features_section',
-			'apcm_plugin_features_section',
-			[
-				'text'        => esc_html__( 'Activated', 'apcu-manager' ),
-				'id'          => 'apcm_plugin_features_warmup',
-				'checked'     => Option::network_get( 'warmup' ),
-				'description' => $description,
-				'full_width'  => true,
-				'enabled'     => true,
-			]
-		);
-		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_warmup' );
 	}
 
 }

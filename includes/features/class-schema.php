@@ -38,6 +38,14 @@ class Schema {
 	private static $statistics = APCM_PRODUCT_ABBREVIATION . '_statistics';
 
 	/**
+	 * Details table name.
+	 *
+	 * @since  1.0.0
+	 * @var    string    $details    The details table name.
+	 */
+	private static $details = APCM_PRODUCT_ABBREVIATION . '_details';
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -48,10 +56,11 @@ class Schema {
 	/**
 	 * Effectively write a record in the database.
 	 *
-	 * @param   array $record     The record to write.
+	 * @param   array  $record    The record to write.
+	 * @param   string $table     The table to write in.
 	 * @since    1.0.0
 	 **/
-	public function write_statistics_record_to_database( $record ) {
+	private function write_to_database( $record, $table ) {
 		$field_insert = [];
 		$value_insert = [];
 		$value_update = [];
@@ -62,12 +71,26 @@ class Schema {
 		}
 		if ( count( $field_insert ) > 0 ) {
 			global $wpdb;
-			$sql  = 'INSERT INTO `' . $wpdb->base_prefix . self::$statistics . '` ';
+			$sql  = 'INSERT INTO `' . $wpdb->base_prefix . $table . '` ';
 			$sql .= '(' . implode( ',', $field_insert ) . ') ';
 			$sql .= 'VALUES (' . implode( ',', $value_insert ) . ') ';
 			$sql .= 'ON DUPLICATE KEY UPDATE ' . implode( ',', $value_update ) . ';';
 			// phpcs:ignore
 			$wpdb->query( $sql );
+		}
+	}
+
+	/**
+	 * Write the stats and details in the database.
+	 *
+	 * @param   array $stat     The stat to write.
+	 * @param   array $details   Optional. The detail to write.
+	 * @since    1.0.0
+	 **/
+	public function write_statistics_record_to_database( $stat, $details = [] ) {
+		$this->write_to_database( $stat, self::$statistics );
+		foreach ( $details as $detail ) {
+			$this->write_to_database( $detail, self::$details );
 		}
 		$this->purge();
 	}
@@ -80,11 +103,12 @@ class Schema {
 	public function initialize() {
 		global $wpdb;
 		try {
-			$this->create_table();
+			$this->create_tables();
 			Logger::debug( sprintf( 'Table "%s" created.', $wpdb->base_prefix . self::$statistics ) );
+			Logger::debug( sprintf( 'Table "%s" created.', $wpdb->base_prefix . self::$details ) );
 			Logger::info( 'Schema installed.' );
 		} catch ( \Throwable $e ) {
-			Logger::alert( sprintf( 'Unable to create "%s" table: %s', $wpdb->base_prefix . self::$statistics, $e->getMessage() ), $e->getCode() );
+			Logger::alert( sprintf( 'Unable to create "%s" and/or "%s" table: %s', $wpdb->base_prefix . self::$statistics, $wpdb->base_prefix . self::$details, $e->getMessage() ), $e->getCode() );
 			Logger::alert( 'Schema not installed.', $e->getCode() );
 		}
 	}
@@ -100,6 +124,10 @@ class Schema {
 		// phpcs:ignore
 		$wpdb->query( $sql );
 		Logger::debug( sprintf( 'Table "%s" removed.', $wpdb->base_prefix . self::$statistics ) );
+		$sql = 'DROP TABLE IF EXISTS ' . $wpdb->base_prefix . self::$details;
+		// phpcs:ignore
+		$wpdb->query( $sql );
+		Logger::debug( sprintf( 'Table "%s" removed.', $wpdb->base_prefix . self::$details ) );
 		Logger::debug( 'Schema destroyed.' );
 	}
 
@@ -111,11 +139,12 @@ class Schema {
 	public function update() {
 		global $wpdb;
 		try {
-			$this->create_table();
+			$this->create_tables();
 			Logger::debug( sprintf( 'Table "%s" updated.', $wpdb->base_prefix . self::$statistics ) );
+			Logger::debug( sprintf( 'Table "%s" updated.', $wpdb->base_prefix . self::$details ) );
 			Logger::info( 'Schema updated.' );
 		} catch ( \Throwable $e ) {
-			Logger::alert( sprintf( 'Unable to update "%s" table: %s', $wpdb->base_prefix . self::$statistics, $e->getMessage() ), $e->getCode() );
+			Logger::alert( sprintf( 'Unable to update "%s" and/or "%s" table: %s', $wpdb->base_prefix . self::$statistics, $wpdb->base_prefix . self::$details, $e->getMessage() ), $e->getCode() );
 		}
 	}
 
@@ -132,6 +161,7 @@ class Schema {
 		}
 		$database = new Database();
 		$count    = $database->purge( self::$statistics, 'timestamp', 24 * $days );
+		$count    = $count + $database->purge( self::$details, 'timestamp', 24 * $days );
 		if ( 0 === $count ) {
 			Logger::debug( 'No old records to delete.' );
 		} elseif ( 1 === $count ) {
@@ -149,7 +179,7 @@ class Schema {
 	 *
 	 * @since    1.0.0
 	 */
-	private function create_table() {
+	private function create_tables() {
 		global $wpdb;
 		$charset_collate = 'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
 		$sql             = 'CREATE TABLE IF NOT EXISTS ' . $wpdb->base_prefix . self::$statistics;
@@ -167,6 +197,16 @@ class Schema {
 		$sql            .= " `miss` int(11) UNSIGNED NOT NULL DEFAULT '0',";                // HIT RATIO (1).
 		$sql            .= " `ins` int(11) UNSIGNED NOT NULL DEFAULT '0',";                 // HIT RATIO (1).
 		$sql            .= " PRIMARY KEY (`timestamp`)";
+		$sql            .= ") $charset_collate;";
+		// phpcs:ignore
+		$wpdb->query( $sql );
+		$charset_collate = 'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+		$sql             = 'CREATE TABLE IF NOT EXISTS ' . $wpdb->base_prefix . self::$details;
+		$sql            .= " (`timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',";
+		$sql            .= " `id` varchar(100) NOT NULL DEFAULT '-',";
+		$sql            .= " `items` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `size` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= ' UNIQUE KEY u_stat (timestamp, id)';
 		$sql            .= ") $charset_collate;";
 		// phpcs:ignore
 		$wpdb->query( $sql );
@@ -196,6 +236,23 @@ class Schema {
 			'ins'        => 0,
 		];
 		return $record;
+	}
+
+	/**
+	 * Get an empty detail.
+	 *
+	 * @return  array   An empty, ready to use, detail.
+	 * @since    1.0.0
+	 */
+	public function init_detail() {
+		$datetime = new \DateTime();
+		$detail   = [
+			'timestamp' => $datetime->format( 'Y-m-d H:i:s' ),
+			'id'        => 'id',
+			'items'     => 0,
+			'size'      => 0,
+		];
+		return $detail;
 	}
 
 	/**
