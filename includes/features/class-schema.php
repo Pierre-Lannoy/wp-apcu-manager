@@ -268,7 +268,7 @@ class Schema {
 			$where_extra = ' AND ' . $extra_field . ( $not ? ' NOT' : '' ) . " IN ( '" . implode( $extras, "', '" ) . "' )";
 		}
 		global $wpdb;
-		$sql = 'SELECT count(*) as records, sum(hit) as sum_hit, avg(hit) as avg_hit, avg(miss) as avg_miss, avg(mem_total) as avg_mem_total, avg(mem_used) as avg_mem_used, avg(mem_wasted) as avg_mem_wasted, avg(key_total) as avg_key_total, avg(key_used) as avg_key_used, avg(buf_total) as avg_buf_total, avg(buf_used) as avg_buf_used, avg(strings) as avg_strings, min(strings) as min_strings, max(strings) as max_strings, avg(scripts) as avg_scripts, min(scripts) as min_scripts, max(scripts) as max_scripts FROM ' . $wpdb->base_prefix . self::$statistics . ' WHERE (' . implode( ' AND ', $filter ) . ') ' . $where_extra;
+		$sql = 'SELECT count(*) as records, avg(delta) as avg_delta,sum(hit) as sum_hit,avg(hit) as avg_hit,avg(miss) as avg_miss, avg(ins) as avg_ins, avg(mem_total) as avg_mem_total, avg(mem_used) as avg_mem_used,  avg(slot_total) as avg_slot_total, avg(slot_used) as avg_slot_used, min(slot_used) as min_slot_used, max(slot_used) as max_slot_used,avg(frag_small) as avg_frag_small, avg(frag_big) as avg_frag_big, avg(frag_count) as avg_frag_count, min(frag_count) as min_frag_count, max(frag_count) as max_frag_count FROM ' . $wpdb->base_prefix . self::$statistics . ' WHERE (' . implode( ' AND ', $filter ) . ') ' . $where_extra;
 		// phpcs:ignore
 		$result = $wpdb->get_results( $sql, ARRAY_A );
 		if ( is_array( $result ) && 1 === count( $result ) ) {
@@ -377,7 +377,7 @@ class Schema {
 			$c = $c . ', ';
 		}
 		global $wpdb;
-		$sql  = 'SELECT *, ' . ( '' !== $group ? $group . ', ' : '' ) . $c . 'count(*) as records, sum(hit) as sum_hit, avg(hit) as avg_hit, avg(miss) as avg_miss, avg(mem_total) as avg_mem_total, avg(mem_used) as avg_mem_used, avg(mem_wasted) as avg_mem_wasted, avg(key_total) as avg_key_total, avg(key_used) as avg_key_used, avg(buf_total) as avg_buf_total, avg(buf_used) as avg_buf_used, avg(strings) as avg_strings, min(strings) as min_strings, max(strings) as max_strings, avg(scripts) as avg_scripts, min(scripts) as min_scripts, max(scripts) as max_scripts FROM ';
+		$sql  = 'SELECT *, ' . ( '' !== $group ? $group . ', ' : '' ) . $c . 'count(*) as records, avg(delta) as avg_delta,sum(hit) as sum_hit,avg(hit) as avg_hit,avg(miss) as avg_miss, avg(ins) as avg_ins, avg(mem_total) as avg_mem_total, avg(mem_used) as avg_mem_used,  avg(slot_total) as avg_slot_total, avg(slot_used) as avg_slot_used, min(slot_used) as min_slot_used, max(slot_used) as max_slot_used,avg(frag_small) as avg_frag_small, avg(frag_big) as avg_frag_big, avg(frag_count) as avg_frag_count, min(frag_count) as min_frag_count, max(frag_count) as max_frag_count FROM ';
 		$sql .= $wpdb->base_prefix . self::$statistics . ' WHERE (' . implode( ' AND ', $filter ) . ') ' . $where_extra . ' GROUP BY ' . $group . ' ' . $order . ( $limit > 0 ? 'LIMIT ' . $limit : '') .';';
 		// phpcs:ignore
 		$result = $wpdb->get_results( $sql, ARRAY_A );

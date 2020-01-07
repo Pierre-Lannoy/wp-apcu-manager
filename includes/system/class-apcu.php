@@ -106,20 +106,13 @@ class APCu {
 	 */
 	public static function name() {
 		$result = '';
-		if ( function_exists( 'opcache_get_configuration' ) ) {
-			$raw = opcache_get_configuration();
-			if ( array_key_exists( 'version', $raw ) ) {
-				if ( array_key_exists( 'opcache_product_name', $raw['version'] ) ) {
-					$result = $raw['version']['opcache_product_name'];
-				}
-				if ( array_key_exists( 'version', $raw['version'] ) ) {
-					$version = $raw['version']['version'];
-					if ( false !== strpos( $version, '-' ) ) {
-						$version = substr( $version, 0, strpos( $version, '-' ) );
-					}
-					$result .= ' ' . $version;
-				}
+		if ( function_exists( 'apcu_cache_info' ) ) {
+			$result = 'APCu';
+			$info   = apcu_cache_info( false );
+			if ( array_key_exists( 'memory_type', $info ) ) {
+				$result .= ' (' . $info['memory_type'] . ')';
 			}
+			$result .= ' ' . phpversion( 'apcu' );
 		}
 		return $result;
 	}
