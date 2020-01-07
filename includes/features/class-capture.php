@@ -62,6 +62,7 @@ class Capture {
 	 * @since 1.0.0
 	 */
 	private static function get_details() {
+		$ids     = apply_filters( 'perfopsone_apcu_info', [ 'w3tc' => 'W3 Total Cache' ] );
 		$schema  = new Schema();
 		$result  = [];
 		$details = [];
@@ -69,12 +70,12 @@ class Capture {
 			$infos = apcu_cache_info( false );
 			if ( array_key_exists( 'cache_list', $infos ) ) {
 				foreach ( $infos['cache_list'] as $item ) {
-					$name = '';
-					if ( false !== strpos( $item['info'], '_' ) ) {
-						$name = substr( $item['info'], 0, strpos( $item['info'], '_' ) );
-					}
-					if ( '' === $name ) {
-						$name = '-';
+					$name = '-';
+					foreach ( $ids as $k => $id ) {
+						if ( 0 === strpos( $item['info'], $k ) ) {
+							$name = $k;
+							break;
+						}
 					}
 					if ( array_key_exists( $name, $details ) ) {
 						$details[ $name ]['items'] = $details[ $name ]['items'] + 1;
@@ -85,14 +86,12 @@ class Capture {
 					}
 				}
 			}
-			if ( 20 > count( $details ) ) {
-				foreach ( $details as $key => $detail ) {
-					$d          = $schema->init_detail();
-					$d['id']    = $key;
-					$d['items'] = $detail['items'];
-					$d['size']  = $detail['size'];
-					$result[]   = $d;
-				}
+			foreach ( $details as $key => $detail ) {
+				$d          = $schema->init_detail();
+				$d['id']    = $key;
+				$d['items'] = $detail['items'];
+				$d['size']  = $detail['size'];
+				$result[]   = $d;
 			}
 		}
 		return $result;

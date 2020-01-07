@@ -51,6 +51,29 @@ class APCu {
 	}
 
 	/**
+	 * Sets APCu identification hook.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function init() {
+		add_filter( 'perfopsone_apcu_info', [ self::class, 'perfopsone_apcu_info' ] );
+	}
+
+	/**
+	 * Adds APCu identification.
+	 *
+	 * @param array $apcu The already set identifiers.
+	 * @return array The extended identifiers if needed.
+	 * @since 1.0.0
+	 */
+	public static function perfopsone_apcu_info( $apcu ) {
+		$apcu[ APCM_SLUG ] = [
+			'name' => APCM_PRODUCT_NAME,
+		];
+		return $apcu;
+	}
+
+	/**
 	 * Get the options infos for Site Health "info" tab.
 	 *
 	 * @since 1.0.0
