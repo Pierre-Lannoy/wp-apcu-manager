@@ -35,14 +35,6 @@ class APCu {
 	public static $status = [ 'disabled', 'enabled', 'recycle_in_progress' ];
 
 	/**
-	 * The list of file not compilable/recompilable.
-	 *
-	 * @since  1.0.0
-	 * @var    array    $do_not_compile    Maintains the file list.
-	 */
-	public static $do_not_compile = [ 'includes/plugin.php', 'includes/options.php', 'includes/misc.php', 'includes/menu.php' ];
-
-	/**
 	 * Initializes the class and set its properties.
 	 *
 	 * @since 1.0.0

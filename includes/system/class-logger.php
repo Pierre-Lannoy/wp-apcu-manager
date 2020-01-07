@@ -46,8 +46,6 @@ class Logger {
 	public static function init() {
 		if ( defined( 'DECALOG_VERSION' ) && class_exists( '\Decalog\Logger' ) ) {
 			self::$logger = new \Decalog\Logger( 'plugin', APCM_PRODUCT_NAME, APCM_VERSION );
-		} else {
-			error_log( 'ALERT');
 		}
 	}
 
