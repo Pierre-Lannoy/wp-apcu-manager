@@ -12,7 +12,7 @@ define( 'APCM_PRODUCT_URL', 'https://github.com/Pierre-Lannoy/wp-apcu-manager' )
 define( 'APCM_PRODUCT_SHORTNAME', 'APCu' );
 define( 'APCM_PRODUCT_ABBREVIATION', 'apcm' );
 define( 'APCM_SLUG', 'apcu-manager' );
-define( 'APCM_VERSION', '1.0.0-dev0' );
+define( 'APCM_VERSION', '1.0.0-rc1' );
 define( 'APCM_CODENAME', '"-"' );
 
 define( 'APCM_MINIMUM_WP_VERSION', '4.9' );
