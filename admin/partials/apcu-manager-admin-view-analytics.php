@@ -36,7 +36,7 @@ wp_enqueue_style( 'apcm-chartist-tooltip' );
         <div class="traffic-row">
             <div class="apcm-box apcm-box-60-40-line">
 				<?php echo $analytics->get_top_size_box() ?>
-				<?php echo $analytics->get_top_count_box() ?>
+				<?php echo $analytics->get_count_box() ?>
             </div>
         </div>
         <div class="apcm-row">

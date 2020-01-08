@@ -484,6 +484,8 @@
     flex-wrap: nowrap;
     justify-content: space-evenly;
     align-items: center;
+    margin-top: 36px;
+    margin-bottom: 60px;
 }
 
 .apcm-pie-graph {
@@ -642,6 +644,9 @@ button.btn {
     }
     .last-row {
         margin-top: -26px;
+    }
+    .apcm-pie-box {
+        margin-top: 10px;
     }
 }
 

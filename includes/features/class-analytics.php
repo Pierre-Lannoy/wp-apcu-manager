@@ -145,8 +145,114 @@ class Analytics {
 				return $this->query_kpi( $queried );
 			case 'top-size':
 				return $this->query_top( 'size', (int) $queried );
+			case 'count':
+				return $this->query_pie( 'count', (int) $queried );
 		}
 		return [];
+	}
+
+	/**
+	 * Query statistics table.
+	 *
+	 * @param   string  $type    The type of pie.
+	 * @param   integer $limit  The number to display.
+	 * @return array  The result of the query, ready to encode.
+	 * @since    1.0.0
+	 */
+	private function query_pie( $type, $limit ) {
+		$uuid  = UUID::generate_unique_id( 5 );
+		$data  = Schema::get_grouped_detail( 'id', [], $this->filter, ! $this->is_today, '', [], false, 'ORDER BY avg_items DESC' );
+		$total = 0;
+		$other = 0;
+		$found = false;
+		foreach ( $data as $key => $row ) {
+			if ( '-' === $row['id'] ) {
+				$other = $row['avg_items'];
+				$total = $row['avg_items'];
+				$found = $key;
+				break;
+			}
+		}
+		if ( false !== $found ) {
+			unset( $data[ $found ] );
+			$data = array_values( $data );
+		}
+		foreach ( $data as $key => $row ) {
+			$total = $total + $row['avg_items'];
+			if ( $limit <= $key ) {
+				$other = $other + $row['avg_items'];
+			}
+		}
+		if ( 0 < $other ) {
+			--$limit;
+		}
+		$cpt     = 0;
+		$plugins = apply_filters( 'perfopsone_plugin_info', [ 'w3tc' => [ 'name' => 'W3 Total Cache' ] ] );
+		$labels  = [];
+		$series  = [];
+		while ( $cpt < $limit && array_key_exists( $cpt, $data ) ) {
+			if ( 0 < $total ) {
+				$percent = round( 100 * $data[ $cpt ]['avg_items'] / $total, 1 );
+			} else {
+				$percent = 100;
+			}
+			if ( 0.1 > $percent ) {
+				$percent = 0.1;
+			}
+			$meta = $data[ $cpt ]['id'];
+			if ( array_key_exists( $meta, $plugins ) ) {
+				if ( array_key_exists( 'name', $plugins[ $meta ] ) ) {
+					$meta = $plugins[ $meta ]['name'];
+				}
+			}
+			$labels[] = $meta;
+			$series[] = [
+				'meta'  => $meta,
+				'value' => (float) $percent,
+			];
+			++$cpt;
+		}
+		if ( 0 < $other ) {
+			if ( 0 < $total ) {
+				$percent = round( 100 * $other / $total, 1 );
+			} else {
+				$percent = 100;
+			}
+			if ( 0.1 > $percent ) {
+				$percent = 0.1;
+			}
+			$labels[] = esc_html__( 'Other', 'apcu-manager' );
+			$series[] = [
+				'meta'  => esc_html__( 'Other', 'apcu-manager' ),
+				'value' => (float) $percent,
+			];
+		}
+		$result  = '<div class="apcm-pie-box">';
+		$result .= '<div class="apcm-pie-graph">';
+		$result .= '<div class="apcm-pie-graph-handler" id="apcm-pie-id"></div>';
+		$result .= '</div>';
+		$result .= '<div class="apcm-pie-legend">';
+		foreach ( $labels as $key => $label ) {
+			$icon    = '<img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'square', $this->colors[ $key ], $this->colors[ $key ] ) . '" />';
+			$result .= '<div class="apcm-pie-legend-item">' . $icon . '&nbsp;&nbsp;' . $label . '</div>';
+		}
+		$result .= '';
+		$result .= '</div>';
+		$result .= '</div>';
+		$result .= '<script>';
+		$result .= 'jQuery(function ($) {';
+		$result .= ' var data' . $uuid . ' = ' . wp_json_encode(
+				[
+					'labels' => $labels,
+					'series' => $series,
+				]
+			) . ';';
+		$result .= ' var tooltip' . $uuid . ' = Chartist.plugins.tooltip({percentage: true, appendToBody: true});';
+		$result .= ' var option' . $uuid . ' = {width: 180, height: 180, showLabel: false, donut: true, donutWidth: "36%", startAngle: 270, plugins: [tooltip' . $uuid . ']};';
+		$result .= ' new Chartist.Pie("#apcm-pie-id", data' . $uuid . ', option' . $uuid . ');';
+		$result .= '});';
+		$result .= '</script>';
+		return [ 'apcm-' . $type => $result ];
 	}
 
 	/**
@@ -182,7 +288,7 @@ class Analytics {
 		}
 		$result  = '';
 		$cpt     = 0;
-		$plugins = apply_filters( 'perfopsone_plugin_info', [] );
+		$plugins = apply_filters( 'perfopsone_plugin_info', [ 'w3tc' => [ 'name' => 'W3 Total Cache' ] ] );
 		while ( $cpt < $limit && array_key_exists( $cpt, $data ) ) {
 			if ( 0 < $total ) {
 				$percent = round( 100 * $data[ $cpt ]['avg_size'] / $total, 1 );
@@ -1089,13 +1195,13 @@ class Analytics {
 	 */
 	public function get_top_size_box() {
 		$result  = '<div class="apcm-60-module">';
-		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Sources - Top Memory', 'apcu-manager' ) . '</span></div>';
+		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Memory Usage', 'apcu-manager' ) . '</span></div>';
 		$result .= '<div class="apcm-module-content" id="apcm-top-size">' . $this->get_graph_placeholder( 200 ) . '</div>';
 		$result .= '</div>';
 		$result .= $this->get_refresh_script(
 			[
 				'query'   => 'top-size',
-				'queried' => 4,
+				'queried' => 5,
 			]
 		);
 		return $result;
@@ -1107,14 +1213,14 @@ class Analytics {
 	 * @return string  The box ready to print.
 	 * @since    1.0.0
 	 */
-	public function get_top_count_box() {
+	public function get_count_box() {
 		$result  = '<div class="apcm-40-module">';
-		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Sources - Top Objects', 'apcu-manager' ) . '</span></div>';
-		$result .= '<div class="apcm-module-content" id="apcm-top-count">' . $this->get_graph_placeholder( 200 ) . '</div>';
+		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Objects Count', 'apcu-manager' ) . '</span></div>';
+		$result .= '<div class="apcm-module-content" id="apcm-count">' . $this->get_graph_placeholder( 200 ) . '</div>';
 		$result .= '</div>';
 		$result .= $this->get_refresh_script(
 			[
-				'query'   => 'top-count',
+				'query'   => 'count',
 				'queried' => 5,
 			]
 		);
