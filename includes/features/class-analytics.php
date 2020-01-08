@@ -180,8 +180,9 @@ class Analytics {
 				$other = $other + $row['avg_size'];
 			}
 		}
-		$result = '';
-		$cpt    = 0;
+		$result  = '';
+		$cpt     = 0;
+		$plugins = apply_filters( 'perfopsone_plugin_info', [] );
 		while ( $cpt < $limit && array_key_exists( $cpt, $data ) ) {
 			if ( 0 < $total ) {
 				$percent = round( 100 * $data[ $cpt ]['avg_size'] / $total, 1 );
@@ -191,9 +192,19 @@ class Analytics {
 			if ( 0.5 > $percent ) {
 				$percent = 0.5;
 			}
+			$icon = Feather\Icons::get_base64( 'package', 'none', '#73879C' );
+			$name = $data[ $cpt ]['id'];
+			if ( array_key_exists( $name, $plugins ) ) {
+				if ( array_key_exists( 'icon', $plugins[ $name ] ) ) {
+					$icon = $plugins[ $name ]['icon'];
+				}
+				if ( array_key_exists( 'name', $plugins[ $name ] ) ) {
+					$name = $plugins[ $name ]['name'];
+				}
+			}
 			$result .= '<div class="apcm-top-line">';
 			$result .= '<div class="apcm-top-line-title">';
-			$result .= '<img style="width:16px;vertical-align:bottom;" src="' . '" />&nbsp;&nbsp;<span class="apcm-top-line-title-text">' . $data[ $cpt ][ 'id' ] . '</span>';
+			$result .= '<img style="width:16px;vertical-align:bottom;" src="' . $icon . '" />&nbsp;&nbsp;<span class="apcm-top-line-title-text">' . $name . '</span>';
 			$result .= '</div>';
 			$result .= '<div class="apcm-top-line-content">';
 			$result .= '<div class="apcm-bar-graph"><div class="apcm-bar-graph-value" style="width:' . $percent . '%"></div></div>';

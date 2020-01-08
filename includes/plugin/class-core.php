@@ -156,7 +156,7 @@ class Core {
 	 * Adds full plugin identification.
 	 *
 	 * @param array $plugin The already set identification information.
-	 * @return array The extended identification information if needed.
+	 * @return array The extended identification information.
 	 * @since 1.0.0
 	 */
 	public static function perfopsone_plugin_info( $plugin ) {
