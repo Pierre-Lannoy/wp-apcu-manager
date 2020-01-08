@@ -188,14 +188,14 @@ class Schema {
 		$sql            .= " `status` enum('" . implode( "','", APCu::$status ) . "') NOT NULL DEFAULT 'disabled',";
 		$sql            .= " `mem_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";
 		$sql            .= " `mem_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= " `slot_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // KEYS SATURATION (4).
-		$sql            .= " `slot_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";           // ITEMS (3) / KEYS SATURATION (4).
-		$sql            .= " `frag_small` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // MEMORY FRAGMENTATION (5).
-		$sql            .= " `frag_big` int(11) UNSIGNED NOT NULL DEFAULT '0',";            // MEMORY FRAGMENTATION (5).
-		$sql            .= " `frag_count` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // MEMORY FRAGMENTATION (5).
-		$sql            .= " `hit` int(11) UNSIGNED NOT NULL DEFAULT '0',";                 // HIT RATIO (1).
-		$sql            .= " `miss` int(11) UNSIGNED NOT NULL DEFAULT '0',";                // HIT RATIO (1).
-		$sql            .= " `ins` int(11) UNSIGNED NOT NULL DEFAULT '0',";                 // HIT RATIO (1).
+		$sql            .= " `slot_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `slot_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `frag_small` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `frag_big` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `frag_count` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `hit` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `miss` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `ins` int(11) UNSIGNED NOT NULL DEFAULT '0',";
 		$sql            .= " PRIMARY KEY (`timestamp`)";
 		$sql            .= ") $charset_collate;";
 		// phpcs:ignore
