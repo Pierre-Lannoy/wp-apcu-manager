@@ -1,34 +1,32 @@
 === APCu Manager ===
 Contributors: PierreLannoy
-Tags: analytics, cache, monitor, OPcache, Zend
+Tags: analytics, APCu, cache, monitor, w3tc
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 5.3
-Stable tag: 1.1.0
+Stable tag: 1.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-OPcache statistics and management right in the WordPress admin dashboard.
+APCu statistics and management right in the WordPress admin dashboard.
 
 == Description ==
 
-**OPcache statistics and management right in the WordPress admin dashboard.**
+**APCu statistics and management right in the WordPress admin dashboard.**
 
-**APCu Manager** is a full featured OPcache management and analytics reporting tool. It allows you to monitor and optimize OPcache operations on your WordPress site or network.
+**APCu Manager** is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network.
 
-**APCu Manager** works on dedicated or shared servers. In shared environments, its use has no influence on other hosted sites than yours. Its main management features are:
+**APCu Manager** works on dedicated or shared servers. It is compatible with all plugins using APCu, like OPcache Manager, Traffic or W3 Total Cache. Its main management features are:
 
-* individual script invalidation, forced invalidation and recompilation;
-* manual site invalidation - a sort of 'smart' OPcache reset only for your site;
-* manual site warm-up - to pre-compile all of you site files;
-* optional scheduled site invalidation and/or warm-up.
+* individual object deletion;
+* full cache clearing.
 
-**APCu Manager** is also a full featured analytics reporting tool that analyzes all OPcache operations on your site. It can report:
+**APCu Manager** is also a full featured analytics reporting tool that analyzes all APCu operations on your site. It can report:
 
-* KPIs: hit ratio, free memory, cached files, keys saturation, buffer saturation and availability;
+* KPIs: hit ratio, free memory, cached objects, keys saturation, memory fragmentation and availability;
 * metrics variations;
 * metrics distributions;
-* OPcache related events.
+* plugins consumption.
 
 **APCu Manager** supports multisite report delegation (see FAQ).
 
@@ -72,9 +70,9 @@ You need at least **WordPress 5.2** and **PHP 7.2**.
 
 = Can this plugin work on multisite? =
 
-Yes. It is designed to work on multisite too. Network Admins can configure the plugin, use management tools and have access to all analytics reports. Sites Admins have access to the analytics reports only.
+Yes. It is designed to work on multisite too. Network Admins can configure the plugin, use management tools and have access to analytics reports. Sites Admins have only access to analytics reports.
 
-= What are the requirements for scheduled invalidation/warm-up and statistics to work? =
+= What are the requirements for statistics to work? =
 
 You need to have a fully operational WordPress cron. If you've set an external cron (crontab, online cron, etc.), its frequency must be less than 5 minutes - 1 or 2 minutes is a recommended value.
 
@@ -95,5 +93,4 @@ Please, see [full changelog](https://github.com/Pierre-Lannoy/wp-apcu-manager/bl
 == Screenshots ==
 
 1. Daily Statistics
-2. Historical Statistics
-3. Management Tools
+2. Management Tools

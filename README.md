@@ -4,23 +4,21 @@
 [![wordpress](https://badgen.net/badge/wordpress/5.2+/green)](https://wordpress.org/plugins/apcu-manager/)
 [![license](https://badgen.net/github/license/Pierre-Lannoy/wp-apcu-manager/)](/license.txt)
 
-__APCu Manager__ is a full featured OPcache management and analytics reporting tool. It allows you to monitor and optimize OPcache operations on your WordPress site or network.
+__APCu Manager__ is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network.
 
 See [WordPress directory page](https://wordpress.org/plugins/apcu-manager/). 
 
-__APCu Manager__ works on dedicated or shared servers. In shared environments, its use has no influence on other hosted sites than yours. Its main management features are:
+__APCu Manager__ works on dedicated or shared servers. It is compatible with all plugins using APCu, like OPcache Manager, Traffic or W3 Total Cache. Its main management features are:
 
-* individual script invalidation, forced invalidation and recompilation;
-* manual site invalidation - a sort of 'smart' OPcache reset only for your site;
-* manual site warm-up - to pre-compile all of you site files;
-* optional scheduled site invalidation and/or warm-up.
+* individual object deletion;
+* full cache clearing.
 
-__APCu Manager__ is also a full featured analytics reporting tool that analyzes all OPcache operations on your site. It can report:
+__APCu Manager__ is also a full featured analytics reporting tool that analyzes all APCu operations on your site. It can report:
 
-* KPIs: hit ratio, free memory, cached files, keys saturation, buffer saturation and availability;
+* KPIs: hit ratio, free memory, cached objects, keys saturation, memory fragmentation and availability;
 * metrics variations;
 * metrics distributions;
-* OPcache related events.
+* plugins consumption.
 
 __APCu Manager__ supports multisite report delegation.
 

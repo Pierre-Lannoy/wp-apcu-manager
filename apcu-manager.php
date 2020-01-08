@@ -10,7 +10,7 @@
  * Plugin Name:       APCu Manager
  * Plugin URI:        https://github.com/Pierre-Lannoy/wp-apcu-manager
  * Description:       APCu statistics and management right in the WordPress admin dashboard.
- * Version:           1.1.0
+ * Version:           1.0.0
  * Author:            Pierre Lannoy
  * Author URI:        https://pierre.lannoy.fr
  * License:           GPLv3
