@@ -20,4 +20,4 @@ define( 'APCM_MINIMUM_PHP_VERSION', '7.2' );
 
 define( 'APCM_CDN_AVAILABLE', true );
 
-define( 'APCM_CRON_STATS_NAME', 'apcm_opcache_stats' );
+define( 'APCM_CRON_STATS_NAME', 'apcm_apcu_stats' );
