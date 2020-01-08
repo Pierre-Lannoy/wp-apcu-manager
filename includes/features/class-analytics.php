@@ -349,7 +349,7 @@ class Analytics {
 		$data       = [];
 		$series     = [];
 		$labels     = [];
-		$items      = [ 'status', 'mem_total', 'mem_used', 'mem_wasted', 'key_total', 'key_used', 'buf_total', 'buf_used', 'hit', 'miss', 'strings', 'scripts' ];
+		$items      = [ 'status', 'mem_total', 'mem_used', 'slot_total', 'slot_used', 'hit', 'miss', 'ins', 'frag_small', 'frag_big' ];
 		$maxhit     = 0;
 		$maxstrings = 0;
 		$maxscripts = 0;
@@ -432,13 +432,22 @@ class Analytics {
 					'x' => $ts,
 					'y' => $val,
 				];
+				// Fragmentation.
+				$val = 'null';
+				if ( 0 !== (int) $datum['frag_small'] + (int) $datum['frag_big'] ) {
+					$val = round( 100 * $datum['frag_small'] / ( $datum['frag_small'] + $datum['frag_big'] ), 3 );
+				}
+				$series['fragmentation'][] = [
+					'x' => $ts,
+					'y' => $val,
+				];
 				// Availablility.
 				$series['availability'][] = [
 					'x' => $ts,
 					'y' => ( 'disabled' === $datum['status'] ? 0 : 100 ),
 				];
 				// Time series.
-				foreach ( [ 'hit', 'miss', 'strings', 'scripts' ] as $item ) {
+				foreach ( [ 'hit', 'miss', 'ins', 'slot_used' ] as $item ) {
 					$val               = (int) $datum[ $item ];
 					$series[ $item ][] = [
 						'x' => $ts,
@@ -447,37 +456,27 @@ class Analytics {
 					switch ( $item ) {
 						case 'hit':
 						case 'miss':
+						case 'ins':
 							if ( $maxhit < $val ) {
 								$maxhit = $val;
 							}
 							break;
-						case 'strings':
+						case 'slot_used':
 							if ( $maxstrings < $val ) {
 								$maxstrings = $val;
-							}
-							break;
-						case 'scripts':
-							if ( $maxscripts < $val ) {
-								$maxscripts = $val;
 							}
 							break;
 					}
 				}
 				// Time series (free vs.used).
-				foreach ( [ 'buf', 'key', 'mem' ] as $item ) {
-					if ( 'key' === $item ) {
-						$factor = 1024;
+				foreach ( [ 'slot', 'mem' ] as $item ) {
+					if ( 'slot' === $item ) {
+						$factor = 1000;
 					} else {
 						$factor = 1024 * 1024;
 					}
-					if ( 'mem' === $item ) {
-						$series['memory'][0][] = round( $datum['mem_used'] / $factor, 2 );
-						$series['memory'][1][] = round( ( $datum['mem_total'] - $datum['mem_used'] - $datum['mem_wasted'] ) / $factor, 2 );
-						$series['memory'][2][] = round( $datum['mem_wasted'] / $factor, 2 );
-					} else {
-						$series[ $item ][0][] = round( $datum[ $item . '_used' ] / $factor, 2 );
-						$series[ $item ][1][] = round( ( $datum[ $item . '_total' ] - $datum[ $item . '_used' ] ) / $factor, 2 );
-					}
+					$series[ $item ][0][] = round( $datum[ $item . '_used' ] / $factor, 2 );
+					$series[ $item ][1][] = round( ( $datum[ $item . '_total' ] - $datum[ $item . '_used' ] ) / $factor, 2 );
 				}
 				// Labels.
 				if ( 1 < $this->duration ) {
@@ -532,6 +531,113 @@ class Analytics {
 			$json_ratio        = str_replace( ')","y"', '),"y"', $json_ratio );
 			$json_ratio        = str_replace( '"null"', 'null', $json_ratio );
 
+			// Hit, miss & inserts distribution.
+			array_unshift( $series['hit'], $before );
+			$series['hit'][] = $after;
+			array_unshift( $series['miss'], $before );
+			$series['miss'][] = $after;
+			array_unshift( $series['ins'], $before );
+			$series['ins'][] = $after;
+			$json_hit        = wp_json_encode(
+				[
+					'series' => [
+						[
+							'name' => esc_html__( 'Hit Count', 'apcu-manager' ),
+							'data' => $series['hit'],
+						],
+						[
+							'name' => esc_html__( 'Miss Count', 'apcu-manager' ),
+							'data' => $series['miss'],
+						],
+						[
+							'name' => esc_html__( 'Insert Count', 'apcu-manager' ),
+							'data' => $series['ins'],
+						],
+					],
+				]
+			);
+			$json_hit        = str_replace( '"x":"new', '"x":new', $json_hit );
+			$json_hit        = str_replace( ')","y"', '),"y"', $json_hit );
+			$json_hit        = str_replace( '"null"', 'null', $json_hit );
+
+			// Memory distribution.
+			$json_memory = wp_json_encode(
+				[
+					'labels' => $labels,
+					'series' => [
+						[
+							'name' => esc_html__( 'Used Memory', 'apcu-manager' ),
+							'data' => $series['mem'][0],
+						],
+						[
+							'name' => esc_html__( 'Free Memory', 'apcu-manager' ),
+							'data' => $series['mem'][1],
+						],
+					],
+				]
+			);
+			$json_memory = str_replace( '"null"', 'null', $json_memory );
+			$json_memory = str_replace( '"labels":["moment', '"labels":[moment', $json_memory );
+			$json_memory = str_replace( '","moment', ',moment', $json_memory );
+			$json_memory = str_replace( '"],"series":', '],"series":', $json_memory );
+			$json_memory = str_replace( '\\"', '"', $json_memory );
+
+			// Objects variation.
+			array_unshift( $series['slot_used'], $before );
+			$series['slot_used'][] = $after;
+			$json_scripts          = wp_json_encode(
+				[
+					'series' => [
+						[
+							'name' => esc_html__( 'Objects Count', 'apcu-manager' ),
+							'data' => $series['slot_used'],
+						],
+					],
+				]
+			);
+			$json_scripts          = str_replace( '"x":"new', '"x":new', $json_scripts );
+			$json_scripts          = str_replace( ')","y"', '),"y"', $json_scripts );
+			$json_scripts          = str_replace( '"null"', 'null', $json_scripts );
+
+			// Key.
+			$json_key = wp_json_encode(
+				[
+					'labels' => $labels,
+					'series' => [
+						[
+							'name' => esc_html__( 'Used Key Slots', 'apcu-manager' ),
+							'data' => $series['slot'][0],
+						],
+						[
+							'name' => esc_html__( 'Free Key Slots', 'apcu-manager' ),
+							'data' => $series['slot'][1],
+						],
+					],
+				]
+			);
+			$json_key = str_replace( '"null"', 'null', $json_key );
+			$json_key = str_replace( '"labels":["moment', '"labels":[moment', $json_key );
+			$json_key = str_replace( '","moment', ',moment', $json_key );
+			$json_key = str_replace( '"],"series":', '],"series":', $json_key );
+			$json_key = str_replace( '\\"', '"', $json_key );
+
+			// Fragmentation variation.
+			array_unshift( $series['fragmentation'], $before );
+			$series['fragmentation'][] = $after;
+			$json_strings              = wp_json_encode(
+				[
+					'series' => [
+						[
+							'name' => esc_html__( 'Fragmentation Variation', 'apcu-manager' ),
+							'data' => $series['fragmentation'],
+						],
+					],
+				]
+			);
+			$json_strings              = str_replace( '"x":"new', '"x":new', $json_strings );
+			$json_strings              = str_replace( ')","y"', '),"y"', $json_strings );
+			$json_strings              = str_replace( '"null"', 'null', $json_strings );
+
 			// Availability.
 			array_unshift( $series['availability'], $before );
 			$series['availability'][] = $after;
@@ -549,132 +655,13 @@ class Analytics {
 			$json_availability        = str_replace( ')","y"', '),"y"', $json_availability );
 			$json_availability        = str_replace( '"null"', 'null', $json_availability );
 
-			// Hit & miss distribution.
-			array_unshift( $series['hit'], $before );
-			$series['hit'][] = $after;
-			array_unshift( $series['miss'], $before );
-			$series['miss'][] = $after;
-			$json_hit         = wp_json_encode(
-				[
-					'series' => [
-						[
-							'name' => esc_html__( 'Hit Count', 'apcu-manager' ),
-							'data' => $series['hit'],
-						],
-						[
-							'name' => esc_html__( 'Miss Count', 'apcu-manager' ),
-							'data' => $series['miss'],
-						],
-					],
-				]
-			);
-			$json_hit         = str_replace( '"x":"new', '"x":new', $json_hit );
-			$json_hit         = str_replace( ')","y"', '),"y"', $json_hit );
-			$json_hit         = str_replace( '"null"', 'null', $json_hit );
 
-			// Scripts variation.
-			array_unshift( $series['scripts'], $before );
-			$series['scripts'][] = $after;
-			$json_scripts        = wp_json_encode(
-				[
-					'series' => [
-						[
-							'name' => esc_html__( 'Files Count', 'apcu-manager' ),
-							'data' => $series['scripts'],
-						],
-					],
-				]
-			);
-			$json_scripts        = str_replace( '"x":"new', '"x":new', $json_scripts );
-			$json_scripts        = str_replace( ')","y"', '),"y"', $json_scripts );
-			$json_scripts        = str_replace( '"null"', 'null', $json_scripts );
 
-			// Strings variation.
-			array_unshift( $series['strings'], $before );
-			$series['strings'][] = $after;
-			$json_strings        = wp_json_encode(
-				[
-					'series' => [
-						[
-							'name' => esc_html__( 'Strings Count', 'apcu-manager' ),
-							'data' => $series['strings'],
-						],
-					],
-				]
-			);
-			$json_strings        = str_replace( '"x":"new', '"x":new', $json_strings );
-			$json_strings        = str_replace( ')","y"', '),"y"', $json_strings );
-			$json_strings        = str_replace( '"null"', 'null', $json_strings );
 
-			// Memory.
-			$json_memory = wp_json_encode(
-				[
-					'labels' => $labels,
-					'series' => [
-						[
-							'name' => esc_html__( 'Used Memory', 'apcu-manager' ),
-							'data' => $series['memory'][0],
-						],
-						[
-							'name' => esc_html__( 'Free Memory', 'apcu-manager' ),
-							'data' => $series['memory'][1],
-						],
-						[
-							'name' => esc_html__( 'Wasted Memory', 'apcu-manager' ),
-							'data' => $series['memory'][2],
-						],
-					],
-				]
-			);
-			$json_memory = str_replace( '"null"', 'null', $json_memory );
-			$json_memory = str_replace( '"labels":["moment', '"labels":[moment', $json_memory );
-			$json_memory = str_replace( '","moment', ',moment', $json_memory );
-			$json_memory = str_replace( '"],"series":', '],"series":', $json_memory );
-			$json_memory = str_replace( '\\"', '"', $json_memory );
 
-			// Key.
-			$json_key = wp_json_encode(
-				[
-					'labels' => $labels,
-					'series' => [
-						[
-							'name' => esc_html__( 'Used Key Slots', 'apcu-manager' ),
-							'data' => $series['key'][0],
-						],
-						[
-							'name' => esc_html__( 'Free Key Slots', 'apcu-manager' ),
-							'data' => $series['key'][1],
-						],
-					],
-				]
-			);
-			$json_key = str_replace( '"null"', 'null', $json_key );
-			$json_key = str_replace( '"labels":["moment', '"labels":[moment', $json_key );
-			$json_key = str_replace( '","moment', ',moment', $json_key );
-			$json_key = str_replace( '"],"series":', '],"series":', $json_key );
-			$json_key = str_replace( '\\"', '"', $json_key );
 
-			// Buf.
-			$json_buf = wp_json_encode(
-				[
-					'labels' => $labels,
-					'series' => [
-						[
-							'name' => esc_html__( 'Used Buffer', 'apcu-manager' ),
-							'data' => $series['buf'][0],
-						],
-						[
-							'name' => esc_html__( 'Free Buffer', 'apcu-manager' ),
-							'data' => $series['buf'][1],
-						],
-					],
-				]
-			);
-			$json_buf = str_replace( '"null"', 'null', $json_buf );
-			$json_buf = str_replace( '"labels":["moment', '"labels":[moment', $json_buf );
-			$json_buf = str_replace( '","moment', ',moment', $json_buf );
-			$json_buf = str_replace( '"],"series":', '],"series":', $json_buf );
-			$json_buf = str_replace( '\\"', '"', $json_buf );
+
+
 
 			// Rendering.
 			if ( 4 < $this->duration ) {
@@ -780,13 +767,7 @@ class Analytics {
 			} else {
 				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {return moment(value).format("HH:00");}},';
 			}
-			if ( $maxstrings < 1000 ) {
-				$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString();}},';
-			} elseif ( $maxstrings < 1000000 ) {
-				$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {value = value / 1000; return value.toString() + " K";}},';
-			} else {
-				$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {value = value / 1000000; return value.toString() + " M";}},';
-			}
+			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
 			$result .= ' new Chartist.Line("#apcm-chart-string", string_data' . $uuid . ', string_option' . $uuid . ');';
 			$result .= '});';
@@ -849,35 +830,6 @@ class Analytics {
 			$result .= ' new Chartist.Bar("#apcm-chart-memory", memory_data' . $uuid . ', memory_option' . $uuid . ');';
 			$result .= '});';
 			$result .= '</script>';
-			$result .= '<div class="apcm-multichart-item" id="apcm-chart-buffer">';
-			$result .= '<style>';
-			if ( 1 < $this->duration ) {
-				$result .= '.apcm-multichart-item .ct-bar {stroke-width: 20px !important;stroke-opacity: 0.8 !important;}';
-			} else {
-				$result .= '.apcm-multichart-item .ct-bar {stroke-width: 3px !important;stroke-opacity: 0.8 !important;}';
-			}
-			$result .= '</style>';
-			$result .= '</div>';
-			$result .= '<script>';
-			$result .= 'jQuery(function ($) {';
-			$result .= ' var buffer_data' . $uuid . ' = ' . $json_buf . ';';
-			$result .= ' var buffer_tooltip' . $uuid . ' = Chartist.plugins.tooltip({percentage: false, appendToBody: true});';
-			$result .= ' var buffer_option' . $uuid . ' = {';
-			$result .= '  height: 300,';
-			$result .= '  stackBars: true,';
-			$result .= '  stackMode: "accumulate",';
-			$result .= '  seriesBarDistance: 1,';
-			$result .= '  plugins: [buffer_tooltip' . $uuid . '],';
-			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {showGrid: false, labelOffset: {x: 18,y: 0}},';
-			} else {
-				$result .= '  axisX: {showGrid: true, labelOffset: {x: 18,y: 0}},';
-			}
-			$result .= '  axisY: {showGrid: true, labelInterpolationFnc: function (value) {return value.toString() + " ' . esc_html_x( 'MB', 'Abbreviation - Stands for "megabytes".', 'apcu-manager' ) . '";}},';
-			$result .= ' };';
-			$result .= ' new Chartist.Bar("#apcm-chart-buffer", buffer_data' . $uuid . ', buffer_option' . $uuid . ');';
-			$result .= '});';
-			$result .= '</script>';
 			$result .= '<div class="apcm-multichart-item" id="apcm-chart-key">';
 			$result .= '<style>';
 			if ( 1 < $this->duration ) {
@@ -927,9 +879,6 @@ class Analytics {
 			$result .= $this->get_graph_placeholder_nodata( 274 );
 			$result .= '</div>';
 			$result .= '<div class="apcm-multichart-item" id="apcm-chart-memory">';
-			$result .= $this->get_graph_placeholder_nodata( 274 );
-			$result .= '</div>';
-			$result .= '<div class="apcm-multichart-item" id="apcm-chart-buffer">';
 			$result .= $this->get_graph_placeholder_nodata( 274 );
 			$result .= '</div>';
 			$result .= '<div class="apcm-multichart-item" id="apcm-chart-key">';
@@ -1164,20 +1113,18 @@ class Analytics {
 	 */
 	public function get_main_chart() {
 		$help_ratio  = esc_html__( 'Hit ratio variation.', 'apcu-manager' );
-		$help_hit    = esc_html__( 'Hit and miss distribution.', 'apcu-manager' );
+		$help_hit    = esc_html__( 'Hit, miss and insert distribution.', 'apcu-manager' );
 		$help_memory = esc_html__( 'Memory distribution.', 'apcu-manager' );
-		$help_file   = esc_html__( 'Files variation.', 'apcu-manager' );
+		$help_file   = esc_html__( 'Objects variation.', 'apcu-manager' );
 		$help_key    = esc_html__( 'Keys distribution.', 'apcu-manager' );
-		$help_string = esc_html__( 'Strings variation.', 'apcu-manager' );
-		$help_buffer = esc_html__( 'Buffer distribution.', 'apcu-manager' );
+		$help_string = esc_html__( 'Fragmentation variation.', 'apcu-manager' );
 		$help_uptime = esc_html__( 'Availability variation.', 'apcu-manager' );
 		$detail      = '<span class="apcm-chart-button not-ready left" id="apcm-chart-button-ratio" data-position="left" data-tooltip="' . $help_ratio . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'award', 'none', '#73879C' ) . '" /></span>';
 		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-hit" data-position="left" data-tooltip="' . $help_hit . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'hash', 'none', '#73879C' ) . '" /></span>';
 		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-memory" data-position="left" data-tooltip="' . $help_memory . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'cpu', 'none', '#73879C' ) . '" /></span>';
-		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-file" data-position="left" data-tooltip="' . $help_file . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'file-text', 'none', '#73879C' ) . '" /></span>';
+		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-file" data-position="left" data-tooltip="' . $help_file . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'box', 'none', '#73879C' ) . '" /></span>';
 		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-key" data-position="left" data-tooltip="' . $help_key . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'key', 'none', '#73879C' ) . '" /></span>';
-		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-string" data-position="left" data-tooltip="' . $help_string . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'tag', 'none', '#73879C' ) . '" /></span>';
-		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-buffer" data-position="left" data-tooltip="' . $help_buffer . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'database', 'none', '#73879C' ) . '" /></span>';
+		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-string" data-position="left" data-tooltip="' . $help_string . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'layers', 'none', '#73879C' ) . '" /></span>';
 		$detail     .= '&nbsp;&nbsp;&nbsp;<span class="apcm-chart-button not-ready left" id="apcm-chart-button-uptime" data-position="left" data-tooltip="' . $help_uptime . '"><img style="width:12px;vertical-align:baseline;" src="' . Feather\Icons::get_base64( 'activity', 'none', '#73879C' ) . '" /></span>';
 		$result      = '<div class="apcm-row">';
 		$result     .= '<div class="apcm-box apcm-box-full-line">';
