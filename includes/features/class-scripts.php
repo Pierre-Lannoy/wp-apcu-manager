@@ -390,8 +390,8 @@ class Scripts extends \WP_List_Table {
 		if ( empty( $this->_pagination_args ) ) {
 			return;
 		}
-		$total_items     = $this->_pagination_args['total_items'];
-		$total_pages     = $this->_pagination_args['total_pages'];
+		$total_items     = (int) $this->_pagination_args['total_items'];
+		$total_pages     = (int) $this->_pagination_args['total_pages'];
 		$infinite_scroll = false;
 		if ( isset( $this->_pagination_args['infinite_scroll'] ) ) {
 			$infinite_scroll = $this->_pagination_args['infinite_scroll'];
@@ -606,8 +606,7 @@ class Scripts extends \WP_List_Table {
 				$this->paged = 1;
 			}
 		}
-		$_REQUEST['paged'] = $this->paged;
-		$this->order       = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING );
+		$this->order = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING );
 		if ( ! $this->order ) {
 			$this->order = 'desc';
 		}
