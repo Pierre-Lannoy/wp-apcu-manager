@@ -143,8 +143,8 @@ class Analytics {
 				return $this->query_chart();
 			case 'kpi':
 				return $this->query_kpi( $queried );
-			case 'events':
-				return $this->query_events();
+			case 'top-size':
+				return $this->query_top( 'size', (int) $queried );
 		}
 		return [];
 	}
@@ -152,189 +152,71 @@ class Analytics {
 	/**
 	 * Query statistics table.
 	 *
+	 * @param   string  $type    The type of top.
+	 * @param   integer $limit  The number to display.
 	 * @return array  The result of the query, ready to encode.
 	 * @since    1.0.0
 	 */
-	private function query_events() {
-		$data    = Schema::get_list( $this->filter, ! $this->is_today, '', [], false, 'ORDER BY timestamp ASC' );
-		$result  = '<table class="apcm-table">';
-		$result .= '<tr>';
-		$result .= '<th>&nbsp;</th>';
-		$result .= '<th>' . esc_html__( 'Timeframe', 'apcu-manager' ) . '</th>';
-		$result .= '<th>' . esc_html__( 'Details', 'apcu-manager' ) . '</th>';
-		$result .= '</tr>';
-		$found   = false;
+	private function query_top( $type, $limit ) {
+		$data  = Schema::get_grouped_detail( 'id', [], $this->filter, ! $this->is_today, '', [], false, 'ORDER BY avg_size DESC' );
+		$total = 0;
+		$other = 0;
+		$found = false;
 		foreach ( $data as $key => $row ) {
-			$op      = $row['reset'];
-			$name    = '';
-			$time    = '';
-			$details = '';
-			$str     = [];
-			switch ( $row['reset'] ) {
-				case 'oom':
-					$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'cpu', 'none', '#73879C' ) . '" />';
-					$name = esc_html__( 'Reset due to free memory exhaustion.', 'apcu-manager' );
-					break;
-				case 'hash':
-					$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'database', 'none', '#73879C' ) . '" />';
-					$name = esc_html__( 'Reset due to excessive keys saturation.', 'apcu-manager' );
-					break;
-				case 'manual':
-					$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'settings', 'none', '#73879C' ) . '" />';
-					$name = esc_html__( 'Programmatic or manual reset.', 'apcu-manager' );
+			if ( '-' === $row['id'] ) {
+				$other = $row['avg_size'];
+				$total = $row['avg_size'];
+				$found = $key;
+				break;
 			}
-			switch ( $row['status'] ) {
-				case 'reset_warmup':
-					$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'clock', 'none', '#73879C' ) . '" />';
-					$name = esc_html__( 'Programmatic site invalidation and warm-up.', 'apcu-manager' );
-					$op   = $row['status'];
-					break;
-				case 'warmup':
-					$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'mouse-pointer', 'none', '#73879C' ) . '" />';
-					$name = esc_html__( 'Manual site warm-up.', 'apcu-manager' );
-					$op   = $row['status'];
-					break;
-				case 'cache_full':
-					if ( array_key_exists( $key - 1, $data ) && 'cache_full' !== $data[ $key - 1 ]['status'] ) {
-						$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'alert-triangle', 'none', '#73879C' ) . '" />';
-						$name = esc_html__( 'Cache is full.', 'apcu-manager' );
-						$op   = $row['status'];
-					}
-					break;
-			}
-			switch ( $row['status'] ) {
-				case 'disabled':
-					if ( array_key_exists( $key - 1, $data ) && 'disabled' !== $data[ $key - 1 ]['status'] ) {
-						$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'power', 'none', '#73879C' ) . '" />';
-						$name = esc_html__( 'APCu disabled.', 'apcu-manager' );
-						$op   = $row['status'];
-					}
-					break;
-				default:
-					if ( array_key_exists( $key - 1, $data ) && 'disabled' === $data[ $key - 1 ]['status'] ) {
-						$icon = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'power', 'none', '#73879C' ) . '" />';
-						$name = esc_html__( 'APCu enabled.', 'apcu-manager' );
-						$op   = 'enabled';
-					}
-			}
-			if ( array_key_exists( $key - 1, $data ) && 'recycle_in_progress' === $data[ $key - 1 ]['status'] ) {
-				$op = 'recycle_in_progress';
-			}
-			$conf = [];
-			if ( array_key_exists( $key - 1, $data ) ) {
-				foreach ( [ 'mem', 'key', 'buf' ] as $idx ) {
-					if ( $row[ $idx . '_total' ] !== $data[ $key - 1 ][ $idx . '_total' ] ) {
-						$conf[] = $idx;
-					}
-				}
-			}
-			if ( 0 < count( $conf ) && 'disabled' !== $op && 'enabled' !== $op && 'recycle_in_progress' !== $op ) {
-				foreach ( $conf as $idx ) {
-					$val = $row[ $idx . '_total' ] - $data[ $key - 1 ][ $idx . '_total' ];
-					switch ( $idx ) {
-						case 'mem':
-							if ( 0 < $val ) {
-								$str[] = sprintf( esc_html__( 'Total memory size increased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-							} elseif ( 0 > $val ) {
-								$str[] = sprintf( esc_html__( 'Total memory size decreased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-							}
-							$op = 'settings';
-							break;
-						case 'buf':
-							if ( 0 < $val ) {
-								$str[] = sprintf( esc_html__( 'Total buffer size increased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-							} elseif ( 0 > $val ) {
-								$str[] = sprintf( esc_html__( 'Total buffer size decreased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-							}
-							$op = 'settings';
-							break;
-						case 'key':
-							if ( 0 < $val ) {
-								$str[] = sprintf( esc_html__( 'Maximum keys slots increased by %s.', 'apcu-manager' ), Conversion::number_shorten( abs( $val ), 0, false, '' ) );
-							} elseif ( 0 > $val ) {
-								$str[] = sprintf( esc_html__( 'Maximum keys slots decreased by %s.', 'apcu-manager' ), Conversion::number_shorten( abs( $val ), 0, false, '' ) );
-							}
-							$op = 'settings';
-							break;
-					}
-				}
-			}
-			if ( 'none' === $op || '' === $name ) {
-				continue;
-			}
-			$found     = true;
-			$timestamp = new \DateTime( $row['timestamp'] );
-			$timestamp->setTimezone( $this->timezone );
-			$time = $timestamp->format( 'H:i' );
-			$timestamp->sub( new \DateInterval( 'PT5M' ) );
-			$time = $timestamp->format( 'Y-m-d H:i' ) . ' ⇥ ' . $time;
-			if ( 0 < count( $str ) ) {
-				$sicon    = '<img style="width:14px;vertical-align:text-bottom;" src="' . Feather\Icons::get_base64( 'tool', 'none', '#73879C' ) . '" />';
-				$sname    = esc_html__( 'Settings changed.', 'apcu-manager' );
-				$sdetails = implode( ' ', $str );
-				$row_str  = '<tr>';
-				$row_str .= '<td data-th="">' . $sicon . '&nbsp;&nbsp;<span class="apcm-table-text">' . $sname . '</span></td>';
-				$row_str .= '<td data-th="' . esc_html__( 'Timeframe', 'apcu-manager' ) . '">' . $time . '</td>';
-				$row_str .= '<td data-th="' . esc_html__( 'Details', 'apcu-manager' ) . '">' . $sdetails . '</td>';
-				$row_str .= '</tr>';
-				$result  .= $row_str;
-			}
-			$str = [];
-			switch ( $op ) {
-				case 'oom':
-				case 'hash':
-				case 'manual':
-				case 'reset_warmup':
-					if ( array_key_exists( $key - 1, $data ) ) {
-						$val = ( $row['mem_total'] - $row['mem_used'] - $row['mem_wasted'] ) - ( $data[ $key - 1 ]['mem_total'] - $data[ $key - 1 ]['mem_used'] - $data[ $key - 1 ]['mem_wasted'] );
-						if ( 0 < $val ) {
-							$str[] = sprintf( esc_html__( 'Free memory size increased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-						} elseif ( 0 > $val ) {
-							$str[] = sprintf( esc_html__( 'Free memory size decreased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-						}
-						$val = ( $row['buf_total'] - $row['buf_used'] ) - ( $data[ $key - 1 ]['buf_total'] - $data[ $key - 1 ]['buf_used'] );
-						if ( 0 < $val ) {
-							$str[] = sprintf( esc_html__( 'Free buffer size increased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-						} elseif ( 0 > $val ) {
-							$str[] = sprintf( esc_html__( 'Free buffer size decreased by %s.', 'apcu-manager' ), Conversion::data_shorten( abs( $val ), 0, false, '&nbsp;' ) );
-						}
-						$val = ( $row['key_total'] - $row['key_used'] ) - ( $data[ $key - 1 ]['key_total'] - $data[ $key - 1 ]['key_used'] );
-						if ( 0 < $val ) {
-							$str[] = sprintf( esc_html__( 'Free keys slots increased by %s.', 'apcu-manager' ), Conversion::number_shorten( abs( $val ), 0, false, '' ) );
-						} elseif ( 0 > $val ) {
-							$str[] = sprintf( esc_html__( 'Free keys slots decreased by %s.', 'apcu-manager' ), Conversion::number_shorten( abs( $val ), 0, false, '' ) );
-						}
-					}
-					$details = implode( ' ', $str );
-					break;
-				case 'warmup':
-				case 'disabled':
-				case 'enabled':
-					break;
-				case 'cache_full':
-					$details = sprintf( esc_html__( 'Current wasted memory: %s.', 'apcu-manager' ), Conversion::data_shorten( $row['mem_wasted'], 0, false, '&nbsp;' ) );
-					break;
-			}
-			if ( '' === $details ) {
-				$details = '-';
-			}
-			$row_str  = '<tr>';
-			$row_str .= '<td data-th="">' . $icon . '&nbsp;&nbsp;<span class="apcm-table-text">' . $name . '</span></td>';
-			$row_str .= '<td data-th="' . esc_html__( 'Timeframe', 'apcu-manager' ) . '">' . $time . '</td>';
-			$row_str .= '<td data-th="' . esc_html__( 'Details', 'apcu-manager' ) . '">' . $details . '</td>';
-			$row_str .= '</tr>';
-			$result  .= $row_str;
 		}
-		if ( ! $found ) {
-			$row_str  = '<tr>';
-			$row_str .= '<td data-th=""><em>' . esc_html__( 'No status events in the selected time range.', 'apcu-manager' ) . '</em></span></td>';
-			$row_str .= '<td data-th="' . esc_html__( 'Timeframe', 'apcu-manager' ) . '">&nbsp;</td>';
-			$row_str .= '<td data-th="' . esc_html__( 'Details', 'apcu-manager' ) . '">&nbsp;</td>';
-			$row_str .= '</tr>';
-			$result  .= $row_str;
+		if ( false !== $found ) {
+			unset( $data[ $found ] );
+			$data = array_values( $data );
 		}
-		$result .= '</table>';
-		return [ 'apcm-events' => $result ];
+		foreach ( $data as $key => $row ) {
+			$total = $total + $row['avg_size'];
+			if ( $limit <= $key ) {
+				$other = $other + $row['avg_size'];
+			}
+		}
+		$result = '';
+		$cpt    = 0;
+		while ( $cpt < $limit && array_key_exists( $cpt, $data ) ) {
+			if ( 0 < $total ) {
+				$percent = round( 100 * $data[ $cpt ]['avg_size'] / $total, 1 );
+			} else {
+				$percent = 100;
+			}
+			if ( 0.5 > $percent ) {
+				$percent = 0.5;
+			}
+			$result .= '<div class="apcm-top-line">';
+			$result .= '<div class="apcm-top-line-title">';
+			$result .= '<img style="width:16px;vertical-align:bottom;" src="' . '" />&nbsp;&nbsp;<span class="apcm-top-line-title-text">' . $data[ $cpt ][ 'id' ] . '</span>';
+			$result .= '</div>';
+			$result .= '<div class="apcm-top-line-content">';
+			$result .= '<div class="apcm-bar-graph"><div class="apcm-bar-graph-value" style="width:' . $percent . '%"></div></div>';
+			$result .= '<div class="apcm-bar-detail">' . Conversion::data_shorten( $data[ $cpt ]['avg_size'], 2, false, '&nbsp;' ) . '</div>';
+			$result .= '</div>';
+			$result .= '</div>';
+			++$cpt;
+		}
+		if ( 0 < $total ) {
+			$percent = round( 100 * $other / $total, 1 );
+		} else {
+			$percent = 100;
+		}
+		$result .= '<div class="apcm-top-line apcm-minor-data">';
+		$result .= '<div class="apcm-top-line-title">';
+		$result .= '<span class="apcm-top-line-title-text">' . esc_html__( 'Other', 'apcu-manager' ) . '</span>';
+		$result .= '</div>';
+		$result .= '<div class="apcm-top-line-content">';
+		$result .= '<div class="apcm-bar-graph"><div class="apcm-bar-graph-value" style="width:' . $percent . '%"></div></div>';
+		$result .= '<div class="apcm-bar-detail">' . Conversion::data_shorten( $other, 2, false, '&nbsp;' ) . '</div>';
+		$result .= '</div>';
+		$result .= '</div>';
+		return [ 'apcm-top-' . $type => $result ];
 	}
 
 	/**
@@ -628,7 +510,7 @@ class Analytics {
 				[
 					'series' => [
 						[
-							'name' => esc_html__( 'Fragmentation Variation', 'apcu-manager' ),
+							'name' => esc_html__( 'Fragmentation', 'apcu-manager' ),
 							'data' => $series['fragmentation'],
 						],
 					],
@@ -654,14 +536,6 @@ class Analytics {
 			$json_availability        = str_replace( '"x":"new', '"x":new', $json_availability );
 			$json_availability        = str_replace( ')","y"', '),"y"', $json_availability );
 			$json_availability        = str_replace( '"null"', 'null', $json_availability );
-
-
-
-
-
-
-
-
 
 			// Rendering.
 			if ( 4 < $this->duration ) {
@@ -1142,26 +1016,6 @@ class Analytics {
 	}
 
 	/**
-	 * Get the domains list.
-	 *
-	 * @return string  The table ready to print.
-	 * @since    1.0.0
-	 */
-	public function get_events_list() {
-		$result  = '<div class="apcm-box apcm-box-full-line">';
-		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Status Events', 'apcu-manager' ) . '</span></div>';
-		$result .= '<div class="apcm-module-content" id="apcm-events">' . $this->get_graph_placeholder( 200 ) . '</div>';
-		$result .= '</div>';
-		$result .= $this->get_refresh_script(
-			[
-				'query'   => 'events',
-				'queried' => 0,
-			]
-		);
-		return $result;
-	}
-
-	/**
 	 * Get a large kpi box.
 	 *
 	 * @param   string $kpi     The kpi to render.
@@ -1211,6 +1065,46 @@ class Analytics {
 			[
 				'query'   => 'kpi',
 				'queried' => $kpi,
+			]
+		);
+		return $result;
+	}
+
+	/**
+	 * Get the top size box.
+	 *
+	 * @return string  The box ready to print.
+	 * @since    1.0.0
+	 */
+	public function get_top_size_box() {
+		$result  = '<div class="apcm-60-module">';
+		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Sources - Top Memory', 'apcu-manager' ) . '</span></div>';
+		$result .= '<div class="apcm-module-content" id="apcm-top-size">' . $this->get_graph_placeholder( 200 ) . '</div>';
+		$result .= '</div>';
+		$result .= $this->get_refresh_script(
+			[
+				'query'   => 'top-size',
+				'queried' => 4,
+			]
+		);
+		return $result;
+	}
+
+	/**
+	 * Get the top count box.
+	 *
+	 * @return string  The box ready to print.
+	 * @since    1.0.0
+	 */
+	public function get_top_count_box() {
+		$result  = '<div class="apcm-40-module">';
+		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Sources - Top Objects', 'apcu-manager' ) . '</span></div>';
+		$result .= '<div class="apcm-module-content" id="apcm-top-count">' . $this->get_graph_placeholder( 200 ) . '</div>';
+		$result .= '</div>';
+		$result .= $this->get_refresh_script(
+			[
+				'query'   => 'top-count',
+				'queried' => 5,
 			]
 		);
 		return $result;

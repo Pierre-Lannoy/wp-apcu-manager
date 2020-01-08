@@ -33,11 +33,14 @@ wp_enqueue_style( 'apcm-chartist-tooltip' );
         <div class="apcm-row">
 	        <?php echo $analytics->get_kpi_bar() ?>
         </div>
-        <div class="apcm-row">
-	        <?php echo $analytics->get_main_chart() ?>
+        <div class="traffic-row">
+            <div class="apcm-box apcm-box-60-40-line">
+				<?php echo $analytics->get_top_size_box() ?>
+				<?php echo $analytics->get_top_count_box() ?>
+            </div>
         </div>
         <div class="apcm-row">
-			<?php echo $analytics->get_events_list() ?>
+	        <?php echo $analytics->get_main_chart() ?>
         </div>
 	</div>
 </div>

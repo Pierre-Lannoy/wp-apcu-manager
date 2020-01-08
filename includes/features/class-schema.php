@@ -398,7 +398,7 @@ class Schema {
 	}
 
 	/**
-	 * Get the standard KPIs.
+	 * Get the grouped details.
 	 *
 	 * @param   string  $group       The group of the query.
 	 * @param   array   $count       The sub-groups of the query.
@@ -409,10 +409,10 @@ class Schema {
 	 * @param   boolean $not         Optional. Exclude extra filter.
 	 * @param   string  $order       Optional. The sort order of results.
 	 * @param   integer $limit       Optional. The number of results to return.
-	 * @return  array   The standard KPIs.
+	 * @return  array   The grouped details.
 	 * @since    1.0.0
 	 */
-	public static function get_grouped_list( $group, $count, $filter, $cache = true, $extra_field = '', $extras = [], $not = false, $order = '', $limit = 0 ) {
+	public static function get_grouped_detail( $group, $count, $filter, $cache = true, $extra_field = '', $extras = [], $not = false, $order = '', $limit = 0 ) {
 		// phpcs:ignore
 		$id = Cache::id( __FUNCTION__ . $group . serialize( $count ) . serialize( $filter ) . $extra_field . serialize( $extras ) . ( $not ? 'no' : 'yes') . $order . (string) $limit);
 		if ( $cache ) {
@@ -434,8 +434,8 @@ class Schema {
 			$c = $c . ', ';
 		}
 		global $wpdb;
-		$sql  = 'SELECT *, ' . ( '' !== $group ? $group . ', ' : '' ) . $c . 'count(*) as records, avg(delta) as avg_delta,sum(hit) as sum_hit,avg(hit) as avg_hit,avg(miss) as avg_miss, avg(ins) as avg_ins, avg(mem_total) as avg_mem_total, avg(mem_used) as avg_mem_used,  avg(slot_total) as avg_slot_total, avg(slot_used) as avg_slot_used, min(slot_used) as min_slot_used, max(slot_used) as max_slot_used,avg(frag_small) as avg_frag_small, avg(frag_big) as avg_frag_big, avg(frag_count) as avg_frag_count, min(frag_count) as min_frag_count, max(frag_count) as max_frag_count FROM ';
-		$sql .= $wpdb->base_prefix . self::$statistics . ' WHERE (' . implode( ' AND ', $filter ) . ') ' . $where_extra . ' GROUP BY ' . $group . ' ' . $order . ( $limit > 0 ? 'LIMIT ' . $limit : '') .';';
+		$sql  = 'SELECT *, ' . ( '' !== $group ? $group . ', ' : '' ) . $c . 'count(*) as records, avg(items) as avg_items, avg(size) as avg_size FROM ';
+		$sql .= $wpdb->base_prefix . self::$details . ' WHERE (' . implode( ' AND ', $filter ) . ') ' . $where_extra . ' GROUP BY ' . $group . ' ' . $order . ( $limit > 0 ? 'LIMIT ' . $limit : '') .';';
 		// phpcs:ignore
 		$result = $wpdb->get_results( $sql, ARRAY_A );
 		if ( is_array( $result ) && 0 < count( $result ) ) {
