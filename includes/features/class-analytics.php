@@ -950,7 +950,7 @@ class Analytics {
 	 */
 	private function query_kpi( $queried ) {
 		$result = [];
-		if ( 'ratio' === $queried || 'memory' === $queried || 'key' === $queried || 'buffer' === $queried || 'uptime' === $queried ) {
+		if ( 'ratio' === $queried || 'memory' === $queried || 'key' === $queried || 'fragmentation' === $queried || 'uptime' === $queried ) {
 			$data        = Schema::get_std_kpi( $this->filter, ! $this->is_today );
 			$pdata       = Schema::get_std_kpi( $this->previous );
 			$base_value  = 0.0;
@@ -994,38 +994,42 @@ class Analytics {
 				}
 			}
 			if ( 'key' === $queried ) {
-				if ( is_array( $data ) && array_key_exists( 'avg_key_used', $data ) && ! empty( $data['avg_key_used'] ) && array_key_exists( 'avg_key_total', $data ) && ! empty( $data['avg_key_total'] ) ) {
-					$base_value = (float) $data['avg_key_total'];
-					$data_value = (float) $data['avg_key_used'];
+				if ( is_array( $data ) && array_key_exists( 'avg_slot_used', $data ) && ! empty( $data['avg_slot_used'] ) && array_key_exists( 'avg_slot_total', $data ) && ! empty( $data['avg_slot_total'] ) ) {
+					$base_value = (float) $data['avg_slot_total'];
+					$data_value = (float) $data['avg_slot_used'];
 				}
-				if ( is_array( $pdata ) && array_key_exists( 'avg_key_used', $pdata ) && ! empty( $pdata['avg_key_used'] ) && array_key_exists( 'avg_key_total', $pdata ) && ! empty( $pdata['avg_key_total'] ) ) {
-					$pbase_value = (float) $pdata['avg_key_total'];
-					$pdata_value = (float) $pdata['avg_key_used'];
+				if ( is_array( $pdata ) && array_key_exists( 'avg_slot_used', $pdata ) && ! empty( $pdata['avg_slot_used'] ) && array_key_exists( 'avg_slot_total', $pdata ) && ! empty( $pdata['avg_slot_total'] ) ) {
+					$pbase_value = (float) $pdata['avg_slot_total'];
+					$pdata_value = (float) $pdata['avg_slot_used'];
 				}
 			}
-			if ( 'buffer' === $queried ) {
-				if ( is_array( $data ) && array_key_exists( 'avg_buf_used', $data ) && ! empty( $data['avg_buf_used'] ) && array_key_exists( 'avg_buf_total', $data ) && ! empty( $data['avg_buf_total'] ) ) {
-					$base_value = (float) $data['avg_buf_total'];
-					$data_value = (float) $data['avg_buf_used'];
+			if ( 'fragmentation' === $queried ) {
+				if ( is_array( $data ) && array_key_exists( 'avg_frag_small', $data ) && ! empty( $data['avg_frag_small'] ) && array_key_exists( 'avg_frag_big', $data ) && ! empty( $data['avg_frag_big'] ) ) {
+					$base_value = (float) $data['avg_frag_small'] + (float) $data['avg_frag_big'];
+					$data_value = (float) $data['avg_frag_small'];
 				}
-				if ( is_array( $pdata ) && array_key_exists( 'avg_buf_used', $pdata ) && ! empty( $pdata['avg_buf_used'] ) && array_key_exists( 'avg_buf_total', $pdata ) && ! empty( $pdata['avg_buf_total'] ) ) {
-					$pbase_value = (float) $pdata['avg_buf_total'];
-					$pdata_value = (float) $pdata['avg_buf_used'];
+				if ( is_array( $pdata ) && array_key_exists( 'avg_frag_small', $pdata ) && ! empty( $pdata['avg_frag_small'] ) && array_key_exists( 'avg_frag_big', $pdata ) && ! empty( $pdata['avg_frag_big'] ) ) {
+					$pbase_value = (float) $pdata['avg_frag_small'] + (float) $pdata['avg_frag_big'];
+					$pdata_value = (float) $pdata['avg_frag_small'];
 				}
 			}
 			if ( 'memory' === $queried ) {
-				if ( is_array( $data ) && array_key_exists( 'avg_mem_total', $data ) && ! empty( $data['avg_mem_total'] ) && array_key_exists( 'avg_mem_used', $data ) && ! empty( $data['avg_mem_used'] ) && array_key_exists( 'avg_mem_wasted', $data ) && ! empty( $data['avg_mem_wasted'] ) ) {
+				if ( is_array( $data ) && array_key_exists( 'avg_mem_total', $data ) && ! empty( $data['avg_mem_total'] ) && array_key_exists( 'avg_mem_used', $data ) && ! empty( $data['avg_mem_used'] ) ) {
 					$base_value = (float) $data['avg_mem_total'];
-					$data_value = (float) $data['avg_mem_total'] - (float) $data['avg_mem_used'] - (float) $data['avg_mem_wasted'];
+					$data_value = (float) $data['avg_mem_total'] - (float) $data['avg_mem_used'];
 				}
-				if ( is_array( $pdata ) && array_key_exists( 'avg_mem_total', $pdata ) && ! empty( $pdata['avg_mem_total'] ) && array_key_exists( 'avg_mem_used', $pdata ) && ! empty( $pdata['avg_mem_used'] ) && array_key_exists( 'avg_mem_wasted', $pdata ) && ! empty( $pdata['avg_mem_wasted'] ) ) {
+				if ( is_array( $pdata ) && array_key_exists( 'avg_mem_total', $pdata ) && ! empty( $pdata['avg_mem_total'] ) && array_key_exists( 'avg_mem_used', $pdata ) && ! empty( $pdata['avg_mem_used'] ) ) {
 					$pbase_value = (float) $pdata['avg_mem_total'];
-					$pdata_value = (float) $pdata['avg_mem_total'] - (float) $pdata['avg_mem_used'] - (float) $pdata['avg_mem_wasted'];
+					$pdata_value = (float) $pdata['avg_mem_total'] - (float) $pdata['avg_mem_used'];
 				}
 			}
 			if ( 0.0 !== $base_value && 0.0 !== $data_value ) {
-				$current                          = 100 * $data_value / $base_value;
-				$result[ 'kpi-main-' . $queried ] = round( $current, 1 ) . '&nbsp;%';
+				$current = 100 * $data_value / $base_value;
+				if ( 1 > $current && 'fragmentation' === $queried ) {
+					$result[ 'kpi-main-' . $queried ] = round( $current, 2 ) . '&nbsp;%';
+				} else {
+					$result[ 'kpi-main-' . $queried ] = round( $current, 1 ) . '&nbsp;%';
+				}
 			} else {
 				if ( 0.0 !== $data_value ) {
 					$result[ 'kpi-main-' . $queried ] = '100&nbsp;%';
@@ -1062,8 +1066,8 @@ class Analytics {
 				case 'memory':
 					$result[ 'kpi-bottom-' . $queried ] = '<span class="apcm-kpi-large-bottom-text">' . sprintf( esc_html__( 'total memory: %s', 'apcu-manager' ), Conversion::data_shorten( $base_value, 0, false, '&nbsp;' ) ) . '</span>';
 					break;
-				case 'buffer':
-					$result[ 'kpi-bottom-' . $queried ] = '<span class="apcm-kpi-large-bottom-text">' . sprintf( esc_html__( 'buffer size: %s', 'apcu-manager' ), Conversion::data_shorten( $base_value, 0, false, '&nbsp;' ) ) . '</span>';
+				case 'fragmentation':
+					$result[ 'kpi-bottom-' . $queried ] = '<span class="apcm-kpi-large-bottom-text">' . sprintf( esc_html__( '%s blocks (avg.)', 'apcu-manager' ), (int) round( $data['avg_frag_count'], 0 ) ) . '</span>';
 					break;
 				case 'key':
 					$result[ 'kpi-bottom-' . $queried ] = '<span class="apcm-kpi-large-bottom-text">' . sprintf( esc_html__( '%s keys (avg.)', 'apcu-manager' ), (int) round( $data_value, 0 ) ) . '</span>';
@@ -1081,16 +1085,16 @@ class Analytics {
 					break;
 			}
 		}
-		if ( 'script' === $queried ) {
+		if ( 'object' === $queried ) {
 			$data     = Schema::get_std_kpi( $this->filter, ! $this->is_today );
 			$pdata    = Schema::get_std_kpi( $this->previous );
 			$current  = 0.0;
 			$previous = 0.0;
-			if ( is_array( $data ) && array_key_exists( 'avg_scripts', $data ) && ! empty( $data['avg_scripts'] ) ) {
-				$current = (float) $data['avg_scripts'];
+			if ( is_array( $data ) && array_key_exists( 'avg_slot_used', $data ) && ! empty( $data['avg_slot_used'] ) ) {
+				$current = (float) $data['avg_slot_used'];
 			}
-			if ( is_array( $pdata ) && array_key_exists( 'avg_scripts', $pdata ) && ! empty( $pdata['avg_scripts'] ) ) {
-				$previous = (float) $pdata['avg_scripts'];
+			if ( is_array( $pdata ) && array_key_exists( 'avg_slot_used', $pdata ) && ! empty( $pdata['avg_slot_used'] ) ) {
+				$previous = (float) $pdata['avg_slot_used'];
 			}
 			$result[ 'kpi-main-' . $queried ] = (int) round( $current, 0 );
 			if ( 0.0 !== $current && 0.0 !== $previous ) {
@@ -1104,14 +1108,14 @@ class Analytics {
 			} elseif ( 0.0 !== $previous && 100 !== $previous && 0.0 === $current ) {
 				$result[ 'kpi-index-' . $queried ] = '<span style="color:#E74C3C;">-∞</span>';
 			}
-			if ( is_array( $data ) && array_key_exists( 'min_scripts', $data ) && array_key_exists( 'max_scripts', $data ) ) {
-				if ( empty( $data['min_scripts'] ) ) {
-					$data['min_scripts'] = 0;
+			if ( is_array( $data ) && array_key_exists( 'min_slot_used', $data ) && array_key_exists( 'max_slot_used', $data ) ) {
+				if ( empty( $data['min_slot_used'] ) ) {
+					$data['min_slot_used'] = 0;
 				}
-				if ( empty( $data['max_scripts'] ) ) {
-					$data['max_scripts'] = 0;
+				if ( empty( $data['max_slot_used'] ) ) {
+					$data['max_slot_used'] = 0;
 				}
-				$result[ 'kpi-bottom-' . $queried ] = '<span class="apcm-kpi-large-bottom-text">' . (int) round( $data['min_scripts'], 0 ) . '&nbsp;<img style="width:12px;vertical-align:middle;" src="' . Feather\Icons::get_base64( 'arrow-right', 'none', '#73879C' ) . '" />&nbsp;' . (int) round( $data['max_scripts'], 0 ) . '&nbsp;</span>';
+				$result[ 'kpi-bottom-' . $queried ] = '<span class="apcm-kpi-large-bottom-text">' . (int) round( $data['min_slot_used'], 0 ) . '&nbsp;<img style="width:12px;vertical-align:middle;" src="' . Feather\Icons::get_base64( 'arrow-right', 'none', '#73879C' ) . '" />&nbsp;' . (int) round( $data['max_slot_used'], 0 ) . '&nbsp;</span>';
 			}
 		}
 		return $result;
@@ -1143,9 +1147,9 @@ class Analytics {
 		$result .= '<div class="apcm-kpi-bar">';
 		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'ratio' ) . '</div>';
 		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'memory' ) . '</div>';
-		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'script' ) . '</div>';
+		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'object' ) . '</div>';
 		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'key' ) . '</div>';
-		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'buffer' ) . '</div>';
+		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'fragmentation' ) . '</div>';
 		$result .= '<div class="apcm-kpi-large">' . $this->get_large_kpi( 'uptime' ) . '</div>';
 		$result .= '</div>';
 		$result .= '</div>';
@@ -1229,20 +1233,20 @@ class Analytics {
 				$title = esc_html_x( 'Free Memory', 'Noun - Memory free of allocation.', 'apcu-manager' );
 				$help  = esc_html__( 'Ratio of free available memory.', 'apcu-manager' );
 				break;
-			case 'script':
-				$icon  = Feather\Icons::get_base64( 'file-text', 'none', '#73879C' );
-				$title = esc_html_x( 'Cached Files', 'Noun - Number of already cached files.', 'apcu-manager' );
-				$help  = esc_html__( 'Number of compiled and cached files.', 'apcu-manager' );
+			case 'object':
+				$icon  = Feather\Icons::get_base64( 'box', 'none', '#73879C' );
+				$title = esc_html_x( 'Objects', 'Noun - Number of already cached objects.', 'apcu-manager' );
+				$help  = esc_html__( 'Number of cached objects.', 'apcu-manager' );
 				break;
 			case 'key':
 				$icon  = Feather\Icons::get_base64( 'key', 'none', '#73879C' );
 				$title = esc_html_x( 'Keys Saturation', 'Noun - Ratio of the allocated keys to the total available keys slots.', 'apcu-manager' );
 				$help  = esc_html__( 'Ratio of the allocated keys to the total available keys slots.', 'apcu-manager' );
 				break;
-			case 'buffer':
-				$icon  = Feather\Icons::get_base64( 'database', 'none', '#73879C' );
-				$title = esc_html_x( 'Buffer Saturation', 'Noun - Ratio of the used buffer to the total buffer size.', 'apcu-manager' );
-				$help  = esc_html__( 'Ratio of the used buffer to the total buffer size.', 'apcu-manager' );
+			case 'fragmentation':
+				$icon  = Feather\Icons::get_base64( 'layers', 'none', '#73879C' );
+				$title = esc_html_x( 'Fragmentation', 'Noun - Ratio of the blocks < 5M to the total memory size.', 'apcu-manager' );
+				$help  = esc_html__( 'Ratio of the small memory blocks to the total memory size.', 'apcu-manager' );
 				break;
 			case 'uptime':
 				$icon  = Feather\Icons::get_base64( 'activity', 'none', '#73879C' );

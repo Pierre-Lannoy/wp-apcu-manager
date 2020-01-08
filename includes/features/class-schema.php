@@ -186,8 +186,8 @@ class Schema {
 		$sql            .= " (`timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',";
 		$sql            .= " `delta` int(11) UNSIGNED NOT NULL DEFAULT '0',";
 		$sql            .= " `status` enum('" . implode( "','", APCu::$status ) . "') NOT NULL DEFAULT 'disabled',";
-		$sql            .= " `mem_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";           // FREE MEMORY (2).
-		$sql            .= " `mem_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";            // FREE MEMORY (2).
+		$sql            .= " `mem_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";
+		$sql            .= " `mem_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";
 		$sql            .= " `slot_total` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // KEYS SATURATION (4).
 		$sql            .= " `slot_used` int(11) UNSIGNED NOT NULL DEFAULT '0',";           // ITEMS (3) / KEYS SATURATION (4).
 		$sql            .= " `frag_small` int(11) UNSIGNED NOT NULL DEFAULT '0',";          // MEMORY FRAGMENTATION (5).
