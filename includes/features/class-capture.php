@@ -32,7 +32,7 @@ class Capture {
 	 * @since  1.0.0
 	 * @var    integer    $delta    The authorized delta time in seconds.
 	 */
-	public static $delta = 59;
+	public static $delta = 90;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -108,7 +108,7 @@ class Capture {
 		$time   = time();
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_sma_info' ) ) {
 			$details  = self::get_details();
-			$cache_id = '/Data/LastCheck';
+			$cache_id = 'data/lastcheck';
 			$old      = Cache::get_global( $cache_id );
 			if ( ! isset( $old ) ) {
 				Logger::debug( 'No APCu transient.' );
