@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Analysis delta time has been increased to avoid holes in stats when cron is not fully reliable.
 ### Fixed
 - With some plugins, box tooltips may be misplaced (css collision).
+### Removed
+- Compatibility with WordPress versions prior to 5.2.
 
 ## [1.0.0] - 2020-01-09
 ### Initial release

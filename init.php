@@ -15,9 +15,6 @@ define( 'APCM_SLUG', 'apcu-manager' );
 define( 'APCM_VERSION', '1.0.1-dev1' );
 define( 'APCM_CODENAME', '"-"' );
 
-define( 'APCM_MINIMUM_WP_VERSION', '4.9' );
-define( 'APCM_MINIMUM_PHP_VERSION', '7.2' );
-
 define( 'APCM_CDN_AVAILABLE', true );
 
 define( 'APCM_CRON_STATS_NAME', 'apcm_apcu_stats' );
