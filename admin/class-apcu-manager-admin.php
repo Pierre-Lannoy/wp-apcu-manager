@@ -20,6 +20,7 @@ use APCuManager\System\Form;
 use APCuManager\System\Blog;
 use APCuManager\System\Date;
 use APCuManager\System\Timezone;
+use PerfOpsOne\AdminMenus;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -75,33 +76,74 @@ class Apcu_Manager_Admin {
 	}
 
 	/**
+	 * Init PerfOps admin menus.
+	 *
+	 * @param array $perfops    The already declared menus.
+	 * @return array    The completed menus array.
+	 * @since 1.0.0
+	 */
+	public function init_perfops_admin_menus( $perfops ) {
+		if ( Role::SUPER_ADMIN === Role::admin_type() || Role::SINGLE_ADMIN === Role::admin_type() ) {
+			$perfops['tools'][]    = [
+				'name'          => esc_html__( 'APCu', 'apcu-manager' ),
+				/* translators: as in the sentence "Explore and delete APCu objects used by your network." or "Explore and delete APCu objects used by your website." */
+				'description'   => sprintf( esc_html__( 'Explore and delete APCu objects used by your %s.', 'apcu-manager' ), Environment::is_wordpress_multisite() ? esc_html__( 'network', 'apcu-manager' ) : esc_html__( 'website', 'apcu-manager' ) ),
+				'icon_callback' => [ \APCuManager\Plugin\Core::class, 'get_base64_logo' ],
+				'slug'          => 'apcm-tools',
+				'page_title'    => esc_html__( 'APCu Management', 'apcu-manager' ),
+				'menu_title'    => esc_html__( 'APCu', 'apcu-manager' ),
+				'capability'    => 'manage_options',
+				'callback'      => [ $this, 'get_tools_page' ],
+				'position'      => 50,
+				'plugin'        => APCM_SLUG,
+				'activated'     => true,
+				'remedy'        => '',
+			];
+			$perfops['settings'][] = [
+				'name'          => APCM_PRODUCT_NAME,
+				'description'   => '',
+				'icon_callback' => [ \APCuManager\Plugin\Core::class, 'get_base64_logo' ],
+				'slug'          => 'apcm-settings',
+				/* translators: as in the sentence "APCu Manager Settings" or "WordPress Settings" */
+				'page_title'    => sprintf( esc_html__( '%s Settings', 'apcu-manager' ), APCM_PRODUCT_NAME ),
+				'menu_title'    => APCM_PRODUCT_NAME,
+				'capability'    => 'manage_options',
+				'callback'      => [ $this, 'get_settings_page' ],
+				'position'      => 50,
+				'plugin'        => APCM_SLUG,
+				'activated'     => true,
+				'remedy'        => '',
+				'statistics'    => [ '\APCuManager\System\Statistics', 'sc_get_raw' ],
+			];
+		}
+		if ( Role::SUPER_ADMIN === Role::admin_type() || Role::SINGLE_ADMIN === Role::admin_type() || Role::LOCAL_ADMIN === Role::admin_type() ) {
+			$perfops['analytics'][] = [
+				'name'          => esc_html__( 'APCu', 'apcu-manager' ),
+				/* translators: as in the sentence "View APCu key performance indicators and activity metrics for your network." or "View APCu key performance indicators and activity metrics for your website." */
+				'description'   => sprintf( esc_html__( 'View APCu key performance indicators and activity metrics for your %s.', 'apcu-manager' ), Environment::is_wordpress_multisite() ? esc_html__( 'network', 'apcu-manager' ) : esc_html__( 'website', 'apcu-manager' ) ),
+				'icon_callback' => [ \APCuManager\Plugin\Core::class, 'get_base64_logo' ],
+				'slug'          => 'apcm-viewer',
+				'page_title'    => esc_html__( 'APCu Analytics', 'apcu-manager' ),
+				'menu_title'    => esc_html__( 'APCu', 'apcu-manager' ),
+				'capability'    => 'manage_options',
+				'callback'      => [ $this, 'get_viewer_page' ],
+				'position'      => 50,
+				'plugin'        => APCM_SLUG,
+				'activated'     => Option::network_get( 'analytics' ),
+				'remedy'        => esc_url( admin_url( 'admin.php?page=apcm-settings' ) ),
+			];
+		}
+		return $perfops;
+	}
+
+	/**
 	 * Set the items in the settings menu.
 	 *
 	 * @since 1.0.0
 	 */
 	public function init_admin_menus() {
-		if ( Role::SUPER_ADMIN === Role::admin_type() || Role::SINGLE_ADMIN === Role::admin_type() ) {
-			/* translators: as in the sentence "APCu Manager Settings" or "WordPress Settings" */
-			$settings = add_submenu_page( 'options-general.php', sprintf( esc_html__( '%s Settings', 'apcu-manager' ), APCM_PRODUCT_NAME ), APCM_PRODUCT_NAME, 'manage_options', 'apcm-settings', [ $this, 'get_settings_page' ] );
-			$name     = add_submenu_page(
-				'tools.php',
-				esc_html__( 'APCu Tools', 'apcu-manager' ),
-				esc_html__( 'APCu Tools', 'apcu-manager' ),
-				'manage_options',
-				'apcm-tools',
-				[ $this, 'get_tools_page' ]
-			);
-		}
-		if ( Role::SUPER_ADMIN === Role::admin_type() || Role::SINGLE_ADMIN === Role::admin_type() || Role::LOCAL_ADMIN === Role::admin_type() ) {
-			$name = add_submenu_page(
-				'tools.php',
-				esc_html__( 'APCu Analytics', 'apcu-manager' ),
-				esc_html__( 'APCu Analytics', 'apcu-manager' ),
-				'manage_options',
-				'apcm-viewer',
-				[ $this, 'get_viewer_page' ]
-			);
-		}
+		add_filter( 'init_perfops_admin_menus', [ $this, 'init_perfops_admin_menus' ] );
+		AdminMenus::initialize();
 	}
 
 	/**
@@ -127,9 +169,9 @@ class Apcu_Manager_Admin {
 	 * @since 1.0.0
 	 */
 	public function add_actions_links( $actions, $plugin_file, $plugin_data, $context ) {
-		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'options-general.php?page=apcm-settings' ) ), esc_html__( 'Settings', 'apcu-manager' ) );
-		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'tools.php?page=apcm-tools' ) ), esc_html__( 'Tools', 'apcu-manager' ) );
-		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'tools.php?page=apcm-viewer' ) ), esc_html__( 'Statistics', 'apcu-manager' ) );
+		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'admin.php?page=apcm-settings' ) ), esc_html__( 'Settings', 'apcu-manager' ) );
+		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'admin.php?page=apcm-tools' ) ), esc_html__( 'Tools', 'apcu-manager' ) );
+		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'admin.php?page=apcm-viewer' ) ), esc_html__( 'Statistics', 'apcu-manager' ) );
 		return $actions;
 	}
 

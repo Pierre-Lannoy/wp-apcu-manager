@@ -46,7 +46,7 @@ class Updater {
 				$message  = sprintf( esc_html__( '%1$s has been correctly updated from version %2$s to version %3$s.', 'apcu-manager' ), APCM_PRODUCT_NAME, $old, APCM_VERSION );
 				Logger::notice( $message );
 				// phpcs:ignore
-				$message .= ' ' . sprintf( __( 'See <a href="%s">what\'s new</a>.', 'apcu-manager' ), admin_url( 'options-general.php?page=apcm-settings&tab=about' ) );
+				$message .= ' ' . sprintf( __( 'See <a href="%s">what\'s new</a>.', 'apcu-manager' ), admin_url( 'admin.php?page=apcm-settings&tab=about' ) );
 			}
 			Nag::add( 'update', 'info', $message );
 			Option::network_set( 'version', APCM_VERSION );

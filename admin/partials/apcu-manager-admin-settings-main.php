@@ -16,7 +16,7 @@ $url1       = esc_url(
 		[
 			'page' => 'apcm-tools',
 		],
-		admin_url( 'tools.php' )
+		admin_url( 'admin.php' )
 	)
 );
 $url2       = esc_url(
@@ -24,7 +24,7 @@ $url2       = esc_url(
 		[
 			'page' => 'apcm-viewer',
 		],
-		admin_url( 'tools.php' )
+		admin_url( 'admin.php' )
 	)
 );
 $note       = sprintf(__('Note: <a href="%s">management tools</a> and <a href="%s">analytics reports</a> are available via the <strong>tools menu</strong>.', 'apcu-manager' ), $url1, $url2 );
@@ -45,7 +45,7 @@ $note       = sprintf(__('Note: <a href="%s">management tools</a> and <a href="%
 					'page' => 'apcm-settings',
 					'tab'  => 'misc',
 				),
-				admin_url( 'options-general.php' )
+				admin_url( 'admin.php' )
 			)
 		);
 		?>
@@ -58,7 +58,7 @@ $note       = sprintf(__('Note: <a href="%s">management tools</a> and <a href="%
 					'page' => 'apcm-settings',
 					'tab'  => 'about',
 				),
-				admin_url( 'options-general.php' )
+				admin_url( 'admin.php' )
 			)
 		);
 		?>

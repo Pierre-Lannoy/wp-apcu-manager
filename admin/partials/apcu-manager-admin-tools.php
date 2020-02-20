@@ -20,7 +20,7 @@ wp_enqueue_style( APCM_ASSETS_ID );
 ?>
 
 <div class="wrap">
-	<h2><?php echo APCM_PRODUCT_NAME; ?></h2>
+	<h2><?php echo esc_html__( 'APCu Management', 'apcu-manager' ); ?></h2>
 	<?php settings_errors(); ?>
 	<?php $scripts->warning(); ?>
 	<?php $scripts->views(); ?>
