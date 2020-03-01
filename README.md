@@ -8,7 +8,7 @@ __APCu Manager__ is a full featured APCu management and analytics reporting tool
 
 See [WordPress directory page](https://wordpress.org/plugins/apcu-manager/). 
 
-__APCu Manager__ works on dedicated or shared servers. It is compatible with all plugins using APCu, like OPcache Manager, Traffic or W3 Total Cache. Its main management features are:
+__APCu Manager__ works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps.One suite or W3 Total Cache. Its main management features are:
 
 * individual object deletion;
 * full cache clearing.
