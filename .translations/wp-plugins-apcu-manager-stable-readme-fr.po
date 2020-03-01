@@ -1,0 +1,191 @@
+# Translation of Plugins - APCu Manager - Stable Readme (latest release) in French (France)
+# This file is distributed under the same license as the Plugins - APCu Manager - Stable Readme (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2020-03-01 20:21+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Poedit 2.2.4\n"
+"Language: fr\n"
+"Project-Id-Version: Plugins - APCu Manager - Stable Readme (latest release)\n"
+"POT-Creation-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+
+#. Short description.
+msgid "APCu statistics and management right in the WordPress admin dashboard."
+msgstr "Statistiques et gestion APCu directement dans le Tableau de bord WordPress."
+
+#. Plugin name.
+msgid "APCu Manager"
+msgstr "APCu Manager"
+
+#. Found in faq paragraph.
+msgid "You can report bugs and suggest ideas via the <a href=\"https://github.com/Pierre-Lannoy/wp-apcu-manager/issues\">GitHub issue tracker</a> of the plugin."
+msgstr "Vous pouvez signaler des bogues et suggérer des améliorations via le <a href=\"https://github.com/Pierre-Lannoy/wp-apcu-manager/issues\">suivi d’incidents GitHub</a> de l’extension."
+
+#. Found in faq paragraph.
+msgid "Support is provided via the official <a href=\"https://wordpress.org/support/plugin/apcu-manager/\">WordPress page</a>."
+msgstr "L’assistance est proposée via la page officielle <a href=\"https://wordpress.org/support/plugin/apcu-manager/\">d’assistance</a>."
+
+#. Found in faq paragraph.
+msgid "You need to have a fully operational WordPress cron. If you've set an external cron (crontab, online cron, etc.), its frequency must be less than 5 minutes - 1 or 2 minutes is a recommended value."
+msgstr "Vous devez avoir un cron WordPress entièrement opérationnel. Si vous avez réglé un cron externe (crontab, cron en ligne, etc.), sa fréquence doit être inférieure à 5 minutes - 1 ou 2 minutes est une valeur recommandée."
+
+#. Found in faq paragraph.
+msgid "Yes. It is designed to work on multisite too. Network Admins can configure the plugin, use management tools and have access to analytics reports. Sites Admins have only access to analytics reports."
+msgstr "Oui. Cette extension est conçue pour fonctionner sur un multisite aussi. Les administrateurs du réseau peuvent configurer l’extension et avoir accès aux rapports d’analyse. Les administrateurs de sites ont seulement accès aux rapports d’analyse."
+
+#. Found in faq paragraph.
+msgid "You need at least <strong>WordPress 5.2</strong> and <strong>PHP 7.2</strong>."
+msgstr "Vous avez besoin d’au moins <strong>WordPress 5.2</strong> et <strong>PHP 7.2</strong>."
+
+#. Found in faq header.
+msgid "Where can I report a bug?"
+msgstr "Où puis-je signaler un bogue ?"
+
+#. Found in faq header.
+msgid "Where can I get support?"
+msgstr "Où puis-je obtenir de l’aide ?"
+
+#. Found in faq header.
+msgid "What are the requirements for statistics to work?"
+msgstr "Quels sont les prérequis pour que les statistiques fonctionnent ?"
+
+#. Found in faq header.
+msgid "Can this plugin work on multisite?"
+msgstr "Cette extension fonctionne-t’elle sur un multisite ?"
+
+#. Found in faq header.
+msgid "What are the requirements for this plugin to work?"
+msgstr "Quels sont les prérequis pour que cette extension fonctionne ?"
+
+#. Found in installation list item.
+msgid "Enjoy!"
+msgstr "Profitez !"
+
+#. Found in installation list item.
+msgid "Visit 'Settings &gt; APCu Manager' in the left-hand menu of your WP Admin to adjust settings."
+msgstr "Visitez « Réglages &gt; APCu Manager » dans le menu gauche de votre panneau d’administration pour ajuster les paramètres."
+
+#. Found in installation list item.
+msgid "Activate APCu Manager from your Plugins page."
+msgstr "Activez APCu Manager depuis votre page Extensions."
+
+#. Found in installation list item.
+msgid "Upload the <code>apcu-manager</code> directory to your <code>/wp-content/plugins/</code> directory, using your favorite method (ftp, sftp, scp, etc...)."
+msgstr "Téléversez le dossier <code>apcu-manager</code> dans votre dossier <code>/wp-content/plugins/</code>, en utilisant votre méthode préférée (ftp, sftp, scp, etc.)."
+
+#. Found in installation list item.
+msgid "Download APCu Manager."
+msgstr "Télécharger APCu Manager."
+
+#. Found in installation list item.
+msgid "Activate APCu Manager."
+msgstr "Activez APCu Manager."
+
+#. Found in installation list item.
+msgid "Click on the 'Install Now' button."
+msgstr "Cliquez sur le bouton « Installer maintenant »."
+
+#. Found in installation list item.
+msgid "Search for 'APCu Manager'."
+msgstr "Recherchez «&nbsp;APCu Manager&nbsp;»."
+
+#. Found in installation list item.
+msgid "Visit 'Plugins &gt; Add New'."
+msgstr "Visitez « Extensions &gt; Ajouter »."
+
+#. Found in installation header.
+msgid "Once Activated"
+msgstr "Une fois activé"
+
+#. Found in installation header.
+msgid "From WordPress.org"
+msgstr "Depuis WordPress.org"
+
+#. Found in installation header.
+msgid "From your WordPress dashboard"
+msgstr "Depuis votre Tableau de bord WordPress"
+
+#. Found in description paragraph.
+msgid "If you like this plugin or find it useful and want to thank me for the work done, please consider making a donation to <a href=\"https://www.laquadrature.net/en\">La Quadrature Du Net</a> or the <a href=\"https://www.eff.org/\">Electronic Frontier Foundation</a> which are advocacy groups defending the rights and freedoms of citizens on the Internet. By supporting them, you help the daily actions they perform to defend our fundamental freedoms!"
+msgstr "Si vous aimez cette extension ou la trouvez utile et que vous voulez me remercier pour le travail accompli, vous pouvez faire un don à <a href=\"https://www.laquadrature.net/en\">La Quadrature Du Net</a> ou l’<a href=\"https://www.eff.org/\">Electronic Frontier Foundation</a> qui sont des associations de défense des droits et libertés des citoyens sur Internet. En les soutenant, vous aidez les actions quotidiennes qu’ils accomplissent pour défendre nos libertés fondamentales !"
+
+#. Found in description paragraph.
+msgid "Anyway, I'll be glad to help you if you encounter issues when using this plugin. Just use the support section of this plugin page."
+msgstr "Dans tous les cas, je serai heureux de vous apporter mon assistance si vous rencontrez des problèmes lors de l’utilisation de cette extension. Merci de me contacter via la page support de ce site."
+
+#. Found in description paragraph.
+msgid "This plugin is free and provided without warranty of any kind. Use it at your own risk, I'm not responsible for any improper use of this plugin, nor for any damage it might cause to your site. Always backup all your data before installing a new plugin."
+msgstr "Cette extension est gratuite et distribuée sans aucune garantie d’aucune sorte. Son utilisation se fait à vos risques et périls, je ne saurais être tenu responsable d’aucun dommage que son utilisation pourrait causer à votre site. Pensez à toujours sauvegarder vos données avant d’installer une nouvelle extension."
+
+#. Found in description paragraph.
+msgid "<strong>APCu Manager</strong> is a free and open source plugin for WordPress. It integrates many other free and open source works (as-is or modified). Please, see 'about' tab in the plugin settings to see the details."
+msgstr "<strong>APCu Manager</strong> est une extension libre et open source pour WordPress. Elle intègre de nombreuses autres œuvres libres et open source (telles quelles ou modifiées). Consultez l’onglet « à propos » dans l’extension pour obtenir des détails."
+
+#. Found in description paragraph.
+msgid "<strong>APCu Manager</strong> supports multisite report delegation (see FAQ)."
+msgstr "<strong>APCu Manager</strong> prend en charge la délégation de rapports multisites (voir FAQ)."
+
+#. Found in description paragraph.
+msgid "<strong>APCu Manager</strong> is also a full featured analytics reporting tool that analyzes all APCu operations on your site. It can report:"
+msgstr "<strong>APCu Manager</strong> est également un outil complet de rapport analytique qui détaille toutes les mesures de fonctionnement d’APCu sur votre site. Il peut signaler :"
+
+#. Found in description paragraph.
+msgid "<strong>APCu Manager</strong> works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps.One suite or W3 Total Cache. Its main management features are:"
+msgstr "<strong>APCu Manager</strong> fonctionne aussi bien sur des serveurs dédiés que mutualisés. Il est compatible avec des extensions telles que le suite PerfOps.One ou W3 Total Cache. Ses principales caractéristiques de gestion sont :"
+
+#. Found in description paragraph.
+msgid "<strong>APCu Manager</strong> is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network."
+msgstr "<strong>APCu Manager</strong> est un outil complet de gestion et d’analyse APCu. Il vous permet de surveiller et d’optimiser le fonctionnement d’APCu sur votre site ou réseau de sites WordPress."
+
+#. Found in description paragraph.
+msgid "<strong>APCu statistics and management right in the WordPress admin dashboard.</strong>"
+msgstr "<strong>Statistiques et gestion APCu directement dans le Tableau de bord WordPress.</strong>"
+
+#. Found in description list item.
+msgid "plugins consumption."
+msgstr "consommation par les extensions."
+
+#. Found in description list item.
+msgid "metrics distributions;"
+msgstr "distributions des métriques ;"
+
+#. Found in description list item.
+msgid "metrics variations;"
+msgstr "variations des métriques ;"
+
+#. Found in description list item.
+msgid "KPIs: hit ratio, free memory, cached objects, keys saturation, memory fragmentation and availability;"
+msgstr "KPIs : taux de réussite, mémoire libre, objets mis en cache, saturation des emplacements de clés, fragmentation et disponibilité ;"
+
+#. Found in description list item.
+msgid "full cache clearing."
+msgstr "nettoyage du cache."
+
+#. Found in description list item.
+msgid "individual object deletion;"
+msgstr "suppression individuelle d’objets ;"
+
+#. Found in description header.
+msgid "Donation"
+msgstr "Don"
+
+#. Found in description header.
+msgid "Support"
+msgstr "Assistance"
+
+#. Screenshot description.
+msgid "Management Tools"
+msgstr "Outils de gestion"
+
+#. Screenshot description.
+msgid "Daily Statistics"
+msgstr "Statistiques quotidiennes"
+
+#. Found in changelog paragraph.
+msgid "Please, see <a href=\"https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/CHANGELOG.md\">full changelog</a> on GitHub."
+msgstr "Merci de consulter le <a href=\"https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/CHANGELOG.md\">journal des modifications</a> sur GitHub."
