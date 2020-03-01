@@ -3,8 +3,8 @@ Contributors: PierreLannoy
 Tags: analytics, APCu, cache, monitor, w3tc
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 5.3
-Stable tag: 1.0.0
+Tested up to: 5.4
+Stable tag: 1.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ APCu statistics and management right in the WordPress admin dashboard.
 
 **APCu Manager** is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network.
 
-**APCu Manager** works on dedicated or shared servers. It is compatible with all plugins using APCu, like OPcache Manager, Traffic or W3 Total Cache. Its main management features are:
+**APCu Manager** works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps.One or W3 Total Cache. Its main management features are:
 
 * individual object deletion;
 * full cache clearing.
