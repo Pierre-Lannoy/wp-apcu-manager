@@ -111,6 +111,7 @@ class Apcu_Manager_Admin {
 				'callback'      => [ $this, 'get_settings_page' ],
 				'position'      => 50,
 				'plugin'        => APCM_SLUG,
+				'version'       => APCM_VERSION,
 				'activated'     => true,
 				'remedy'        => '',
 				'statistics'    => [ '\APCuManager\System\Statistics', 'sc_get_raw' ],
