@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased - will be 1.1.1]
 ### Changed
 - Better styling in "PerfOps Settings" page.
+### Removed
+- Unneeded tool links in settings page.
 
 ## [1.1.0] - 2020-03-01
 ### Added
