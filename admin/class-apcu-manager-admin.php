@@ -329,7 +329,7 @@ class Apcu_Manager_Admin {
 				'id'          => 'apcm_plugin_options_usecdn',
 				'checked'     => Option::network_get( 'use_cdn' ),
 				'description' => esc_html__( 'If checked, APCu Manager will use a public CDN (jsDelivr) to serve scripts and stylesheets.', 'apcu-manager' ),
-				'full_width'  => true,
+				'full_width'  => false,
 				'enabled'     => true,
 			]
 		);
@@ -345,7 +345,7 @@ class Apcu_Manager_Admin {
 				'id'          => 'apcm_plugin_options_nag',
 				'checked'     => Option::network_get( 'display_nag' ),
 				'description' => esc_html__( 'Allows APCu Manager to display admin notices throughout the admin dashboard.', 'apcu-manager' ) . '<br/>' . esc_html__( 'Note: APCu Manager respects DISABLE_NAG_NOTICES flag.', 'apcu-manager' ),
-				'full_width'  => true,
+				'full_width'  => false,
 				'enabled'     => true,
 			]
 		);
@@ -404,7 +404,7 @@ class Apcu_Manager_Admin {
 				'id'          => 'apcm_plugin_features_analytics',
 				'checked'     => Option::network_get( 'analytics' ),
 				'description' => esc_html__( 'If checked, APCu Manager will analyze APCu operations and store statistics every five minutes.', 'apcu-manager' ) . '<br/>' . esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' ),
-				'full_width'  => true,
+				'full_width'  => false,
 				'enabled'     => true,
 			]
 		);
@@ -420,7 +420,7 @@ class Apcu_Manager_Admin {
 				'id'          => 'apcm_plugin_features_history',
 				'value'       => Option::network_get( 'history' ),
 				'description' => esc_html__( 'Maximum age of data to keep for statistics.', 'apcu-manager' ),
-				'full_width'  => true,
+				'full_width'  => false,
 				'enabled'     => true,
 			]
 		);
