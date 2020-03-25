@@ -3,7 +3,9 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased - will be 1.1.1]
+## [Unreleased - will be 1.2.0]
+### Added
+- Compatibility with [DecaLog](https://wordpress.org/plugins/decalog/) early loading feature.
 ### Changed
 - The settings page have now the standard WordPress style.
 - Better styling in "PerfOps Settings" page.
