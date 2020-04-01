@@ -120,7 +120,11 @@ class Option {
 		if ( array_key_exists( $option, self::$defaults ) && ! isset( $default ) ) {
 			$default = self::$defaults[ $option ];
 		}
-		return get_option( APCM_PRODUCT_ABBREVIATION . '_' . $option, $default );
+		$val = get_option( APCM_PRODUCT_ABBREVIATION . '_' . $option, $default );
+		if ( empty( $val ) && is_bool( $default ) ) {
+			return $default;
+		}
+		return $val;
 	}
 
 	/**
@@ -135,7 +139,11 @@ class Option {
 		if ( array_key_exists( $option, self::$defaults ) && ! isset( $default ) ) {
 			$default = self::$defaults[ $option ];
 		}
-		return get_site_option( APCM_PRODUCT_ABBREVIATION . '_' . $option, $default );
+		$val = get_site_option( APCM_PRODUCT_ABBREVIATION . '_' . $option, $default );
+		if ( empty( $val ) && is_bool( $default ) ) {
+			return $default;
+		}
+		return $val;
 	}
 
 	/**
