@@ -40,7 +40,7 @@ Anyway, I'll be glad to help you if you encounter issues when using this plugin.
 
 = Privacy =
 
-This plugin, as any piece of software, is neither compliant nor non-compliant with privacy laws and regulations. It is your responsibility to use it - by activating the corresponding options or services - with respect for the personal data of your users and applicable laws.
+This plugin, as any piece of software, is neither compliant nor non-compliant with privacy laws and regulations. It is your responsibility to use it with respect for the personal data of your users and applicable laws.
 
 This plugin doesn't set any cookie in the user's browser.
 
