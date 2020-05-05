@@ -364,8 +364,8 @@ class Analytics {
 					$record[ $item ] = 0;
 				}
 				while ( 300 + Capture::$delta < $real->getTimestamp() - $ts ) {
-					$ts                   = $ts + 300;
-					$data[ $ts + $offset] = $record;
+					$ts                    = $ts + 300;
+					$data[ $ts + $offset ] = $record;
 				}
 				foreach ( $query as $timestamp => $row ) {
 					$datetime    = new \DateTime( $timestamp, new \DateTimeZone( 'UTC' ) );
@@ -483,11 +483,15 @@ class Analytics {
 				} else {
 					$control = ( $timestamp % 86400 ) % ( 3 * HOUR_IN_SECONDS );
 					if ( 300 > $control ) {
-						$hour = (string) (int) floor( ( $timestamp % 86400 ) / ( HOUR_IN_SECONDS ) );
-						if ( 1 === strlen( $hour ) ) {
-							$hour = '0' . $hour;
+						if ( 0 !== (int) floor( ( $timestamp % 86400 ) / ( HOUR_IN_SECONDS ) ) ) {
+							$hour = (string) (int) floor( ( $timestamp % 86400 ) / ( HOUR_IN_SECONDS ) );
+							if ( 1 === strlen( $hour ) ) {
+								$hour = '0' . $hour;
+							}
+							$labels[] = $hour . ':00';
+						} else {
+							$labels[] = 'null';
 						}
-						$labels[] = $hour . ':00';
 					} else {
 						$labels[] = 'null';
 					}
@@ -681,7 +685,7 @@ class Analytics {
 			if ( 1 < $this->duration ) {
 				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("YYYY-MM-DD");}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {return moment(value).format("HH:00");}},';
+				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
@@ -704,7 +708,7 @@ class Analytics {
 			if ( 1 < $this->duration ) {
 				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {return moment(value).format("HH:00");}},';
+				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
@@ -727,7 +731,7 @@ class Analytics {
 			if ( 1 < $this->duration ) {
 				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {return moment(value).format("HH:00");}},';
+				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			if ( $maxhit < 1000 ) {
 				$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString();}},';
@@ -756,7 +760,7 @@ class Analytics {
 			if ( 1 < $this->duration ) {
 				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {return moment(value).format("HH:00");}},';
+				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
@@ -779,7 +783,7 @@ class Analytics {
 			if ( 1 < $this->duration ) {
 				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {return moment(value).format("HH:00");}},';
+				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			if ( $maxscripts < 1000 ) {
 				$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString();}},';
