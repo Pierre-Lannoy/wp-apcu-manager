@@ -275,15 +275,19 @@ class Cache {
 	 * @param  string $item_name Item name. Expected to not be SQL-escaped.
 	 * @param  mixed  $value     Item value. Must be serializable if non-scalar.
 	 *                           Expected to not be SQL-escaped.
-	 * @param  string $ttl       Optional. The previously defined ttl @see self::init().
+	 * @param  int|string $ttl       Optional. The previously defined ttl @see self::init() if it's a string.
+	 *                               The ttl value in seconds if it's and integer.
 	 * @return bool False if value was not set and true if value was set.
 	 * @since  1.0.0
 	 */
 	private static function set_for_full_name( $item_name, $value, $ttl = 'default' ) {
 		$item_name  = self::normalized_item_name( $item_name );
 		$expiration = self::$default_ttl;
-		if ( array_key_exists( $ttl, self::$ttls ) ) {
+		if ( is_string( $ttl ) && array_key_exists( $ttl, self::$ttls ) ) {
 			$expiration = self::$ttls[ $ttl ];
+		}
+		if ( is_integer( $ttl ) && 0 < (int) $ttl ) {
+			$expiration = (int) $ttl;
 		}
 		if ( $expiration > 0 ) {
 			if ( wp_using_ext_object_cache() ) {
@@ -314,7 +318,8 @@ class Cache {
 	 * @param  string $item_name Item name. Expected to not be SQL-escaped.
 	 * @param  mixed  $value     Item value. Must be serializable if non-scalar.
 	 *                           Expected to not be SQL-escaped.
-	 * @param  string $ttl       Optional. The previously defined ttl @see self::init().
+	 * @param  int|string $ttl       Optional. The previously defined ttl @see self::init() if it's a string.
+	 *                               The ttl value in seconds if it's and integer.
 	 * @return bool False if value was not set and true if value was set.
 	 * @since  1.0.0
 	 */
@@ -335,7 +340,8 @@ class Cache {
 	 * @param  string $item_name Item name. Expected to not be SQL-escaped.
 	 * @param  mixed  $value     Item value. Must be serializable if non-scalar.
 	 *                           Expected to not be SQL-escaped.
-	 * @param  string $ttl       Optional. The previously defined ttl @see self::init().
+	 * @param  int|string $ttl       Optional. The previously defined ttl @see self::init() if it's a string.
+	 *                               The ttl value in seconds if it's and integer.
 	 * @return bool False if value was not set and true if value was set.
 	 * @since  1.0.0
 	 */
@@ -451,6 +457,64 @@ class Cache {
 	 */
 	public static function delete( $item_name, $blog_aware = false, $locale_aware = false, $user_aware = false ) {
 		return self::delete_for_ful_name( self::full_item_name( $item_name, $blog_aware, $locale_aware, $user_aware ) );
+	}
+
+	/**
+	 * Get the minimum value of a ttl time range.
+	 *
+	 * This function accepts generic car "*" for transients.
+	 *
+	 * @param  string  $ttl_range   The time range in seconds. May be something like '5-600' or '200'.
+	 * @return integer The ttl in seconds.
+	 * @since  1.0.0
+	 */
+	public static function get_min( $ttl_range ) {
+		if ( ! is_string( $ttl_range) ) {
+			return 0;
+		}
+		$ttls = explode( '-', $ttl_range );
+		if ( 1 === count( $ttls ) ) {
+			return (int) $ttls[0];
+		} else {
+			return (int) min( (int) $ttls[0], (int) $ttls[1] );
+		}
+	}
+
+	/**
+	 * Get the maximum value of a ttl time range.
+	 *
+	 * This function accepts generic car "*" for transients.
+	 *
+	 * @param  string  $ttl_range   The time range in seconds. May be something like '5-600' or '200'.
+	 * @return integer The ttl in seconds.
+	 * @since  1.0.0
+	 */
+	public static function get_max( $ttl_range ) {
+		if ( ! is_string( $ttl_range) ) {
+			return 0;
+		}
+		$ttls = explode( '-', $ttl_range );
+		if ( 1 === count( $ttls ) ) {
+			return (int) $ttls[0];
+		} else {
+			return (int) max( (int) $ttls[0], (int) $ttls[1] );
+		}
+	}
+
+	/**
+	 * Get the medium value of a ttl time range.
+	 *
+	 * This function accepts generic car "*" for transients.
+	 *
+	 * @param  string  $ttl_range   The time range in seconds. May be something like '5-600' or '200'.
+	 * @return integer The ttl in seconds.
+	 * @since  1.0.0
+	 */
+	public static function get_med( $ttl_range ) {
+		$min = self::get_min( $ttl_range );
+		$max = self::get_max( $ttl_range );
+		$med = $max - ( ( $max - $min ) / 2 );
+		return (int) round( $med );
 	}
 
 	/**
