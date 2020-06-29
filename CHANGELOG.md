@@ -4,6 +4,9 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased - will be 1.2.3]
+### Changed
+- Full compatibility with PHP 7.4.
+- Automatic switching between memory and transient when a cache plugin is installed without a properly configured Redis / Memcached.
 ### Fixed
 - When used for the first time, settings checkboxes may remain checked after being unchecked.
 
