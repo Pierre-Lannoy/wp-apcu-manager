@@ -254,9 +254,13 @@ class Apcu_Manager_Admin {
 				Option::network_set( 'use_cdn', array_key_exists( 'apcm_plugin_options_usecdn', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_options_usecdn' ) : false );
 				Option::network_set( 'display_nag', array_key_exists( 'apcm_plugin_options_nag', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_options_nag' ) : false );
 				Option::network_set( 'analytics', array_key_exists( 'apcm_plugin_features_analytics', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_analytics' ) : false );
+				Option::network_set( 'gc', array_key_exists( 'apcm_plugin_features_gc', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_gc' ) : false );
 				Option::network_set( 'history', array_key_exists( 'apcm_plugin_features_history', $_POST ) ? (string) filter_input( INPUT_POST, 'apcm_plugin_features_history', FILTER_SANITIZE_NUMBER_INT ) : Option::network_get( 'history' ) );
 				if ( ! Option::network_get( 'analytics' ) ) {
 					wp_clear_scheduled_hook( APCM_CRON_STATS_NAME );
+				}
+				if ( ! Option::network_get( 'gc' ) ) {
+					wp_clear_scheduled_hook( APCM_CRON_GC_NAME );
 				}
 				$message = esc_html__( 'Plugin settings have been saved.', 'apcu-manager' );
 				$code    = 0;
@@ -393,6 +397,22 @@ class Apcu_Manager_Admin {
 	 */
 	public function plugin_features_section_callback() {
 		$form = new Form();
+		add_settings_field(
+			'apcm_plugin_features_gc',
+			esc_html__( 'Garbage collector', 'apcu-manager' ),
+			[ $form, 'echo_field_checkbox' ],
+			'apcm_plugin_features_section',
+			'apcm_plugin_features_section',
+			[
+				'text'        => esc_html__( 'Activated', 'apcu-manager' ),
+				'id'          => 'apcm_plugin_features_gc',
+				'checked'     => Option::network_get( 'gc' ),
+				'description' => esc_html__( 'If checked, APCu Manager will delete cached objects as soon as they\'re out of date.', 'apcu-manager' ) . '<br/>' . esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' ),
+				'full_width'  => false,
+				'enabled'     => true,
+			]
+		);
+		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_gc' );
 		add_settings_field(
 			'apcm_plugin_features_analytics',
 			esc_html__( 'Analytics', 'apcu-manager' ),

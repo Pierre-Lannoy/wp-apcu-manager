@@ -78,7 +78,8 @@ class Core {
 	 * @access private
 	 */
 	private function define_global_hooks() {
-		add_action( 'cron_schedules', [ 'APCuManager\Plugin\Feature\Capture', 'add_cron_05_minutes_interval' ]);
+		add_action( 'cron_schedules', [ 'APCuManager\Plugin\Feature\Capture', 'add_cron_05_minutes_interval' ] );
+		add_action( 'cron_schedules', [ 'APCuManager\Plugin\Feature\GC', 'add_cron_15_minutes_interval' ] );
 		$bootstrap = new Initializer();
 		$assets    = new Assets();
 		$updater   = new Updater();
@@ -96,6 +97,14 @@ class Core {
 		if ( ! wp_next_scheduled( APCM_CRON_STATS_NAME ) ) {
 			if ( Option::network_get( 'analytics' ) ) {
 				wp_schedule_event( time(), 'five_minutes', APCM_CRON_STATS_NAME );
+			}
+		}
+		if ( Option::network_get( 'gc' ) ) {
+			$this->loader->add_action( APCM_CRON_GC_NAME, 'APCuManager\Plugin\Feature\GC', 'do' );
+		}
+		if ( ! wp_next_scheduled( APCM_CRON_GC_NAME ) ) {
+			if ( Option::network_get( 'gc' ) ) {
+				wp_schedule_event( time(), 'fifteen_minutes', APCM_CRON_GC_NAME );
 			}
 		}
 	}

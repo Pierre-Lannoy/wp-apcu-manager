@@ -74,7 +74,8 @@ class Option {
 		self::$defaults['last_check']       = [];
 		self::$defaults['history']          = 21;
 		self::$defaults['analytics']        = true;
-		self::$network                      = [ 'version', 'use_cdn', 'script_in_footer', 'display_nag', 'analytics', 'history' ];
+		self::$defaults['gc']               = false;
+		self::$network                      = [ 'version', 'use_cdn', 'script_in_footer', 'display_nag', 'analytics', 'history', 'gc' ];
 	}
 	/**
 	 * Get the options infos for Site Health "info" tab.
@@ -232,6 +233,7 @@ class Option {
 		self::network_set( 'display_nag', self::$defaults['display_nag'] );
 		self::network_set( 'analytics', self::$defaults['analytics'] );
 		self::network_set( 'history', self::$defaults['history'] );
+		self::network_set( 'gc', self::$defaults['gc'] );
 	}
 
 	/**
