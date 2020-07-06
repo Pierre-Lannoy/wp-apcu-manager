@@ -21,6 +21,8 @@ spl_autoload_register(
 			}
 			if ( strpos( $class, 'APCuManager\Plugin\Feature\\' ) === 0 ) {
 				$filepath = APCM_INCLUDES_DIR . 'features/';
+			} elseif ( strpos( $class, 'APCuManager\Plugin\Integration\\' ) === 0 ) {
+				$filepath = APCM_INCLUDES_DIR . 'integrations/';
 			} elseif ( strpos( $class, 'APCuManager\Plugin\\' ) === 0 ) {
 				$filepath = APCM_INCLUDES_DIR . 'plugin/';
 			}

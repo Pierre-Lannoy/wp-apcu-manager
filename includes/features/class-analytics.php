@@ -888,11 +888,12 @@ class Analytics {
 	/**
 	 * Query statistics table.
 	 *
-	 * @param   mixed $queried The query params.
+	 * @param   mixed       $queried The query params.
+	 * @param   boolean     $chart   Optional, return the chart if true, only the data if false;
 	 * @return array  The result of the query, ready to encode.
 	 * @since    1.0.0
 	 */
-	private function query_kpi( $queried ) {
+	public function query_kpi( $queried, $chart = true ) {
 		$result = [];
 		if ( 'ratio' === $queried || 'memory' === $queried || 'key' === $queried || 'fragmentation' === $queried || 'uptime' === $queried ) {
 			$data        = Schema::get_std_kpi( $this->filter, ! $this->is_today );
@@ -970,17 +971,17 @@ class Analytics {
 			if ( 0.0 !== $base_value && 0.0 !== $data_value ) {
 				$current = 100 * $data_value / $base_value;
 				if ( 1 > $current && 'fragmentation' === $queried ) {
-					$result[ 'kpi-main-' . $queried ] = round( $current, 2 ) . '&nbsp;%';
+					$result[ 'kpi-main-' . $queried ] = round( $current, 2 );
 				} else {
-					$result[ 'kpi-main-' . $queried ] = round( $current, 1 ) . '&nbsp;%';
+					$result[ 'kpi-main-' . $queried ] = round( $current, 1 );
 				}
 			} else {
 				if ( 0.0 !== $data_value ) {
-					$result[ 'kpi-main-' . $queried ] = '100&nbsp;%';
+					$result[ 'kpi-main-' . $queried ] = 100;
 				} elseif ( 0.0 !== $base_value ) {
-					$result[ 'kpi-main-' . $queried ] = '0&nbsp;%';
+					$result[ 'kpi-main-' . $queried ] = 0;
 				} else {
-					$result[ 'kpi-main-' . $queried ] = '-';
+					$result[ 'kpi-main-' . $queried ] = null;
 				}
 			}
 			if ( 0.0 !== $pbase_value && 0.0 !== $pdata_value ) {
@@ -989,6 +990,23 @@ class Analytics {
 				if ( 0.0 !== $pdata_value ) {
 					$previous = 100.0;
 				}
+			}
+			if ( 0.0 !== $current && 0.0 !== $previous ) {
+				$percent = round( 100 * ( $current - $previous ) / $previous, 1 );
+				if ( 0.1 > abs( $percent ) ) {
+					$percent = 0;
+				}
+				$result[ 'kpi-index-' . $queried ] = $percent;
+			} else {
+				$result[ 'kpi-index-' . $queried ] = null;
+			}
+			if ( ! $chart ) {
+				return $result;
+			}
+			if ( isset( $result[ 'kpi-main-' . $queried ] ) ) {
+				$result[ 'kpi-main-' . $queried ] = $result[ 'kpi-main-' . $queried ] . '&nbsp;%';
+			} else {
+				$result[ 'kpi-main-' . $queried ] = '-';
 			}
 			if ( 0.0 !== $current && 0.0 !== $previous ) {
 				$percent = round( 100 * ( $current - $previous ) / $previous, 1 );
