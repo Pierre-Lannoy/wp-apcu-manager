@@ -886,6 +886,164 @@ class Analytics {
 	}
 
 	/**
+	 * Query all kpis in statistics table.
+	 *
+	 * @param   array   $args   Optional. The needed args.
+	 * @return array  The KPIs ready to send.
+	 * @since    1.0.0
+	 */
+	public static function get_status_kpi_collection( $args = [] ) {
+		$result['meta'] = [
+			'plugin' => APCM_PRODUCT_NAME . ' ' . APCM_VERSION,
+			'apcu'   => APCu::name(),
+			'period' => date( 'Y-m-d' ),
+		];
+		$result['data'] = [];
+		$kpi            = new static( date( 'Y-m-d' ), date( 'Y-m-d' ), false );
+		foreach ( [ 'ratio', 'memory', 'key', 'fragmentation', 'uptime', 'object' ] as $query ) {
+			$data = $kpi->query_kpi( $query, false );
+
+			switch ( $query ) {
+				case 'ratio':
+					$val                   = Conversion::number_shorten( $data['kpi-bottom-ratio'], 0, true );
+					$result['data']['hit'] = [
+						'name'        => esc_html_x( 'Hits', 'Noun - Cache hit.', 'apcu-manager' ),
+						'short'       => esc_html_x( 'Hits', 'Noun - Short (max 4 char) - Cache hit.', 'apcu-manager' ),
+						'description' => esc_html__( 'Successful calls to the cache.', 'apcu-manager' ),
+						'dimension'   => 'none',
+						'ratio'       => [
+							'raw'      => round( $data['kpi-main-ratio'] / 100, 6 ),
+							'percent'  => round( $data['kpi-main-ratio'], 2 ),
+							'permille' => round( $data['kpi-main-ratio'] * 10, 2 ),
+						],
+						'variation'   => [
+							'raw'      => round( $data['kpi-index-ratio'] / 100, 6 ),
+							'percent'  => round( $data['kpi-index-ratio'], 2 ),
+							'permille' => round( $data['kpi-index-ratio'] * 10, 2 ),
+						],
+						'value'       => [
+							'raw'   => $data['kpi-bottom-ratio'],
+							'human' => $val['value'] . $val['abbreviation'],
+						],
+					];
+					break;
+				case 'memory':
+					$val                      = Conversion::data_shorten( $data['kpi-bottom-memory'], 0, true );
+					$result['data']['memory'] = [
+						'name'        => esc_html_x( 'Free memory', 'Noun - Memory free of allocation.', 'apcu-manager' ),
+						'short'       => esc_html_x( 'Mem.', 'Noun - Short (max 4 char) - Memory free of allocation.', 'apcu-manager' ),
+						'description' => esc_html__( 'Free memory available for APCu.', 'apcu-manager' ),
+						'dimension'   => 'memory',
+						'ratio'       => [
+							'raw'      => round( $data['kpi-main-memory'] / 100, 6 ),
+							'percent'  => round( $data['kpi-main-memory'], 2 ),
+							'permille' => round( $data['kpi-main-memory'] * 10, 2 ),
+						],
+						'variation'   => [
+							'raw'      => round( $data['kpi-index-memory'] / 100, 6 ),
+							'percent'  => round( $data['kpi-index-memory'], 2 ),
+							'permille' => round( $data['kpi-index-memory'] * 10, 2 ),
+						],
+						'value'       => [
+							'raw'   => $data['kpi-bottom-memory'],
+							'human' => $val['value'] . $val['abbreviation'],
+						],
+					];
+					break;
+				case 'object':
+					$val                      = Conversion::number_shorten( $data['kpi-main-object'], 0, true );
+					$result['data']['object'] = [
+						'name'        => esc_html_x( 'Objects', 'Noun - Cached objects.', 'apcu-manager' ),
+						'short'       => esc_html_x( 'Obj.', 'Noun - Short (max 4 char) - Cached objects.', 'apcu-manager' ),
+						'description' => esc_html__( 'Objects actually present in cache.', 'apcu-manager' ),
+						'dimension'   => 'none',
+						'ratio'       => null,
+						'variation'   => [
+							'raw'      => round( $data['kpi-index-object'] / 100, 6 ),
+							'percent'  => round( $data['kpi-index-object'], 2 ),
+							'permille' => round( $data['kpi-index-object'] * 10, 2 ),
+						],
+						'value'       => [
+							'raw'   => $data['kpi-main-object'],
+							'human' => $val['value'] . $val['abbreviation'],
+						],
+					];
+					break;
+				case 'key':
+					$val                   = Conversion::number_shorten( $data['kpi-bottom-key'], 0, true );
+					$result['data']['key'] = [
+						'name'        => esc_html_x( 'Keys', 'Noun - Allocated keys.', 'apcu-manager' ),
+						'short'       => esc_html_x( 'Keys', 'Noun - Short (max 4 char) - Allocated keys.', 'apcu-manager' ),
+						'description' => esc_html__( 'Keys allocated by APCu.', 'apcu-manager' ),
+						'dimension'   => 'none',
+						'ratio'       => [
+							'raw'      => round( $data['kpi-main-key'] / 100, 6 ),
+							'percent'  => round( $data['kpi-main-key'], 2 ),
+							'permille' => round( $data['kpi-main-key'] * 10, 2 ),
+						],
+						'variation'   => [
+							'raw'      => round( $data['kpi-index-key'] / 100, 6 ),
+							'percent'  => round( $data['kpi-index-key'], 2 ),
+							'permille' => round( $data['kpi-index-key'] * 10, 2 ),
+						],
+						'value'       => [
+							'raw'   => $data['kpi-bottom-key'],
+							'human' => $val['value'] . $val['abbreviation'],
+						],
+					];
+					break;
+				case 'fragmentation':
+					$val                     = Conversion::number_shorten( $data['kpi-bottom-fragmentation'], 0, true );
+					$result['data']['block'] = [
+						'name'        => esc_html_x( 'Small blocks', 'Noun - Small blocks.', 'apcu-manager' ),
+						'short'       => esc_html_x( 'Blk.', 'Noun - Short (max 4 char) - Small blocks.', 'apcu-manager' ),
+						'description' => esc_html__( 'Used memory small blocks (size < 5M).', 'apcu-manager' ),
+						'dimension'   => 'none',
+						'ratio'       => [
+							'raw'      => round( $data['kpi-main-fragmentation'] / 100, 6 ),
+							'percent'  => round( $data['kpi-main-fragmentation'], 2 ),
+							'permille' => round( $data['kpi-main-fragmentation'] * 10, 2 ),
+						],
+						'variation'   => [
+							'raw'      => round( $data['kpi-index-fragmentation'] / 100, 6 ),
+							'percent'  => round( $data['kpi-index-fragmentation'], 2 ),
+							'permille' => round( $data['kpi-index-fragmentation'] * 10, 2 ),
+						],
+						'value'       => [
+							'raw'   => $data['kpi-bottom-fragmentation'],
+							'human' => $val['value'] . $val['abbreviation'],
+						],
+					];
+					break;
+				case 'uptime':
+					$result['data']['uptime'] = [
+						'name'        => esc_html_x( 'Availability', 'Noun - Extrapolated availability time over 24 hours.', 'apcu-manager' ),
+						'short'       => esc_html_x( 'Avl.', 'Noun - Short (max 4 char) - Extrapolated availability time over 24 hours.', 'apcu-manager' ),
+						'description' => esc_html__( 'Extrapolated availability time over 24 hours.', 'apcu-manager' ),
+						'dimension'   => 'time',
+						'ratio'       => [
+							'raw'      => round( $data['kpi-main-uptime'] / 100, 6 ),
+							'percent'  => round( $data['kpi-main-uptime'], 2 ),
+							'permille' => round( $data['kpi-main-uptime'] * 10, 2 ),
+						],
+						'variation'   => [
+							'raw'      => round( $data['kpi-index-uptime'] / 100, 6 ),
+							'percent'  => round( $data['kpi-index-uptime'], 2 ),
+							'permille' => round( $data['kpi-index-uptime'] * 10, 2 ),
+						],
+						'value'       => [
+							'raw'   => $data['kpi-bottom-uptime'],
+							'human' => implode( ', ', Date::get_age_array_from_seconds( $data['kpi-bottom-uptime'], true, true ) ),
+						],
+					];
+					break;
+			}
+		}
+		$result['assets'] = [];
+		return $result;
+	}
+
+	/**
 	 * Query statistics table.
 	 *
 	 * @param   mixed       $queried The query params.
@@ -971,9 +1129,9 @@ class Analytics {
 			if ( 0.0 !== $base_value && 0.0 !== $data_value ) {
 				$current = 100 * $data_value / $base_value;
 				if ( 1 > $current && 'fragmentation' === $queried ) {
-					$result[ 'kpi-main-' . $queried ] = round( $current, 2 );
+					$result[ 'kpi-main-' . $queried ] = round( $current, $chart ? 2 : 4 );
 				} else {
-					$result[ 'kpi-main-' . $queried ] = round( $current, 1 );
+					$result[ 'kpi-main-' . $queried ] = round( $current, $chart ? 1 : 4 );
 				}
 			} else {
 				if ( 0.0 !== $data_value ) {
@@ -992,19 +1150,41 @@ class Analytics {
 				}
 			}
 			if ( 0.0 !== $current && 0.0 !== $previous ) {
-				$percent = round( 100 * ( $current - $previous ) / $previous, 1 );
-				if ( 0.1 > abs( $percent ) ) {
-					$percent = 0;
-				}
-				$result[ 'kpi-index-' . $queried ] = $percent;
+				$result[ 'kpi-index-' . $queried ] = round( 100 * ( $current - $previous ) / $previous, 4 );
 			} else {
 				$result[ 'kpi-index-' . $queried ] = null;
 			}
 			if ( ! $chart ) {
+				$result[ 'kpi-bottom-' . $queried ] = null;
+				switch ( $queried ) {
+					case 'ratio':
+						if ( is_array( $data ) && array_key_exists( 'sum_hit', $data ) ) {
+							$result[ 'kpi-bottom-' . $queried ] = (int) $data['sum_hit'];
+						}
+						break;
+					case 'memory':
+						$result[ 'kpi-bottom-' . $queried ] = (int) round( $base_value, 0 );
+						break;
+					case 'fragmentation':
+						if ( is_array( $data ) && array_key_exists( 'avg_frag_count', $data ) ) {
+							$result[ 'kpi-bottom-' . $queried ] = (int) round( $data['avg_frag_count'], 0 );
+						}
+						break;
+					case 'key':
+						$result[ 'kpi-bottom-' . $queried ] = (int) round( $data_value, 0 );
+						break;
+					case 'uptime':
+						if ( 0.0 !== $base_value ) {
+							$result[ 'kpi-bottom-' . $queried ] = (int) round( $this->duration * DAY_IN_SECONDS * ( $data_value / $base_value ) );
+						}
+						break;
+				}
 				return $result;
 			}
 			if ( isset( $result[ 'kpi-main-' . $queried ] ) ) {
-				$result[ 'kpi-main-' . $queried ] = $result[ 'kpi-main-' . $queried ] . '&nbsp;%';
+				if ( $chart ) {
+					$result[ 'kpi-main-' . $queried ] = $result[ 'kpi-main-' . $queried ] . '&nbsp;%';
+				}
 			} else {
 				$result[ 'kpi-main-' . $queried ] = '-';
 			}
@@ -1059,6 +1239,15 @@ class Analytics {
 				$previous = (float) $pdata['avg_slot_used'];
 			}
 			$result[ 'kpi-main-' . $queried ] = (int) round( $current, 0 );
+			if ( ! $chart ) {
+				if ( 0.0 !== $current && 0.0 !== $previous ) {
+					$result[ 'kpi-index-' . $queried ] = round( 100 * ( $current - $previous ) / $previous, 4 );
+				} else {
+					$result[ 'kpi-index-' . $queried ] = null;
+				}
+				$result[ 'kpi-bottom-' . $queried ] = null;
+				return $result;
+			}
 			if ( 0.0 !== $current && 0.0 !== $previous ) {
 				$percent = round( 100 * ( $current - $previous ) / $previous, 1 );
 				if ( 0.1 > abs( $percent ) ) {

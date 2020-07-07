@@ -63,21 +63,14 @@ class Databeam {
 						'method' => 'get_base64_logo',
 					],
 				],
-			/*'picture'      =>
-				[
-					'static' => [
-						'class'  => '\APCuManager\Plugin\Integration\Databeam',
-						'method' => 'get_base64_banner',
-					],
-				],*/
 			'type'         => 'collection::kpi',
 			'restrictions' => [ 'only_network' ],
-			'ttl'          => '300-3600:300',
+			'ttl'          => '0-3600:300',
 			'caching'      => [ 'locale' ],
 			'data_call'    =>
 				[
 					'static' => [
-						'class'  => '\Hsiss\Plugin\Integration\Databeam',
+						'class'  => '\APCuManager\Plugin\Feature\Analytics',
 						'method' => 'get_status_kpi_collection',
 					],
 				],
