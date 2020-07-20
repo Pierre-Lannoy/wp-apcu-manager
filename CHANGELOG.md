@@ -3,8 +3,9 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased - will be 1.3.0]
+## [1.3.0] - 2020-07-20
 ### Added
+- Compatibility with WordPress 5.5.
 - Garbage collector for out-of-date cached objects (see "PerfOps Settings" > "APCu Manager").
 
 ## [1.2.3] - 2020-06-29
