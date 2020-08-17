@@ -51,23 +51,23 @@ if ( ! class_exists( 'PerfOpsOne\AdminMenus' ) ) {
 				if ( ! in_array( 'perfopsone-' . $menu, self::$slugs, true ) ) {
 					switch ( $menu ) {
 						case 'analytics':
-							add_menu_page( esc_html__( 'Dashboard', 'apcu-manager' ), sprintf( esc_html__( '%s Analytics', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_analytics_page' ], 'dashicons-chart-bar', 81 );
+							add_menu_page( esc_html__( 'Dashboard', 'apcu-manager' ), sprintf( esc_html__( '%s Analytics', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_analytics_page' ], 'dashicons-chart-bar', 6666 );
 							add_submenu_page( 'perfopsone-' . $menu, esc_html__( 'Dashboard', 'apcu-manager' ), __( 'Dashboard', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_analytics_page' ], 0 );
 							break;
 						case 'tools':
-							add_menu_page( esc_html__( 'Available Tools', 'apcu-manager' ), sprintf( esc_html__( '%s Tools', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_tools_page' ], 'dashicons-admin-tools', 81 );
+							add_menu_page( esc_html__( 'Available Tools', 'apcu-manager' ), sprintf( esc_html__( '%s Tools', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_tools_page' ], 'dashicons-admin-tools', 6666 );
 							add_submenu_page( 'perfopsone-' . $menu, esc_html__( 'Available Tools', 'apcu-manager' ), __( 'Available Tools', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_tools_page' ], 0 );
 							break;
 						case 'insights':
-							add_menu_page( esc_html__( 'Available Reports', 'apcu-manager' ), sprintf( esc_html__( '%s Insights', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_insights_page' ], 'dashicons-lightbulb', 81 );
+							add_menu_page( esc_html__( 'Available Reports', 'apcu-manager' ), sprintf( esc_html__( '%s Insights', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_insights_page' ], 'dashicons-lightbulb', 6666 );
 							add_submenu_page( 'perfopsone-' . $menu, esc_html__( 'Available Reports', 'apcu-manager' ), __( 'Available Reports', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_insights_page' ], 0 );
 							break;
 						case 'records':
-							add_menu_page( esc_html__( 'Available Catalogues', 'apcu-manager' ), sprintf( esc_html__( '%s Records', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_records_page' ], 'dashicons-book', 81 );
+							add_menu_page( esc_html__( 'Available Catalogues', 'apcu-manager' ), sprintf( esc_html__( '%s Records', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_records_page' ], 'dashicons-book', 6666 );
 							add_submenu_page( 'perfopsone-' . $menu, esc_html__( 'Available Catalogues', 'apcu-manager' ), __( 'Available Catalogues', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_records_page' ], 0 );
 							break;
 						case 'settings':
-							add_menu_page( esc_html__( 'Control Center', 'apcu-manager' ), sprintf( esc_html__( '%s Settings', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_settings_page' ], 'dashicons-admin-settings', 81 );
+							add_menu_page( esc_html__( 'Control Center', 'apcu-manager' ), sprintf( esc_html__( '%s Settings', 'apcu-manager' ), 'PerfOps' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_settings_page' ], 'dashicons-admin-settings', 6666 );
 							add_submenu_page( 'perfopsone-' . $menu, esc_html__( 'Control Center', 'apcu-manager' ), __( 'Control Center', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_settings_page' ], 0 );
 							break;
 					}
