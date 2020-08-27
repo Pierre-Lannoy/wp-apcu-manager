@@ -111,46 +111,4 @@ class Databeam {
 		return $integrations;
 	}
 
-	/**
-	 * Get the server status data.
-	 *
-	 * @param   array   $args   Optional. The needed args.
-	 * @return  array   The full transformed data.
-	 * @since    1.0.0
-	 */
-	public static function get_status_kpi_collection( $args = [] ) {
-		$result['meta']   = [];
-		$result['data']   = [];
-		$result['assets'] = [];
-
-		$result['data'] = [
-			'hit' => [
-				'name'        => 'Hits per second',
-				'description' => 'The number of hits per second',
-				'values'      => [
-					'hps'     => [
-						'value' => 2254,
-						'unit'  => 'H/s',
-					],
-				],
-			],
-			'temp' => [
-				'name'        => 'Temperature',
-				'description' => 'Outdoor temperature',
-				'values'      => [
-					'imperial'     => [
-						'value' => 87,
-						'unit'  => '°F',
-					],
-					'mksi'     => [
-						'value' => 26,
-						'unit'  => '°C',
-					],
-				],
-			],
-		];
-
-		return $result;
-	}
-
 }
