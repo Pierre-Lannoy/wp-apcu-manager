@@ -4,6 +4,8 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased - Will be 1.3.1]
+### Changed
+- The positions of PerfOps menus are pushed lower to avoid collision with other plugins (thanks to [Loïc Antignac](https://github.com/webaxones)).
 
 ## [1.3.0] - 2020-07-20
 ### Added
