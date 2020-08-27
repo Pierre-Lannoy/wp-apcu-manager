@@ -1182,9 +1182,7 @@ class Analytics {
 				return $result;
 			}
 			if ( isset( $result[ 'kpi-main-' . $queried ] ) ) {
-				if ( $chart ) {
-					$result[ 'kpi-main-' . $queried ] = $result[ 'kpi-main-' . $queried ] . '&nbsp;%';
-				}
+				$result[ 'kpi-main-' . $queried ] = $result[ 'kpi-main-' . $queried ] . '&nbsp;%';
 			} else {
 				$result[ 'kpi-main-' . $queried ] = '-';
 			}
