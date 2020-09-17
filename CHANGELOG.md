@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Support for data feeds - reserved for future use.
 ### Changed
 - The positions of PerfOps menus are pushed lower to avoid collision with other plugins (thanks to [Loïc Antignac](https://github.com/webaxones)).
+- Improved layout for language indicator.
 
 ## [1.3.0] - 2020-07-20
 ### Added
