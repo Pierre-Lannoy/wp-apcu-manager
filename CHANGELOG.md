@@ -5,12 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased - Will be 1.4.0]
 ### Added
+- New WP-CLI command to toggle on/off main settings: see `wp help apcu settings` for details.
+- New WP-CLI command to display APCu Manager status: see `wp help apcu status` for details.
+- New WP-CLI command to display APCu analytics: see `wp help apcu analytics` for details.
+- Support for APCu multi configuration (web and command-line).
 - Support for data feeds - reserved for future use.
 ### Changed
 - The positions of PerfOps menus are pushed lower to avoid collision with other plugins (thanks to [Loïc Antignac](https://github.com/webaxones)).
 - Improved layout for language indicator.
 - Admin notices are now set to "don't display" by default.
 ### Fixed
+- In some cases, APCu detection may cause a PHP Warning.
 - With Firefox, some links are unclickable in the Control Center (thanks to [Emil1](https://wordpress.org/support/users/milouze/)).
 
 ## [1.3.0] - 2020-07-20
