@@ -3,7 +3,7 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased - Will be 1.4.0]
+## [Unreleased - Will be 2.0.0]
 ### Added
 - New WP-CLI command to toggle on/off main settings: see `wp help apcu settings` for details.
 - New WP-CLI command to display APCu Manager status: see `wp help apcu status` for details.
