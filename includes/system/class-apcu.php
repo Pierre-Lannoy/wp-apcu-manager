@@ -74,12 +74,15 @@ class APCu {
 	public static function name() {
 		$result = '';
 		if ( function_exists( 'apcu_cache_info' ) ) {
-			$result = 'APCu';
-			$info   = apcu_cache_info( false );
-			if ( array_key_exists( 'memory_type', $info ) ) {
-				$result .= ' (' . $info['memory_type'] . ')';
+			// phpcs:ignore
+			set_error_handler( null );
+			// phpcs:ignore
+			$info = @apcu_cache_info( false );
+			// phpcs:ignore
+			restore_error_handler();
+			if ( is_array( $info) && array_key_exists( 'memory_type', $info ) ) {
+				$result .= 'APCu (' . $info['memory_type'] . ') ' . phpversion( 'apcu' );
 			}
-			$result .= ' ' . phpversion( 'apcu' );
 		}
 		return $result;
 	}
