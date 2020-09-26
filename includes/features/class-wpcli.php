@@ -138,6 +138,9 @@ class Wpcli {
 	 *
 	 */
 	public static function analytics( $args, $assoc_args ) {
+		if ( ! Option::network_get( 'analytics' ) ) {
+			\WP_CLI::error( 'analytics are disabled.' );
+		}
 		$analytics = Analytics::get_status_kpi_collection();
 		$result    = [];
 		if ( array_key_exists( 'data', $analytics ) ) {

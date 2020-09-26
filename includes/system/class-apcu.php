@@ -80,7 +80,7 @@ class APCu {
 			$info = @apcu_cache_info( false );
 			// phpcs:ignore
 			restore_error_handler();
-			if ( is_array( $info) && array_key_exists( 'memory_type', $info ) ) {
+			if ( is_array( $info ) && array_key_exists( 'memory_type', $info ) ) {
 				$result .= 'APCu (' . $info['memory_type'] . ') ' . phpversion( 'apcu' );
 			}
 		}
