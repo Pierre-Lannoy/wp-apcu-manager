@@ -6,11 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased - Will be 2.0.0]
 
 ### Added
-- New WP-CLI command to toggle on/off main settings: see `wp help apcu settings` for details.
-- New WP-CLI command to display APCu Manager status: see `wp help apcu status` for details.
-- New WP-CLI command to display APCu analytics: see `wp help apcu analytics` for details.
+- [WP-CLI] New command to toggle on/off main settings: see `wp help apcu settings` for details.
+- [WP-CLI] New command to display APCu Manager status: see `wp help apcu status` for details.
+- [WP-CLI] New command to display APCu analytics: see `wp help apcu analytics` for details.
 - Support for APCu multi configuration (web and command-line).
 - Support for data feeds - reserved for future use.
+- New Site Health "info" section about shared memory.
 
 ### Changed
 - The positions of PerfOps menus are pushed lower to avoid collision with other plugins (thanks to [Loïc Antignac](https://github.com/webaxones)).
