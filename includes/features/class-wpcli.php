@@ -35,6 +35,9 @@ class Wpcli {
 	 *
 	 * wp apcu status
 	 *
+	 *
+	 *     === For other examples and recipes, visit https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/WP-CLI.md ===
+	 *
 	 */
 	public static function status( $args, $assoc_args ) {
 		\WP_CLI::line( sprintf( '%s is running.', Environment::plugin_version_text() ) );
@@ -77,6 +80,9 @@ class Wpcli {
 	 *
 	 * wp apcu settings enable analytics
 	 * wp apcu settings disable gc --yes
+	 *
+	 *
+	 *     === For other examples and recipes, visit https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/WP-CLI.md ===
 	 *
 	 */
 	public static function settings( $args, $assoc_args ) {
@@ -136,6 +142,9 @@ class Wpcli {
 	 * ## EXAMPLES
 	 *
 	 * wp apcu analytics
+	 *
+	 *
+	 *    === For other examples and recipes, visit https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/WP-CLI.md ===
 	 *
 	 */
 	public static function analytics( $args, $assoc_args ) {

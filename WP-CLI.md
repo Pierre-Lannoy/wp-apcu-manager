@@ -14,7 +14,7 @@ By default, the outputted format is a simple table. If you want to customize the
 
 To get detailed status and operation mode, use the `wp apcu status` command.
 
-> Note this command can tell you APCu is not activated for command-line even if it's available for WordPress itself. It is due to the fact that PHP configuration is often different between command-line and web server.
+> Note this command may tell you APCu is not activated for command-line even if it's available for WordPress itself. It is due to the fact that PHP configuration is often different between command-line and web server.
 >
 > Nevertheless, if APCu is available for WordPress, other APCu Manager commands are operational.
 
@@ -34,10 +34,4 @@ If you try to disable a setting, wp-cli will ask you to confirm. To force answer
 To disable garbage collection without confirmation prompt, type the following command:
 ```bash
 wp apcu settings disable gc --yes
-```
-
-```
-git status
-git add
-git commit
 ```

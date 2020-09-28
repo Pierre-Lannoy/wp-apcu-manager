@@ -24,6 +24,15 @@ __APCu Manager__ supports multisite report delegation.
 
 __APCu Manager__ is a free and open source plugin for WordPress. It integrates many other free and open source works (as-is or modified). Please, see 'about' tab in the plugin settings to see the details.
 
+## WP-CLI
+
+__APCu Manager__ supports a set of WP-CLI commands to:
+
+* toggle on/off main settings - see `wp help apcu settings` for details;
+* obtain operational statistics - see `wp help apcu analytics` for details.
+
+For a full help on WP-CLI commands in APCu Manager, please [read this guide](WP-CLI.md).
+
 ## Installation
 
 1. From your WordPress dashboard, visit _Plugins | Add New_.

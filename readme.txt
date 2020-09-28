@@ -4,7 +4,7 @@ Tags: analytics, APCu, cache, monitor, w3tc
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 5.5
-Stable tag: 1.3.0
+Stable tag: 2.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,6 +29,13 @@ APCu statistics and management right in the WordPress admin dashboard.
 * plugins consumption.
 
 **APCu Manager** supports multisite report delegation (see FAQ).
+
+**APCu Manager** supports a set of WP-CLI commands to:
+                 
+* toggle on/off main settings - see `wp help apcu settings` for details;
+* obtain operational statistics - see `wp help apcu analytics` for details.
+
+For a full help on WP-CLI commands in APCu Manager, please [read this guide](https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/WP-CLI.md).
 
 **APCu Manager** is a free and open source plugin for WordPress. It integrates many other free and open source works (as-is or modified). Please, see 'about' tab in the plugin settings to see the details.
 
