@@ -18,10 +18,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Improved layout for language indicator.
 - Admin notices are now set to "don't display" by default.
 - Improved changelog readability.
+- The integrated markdown parser is now [Markdown](https://github.com/cebe/markdown) from Carsten Brandt.
 
 ### Fixed
 - In some cases, APCu detection may cause a PHP Warning.
 - With Firefox, some links are unclickable in the Control Center (thanks to [Emil1](https://wordpress.org/support/users/milouze/)).
+
+### Removed
+- Parsedown as integrated markdown parser.
 
 ## [1.3.0] - 2020-07-20
 

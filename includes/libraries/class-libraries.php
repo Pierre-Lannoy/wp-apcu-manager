@@ -57,8 +57,8 @@ class Libraries {
 	 * @since 1.0.0
 	 */
 	public static function init() {
-		self::$psr4_libraries              = [];
-		self::$psr4_libraries['feather']   = [
+		self::$psr4_libraries             = [];
+		self::$psr4_libraries['feather']  = [
 			'name'    => 'Feather',
 			'prefix'  => 'Feather',
 			'base'    => APCM_VENDOR_DIR . 'feather/',
@@ -69,18 +69,18 @@ class Libraries {
 			'license' => 'mit',
 			'langs'   => 'en',
 		];
-		self::$mono_libraries              = [];
-		self::$mono_libraries['parsedown'] = [
-			'name'    => 'Parsedown',
-			'detect'  => 'Parsedown',
-			'base'    => APCM_VENDOR_DIR . 'parsedown/',
-			'version' => '1.8.0-beta-7',
+		self::$psr4_libraries['markdown'] = [
+			'name'    => 'Markdown Parser',
+			'prefix'  => 'cebe\markdownparser',
+			'base'    => APCM_VENDOR_DIR . 'markdown/',
+			'version' => '1.2.1',
 			// phpcs:ignore
-			'author'  => sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Emanuil Rusev' ),
-			'url'     => 'https://parsedown.org',
+			'author'  => sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Carsten Brandt' ),
+			'url'     => 'https://github.com/cebe/markdown',
 			'license' => 'mit',
 			'langs'   => 'en',
 		];
+		self::$mono_libraries             = [];
 	}
 
 	/**

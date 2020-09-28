@@ -9,7 +9,6 @@
 
 namespace APCuManager\Plugin;
 
-use Parsedown;
 use APCuManager\System\Nag;
 use APCuManager\System\Option;
 use Exception;

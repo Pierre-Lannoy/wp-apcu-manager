@@ -11,7 +11,7 @@
 
 namespace APCuManager\System;
 
-use Parsedown;
+use cebe\markdownparser\GithubMarkdown;
 
 /**
  * Define the Markdown functionality.
@@ -49,7 +49,7 @@ class Markdown {
 		if ( file_exists( $changelog ) ) {
 			try {
 				// phpcs:ignore
-				$content = wp_kses(file_get_contents( $changelog ), [] );
+				$content = file_get_contents( $changelog );
 				if ( $content ) {
 					switch ( $style ) {
 						case 'html':
@@ -75,8 +75,10 @@ class Markdown {
 	 * @since   2.0.0
 	 */
 	private function html_from_markdown( $content, $clean = false ) {
-		$markdown = new Parsedown();
-		$result   = $markdown->text( $content );
+		$markdown                 = new GithubMarkdown();
+		$markdown->html5          = true;
+		$markdown->enableNewlines = true;
+		$result                   = $markdown->parse( $content );
 		if ( $clean ) {
 			$result = preg_replace( '/<h1>.*<\/h1>/iU', '', $result );
 			for ( $i = 8; $i > 1; $i-- ) {
@@ -90,6 +92,7 @@ class Markdown {
 				$result
 			);
 		}
+
 		return wp_kses(
 			$result,
 			[
@@ -101,7 +104,7 @@ class Markdown {
 				'blockquote' => [ 'cite' => [] ],
 				'br'         => [],
 				'p'          => [],
-				'code'       => [],
+				'code'       => [ 'class' => [] ],
 				'pre'        => [],
 				'em'         => [],
 				'strong'     => [],
@@ -110,8 +113,6 @@ class Markdown {
 				'li'         => [],
 				'h3'         => [ 'id' => [] ],
 				'h4'         => [ 'id' => [] ],
-				'h5'         => [ 'id' => [] ],
-				'h6'         => [ 'id' => [] ],
 			]
 		);
 	}
