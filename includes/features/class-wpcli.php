@@ -15,6 +15,7 @@ use APCuManager\System\APCu;
 use APCuManager\System\Environment;
 use APCuManager\System\Option;
 use APCuManager\Plugin\Feature\Analytics;
+use APCuManager\System\Markdown;
 
 /**
  * WP-CLI for APCu Manager.
@@ -165,7 +166,23 @@ class Wpcli {
 			\WP_CLI\Utils\format_items( $assoc_args['format'], $result, [ 'kpi', 'description', 'value', 'ratio', 'variation' ] );
 		}
 	}
+
+	/**
+	 * Get the WP-CLI help file.
+	 *
+	 * @param   array $attributes  'style' => 'markdown', 'html'.
+	 *                             'mode'  => 'raw', 'clean'.
+	 * @return  string  The output of the shortcode, ready to print.
+	 * @since 1.0.0
+	 */
+	public static function sc_get_helpfile( $attributes ) {
+		$md = new Markdown();
+		return $md->get_shortcode(  'WP-CLI.md', $attributes  );
+	}
+
 }
+
+add_shortcode( 'apcm-wpcli', [ 'APCuManager\Plugin\Feature\Wpcli', 'sc_get_helpfile' ] );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	\WP_CLI::add_command( 'apcu status', [ Wpcli::class, 'status' ] );
