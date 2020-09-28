@@ -92,7 +92,6 @@ class Markdown {
 				$result
 			);
 		}
-
 		return wp_kses(
 			$result,
 			[
@@ -112,7 +111,8 @@ class Markdown {
 				'ol'         => [],
 				'li'         => [],
 				'h3'         => [ 'id' => [] ],
-				'h4'         => [ 'id' => [] ],
+				'h4'         => [ ],
+				'h5'         => [ ],
 			]
 		);
 	}

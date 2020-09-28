@@ -24,16 +24,20 @@ To toggle on/off main settings, use `wp apcu settings <enable|disable> <gc|analy
 
 If you try to disable a setting, wp-cli will ask you to confirm. To force answer to yes without prompting, just use `--yes`.
 
-#### Available settings
+### Available settings
 
 - `gc`: garbage collection feature
 - `analytics`: analytics feature
 
-#### Exemple
+### Exemple
 
 To disable garbage collection without confirmation prompt, type the following command:
 ```bash
 wp apcu settings disable gc --yes
 ```
 
-aaa
+```
+git status
+git add
+git commit
+```
