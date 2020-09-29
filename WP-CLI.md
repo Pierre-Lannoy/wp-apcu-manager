@@ -29,7 +29,7 @@ If you try to disable a setting, wp-cli will ask you to confirm. To force answer
 - `gc`: garbage collection feature
 - `analytics`: analytics feature
 
-### Exemple
+### Example
 
 To disable garbage collection without confirmation prompt, type the following command:
 ```bash
