@@ -32,6 +32,7 @@ If you try to disable a setting, wp-cli will ask you to confirm. To force answer
 ### Example
 
 To disable garbage collection without confirmation prompt, type the following command:
-```bash
-wp apcu settings disable gc --yes
+```console
+pierre@dev:~$ wp apcu settings disable gc --yes
+Success: garbage collection is now deactivated.
 ```
