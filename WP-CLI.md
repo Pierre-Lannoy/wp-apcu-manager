@@ -1,8 +1,8 @@
 APCu Manager is fully usable from command-line, thanks to [WP-CLI](https://wp-cli.org/). You can set APCu Manager options and much more, without using a web browser.
 
-1. [Obtaining statistics about APCu usage](#obtaining-statistics-about-apcu-usage)
-2. [Getting APCu Manager status](#getting-apcu-manager-status)
-3. [Managing main settings](#managing-main-settings)
+1. [Obtaining statistics about APCu usage](#obtaining-statistics-about-apcu-usage) - `wp apcu analytics`
+2. [Getting APCu Manager status](#getting-apcu-manager-status) - `wp apcu status`
+3. [Managing main settings](#managing-main-settings) - `wp apcu settings`
 
 ## Obtaining statistics about APCu usage
 
