@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased - will be 2.0.1]
 
 ### Changed
+- Improved IP detection  (thanks to [Ludovic Riaudel](https://github.com/lriaudel)).
 - [WP-CLI] Improved documentation.
 
 ### Fixed
