@@ -955,7 +955,7 @@ class Analytics {
 					$result['data']['object'] = [
 						'name'        => esc_html_x( 'Objects', 'Noun - Cached objects.', 'apcu-manager' ),
 						'short'       => esc_html_x( 'Obj.', 'Noun - Short (max 4 char) - Cached objects.', 'apcu-manager' ),
-						'description' => esc_html__( 'Objects actually present in cache.', 'apcu-manager' ),
+						'description' => esc_html__( 'Objects currently present in cache.', 'apcu-manager' ),
 						'dimension'   => 'none',
 						'ratio'       => null,
 						'variation'   => [

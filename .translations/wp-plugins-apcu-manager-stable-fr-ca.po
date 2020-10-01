@@ -1,18 +1,162 @@
-# Translation of Plugins - APCu Manager - Stable (latest release) in French (Belgium)
+# Translation of Plugins - APCu Manager - Stable (latest release) in French (Canada)
 # This file is distributed under the same license as the Plugins - APCu Manager - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-03-01 20:25+0100\n"
+"PO-Revision-Date: 2020-10-01 12:23+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Poedit 2.2.4\n"
-"Language: fr_BE\n"
+"Language: fr_CA\n"
 "Project-Id-Version: Plugins - APCu Manager - Stable (latest release)\n"
 "POT-Creation-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
+
+#: perfopsone/class-adminmenus.php:74
+msgid "%s Consoles"
+msgstr "Consoles %s"
+
+#: perfopsone/class-adminmenus.php:74 perfopsone/class-adminmenus.php:75
+msgid "Available Consoles"
+msgstr "Consoles disponibles"
+
+#: includes/system/class-sitehealth.php:321
+msgid "You should consider using shared memory (PHP shmop) to allow inter-process communication."
+msgstr "Vous devriez envisager d’utiliser la mémoire partagée (PHP shmop) pour permettre la communication inter-processus."
+
+#: includes/system/class-sitehealth.php:315
+msgid "You should allow inter-process communication"
+msgstr "Vous devriez autoriser la communication inter-processus"
+
+#: includes/system/class-sitehealth.php:309
+msgid "Your site can use shared memory to allow inter-process communication. That's great."
+msgstr "Votre site peut utiliser la mémoire partagée pour permettre la communication inter-processus. C'est super."
+
+#: includes/system/class-sitehealth.php:303
+msgid "Your site can use shared memory"
+msgstr "Votre site peut utiliser la mémoire partagée"
+
+#: includes/system/class-sitehealth.php:286
+msgid "Shared Memory Test"
+msgstr "Test de mémoire partagée"
+
+#: includes/system/class-markdown.php:46
+msgid "Sorry, unable to find or read the specified file."
+msgstr "Désolé, il est impossible de trouver ou de lire le fichier spécifié."
+
+#: admin/class-apcu-manager-admin.php:410
+msgid "If checked, APCu Manager will delete cached objects as soon as they're out of date."
+msgstr "Si coché, APCu Manager supprimera les objets dès qu’ils seront périmés."
+
+#: admin/class-apcu-manager-admin.php:402
+msgid "Garbage collector"
+msgstr "Ramasse miettes"
+
+#: includes/integrations/class-databeam.php:52
+msgid "In multisite environments, this source is available for all network sites."
+msgstr "Dans les environnements multisites, cette source est disponible pour tous les sites du réseau."
+
+#: includes/integrations/class-databeam.php:51
+msgid "Just add this and use it as source in your favorite visualizers and publishers."
+msgstr "Ajoutez ceci pour l’utiliser comme source dans vos afficheurs et publicateurs préférés."
+
+#: includes/integrations/class-databeam.php:50
+msgid "Allows to integrate, as a DataBeam source, all KPIs related to APCu."
+msgstr "Permet d’intégrer, en tant que source DataBeam, tous les KPIs liés à APCu."
+
+#: includes/integrations/class-databeam.php:49
+msgid "KPIs"
+msgstr "KPIs"
+
+#: includes/features/class-analytics.php:1022
+msgid "Extrapolated availability time over 24 hours."
+msgstr "Temps de disponibilité extrapolé sur 24 heures."
+
+#: includes/features/class-analytics.php:1021
+msgctxt "Noun - Short (max 4 char) - Extrapolated availability time over 24 hours."
+msgid "Avl."
+msgstr "Dsp."
+
+#: includes/features/class-analytics.php:1020
+msgctxt "Noun - Extrapolated availability time over 24 hours."
+msgid "Availability"
+msgstr "Disponibilité"
+
+#: includes/features/class-analytics.php:1000
+msgid "Used memory small blocks (size < 5M)."
+msgstr "Petits blocs de mémoire utilisés (taille < 5M)."
+
+#: includes/features/class-analytics.php:999
+msgctxt "Noun - Short (max 4 char) - Small blocks."
+msgid "Blk."
+msgstr "Blc."
+
+#: includes/features/class-analytics.php:998
+msgctxt "Noun - Small blocks."
+msgid "Small blocks"
+msgstr "Petits blocs"
+
+#: includes/features/class-analytics.php:977
+msgid "Keys allocated by APCu."
+msgstr "Clés attribuées par APCu."
+
+#: includes/features/class-analytics.php:976
+msgctxt "Noun - Short (max 4 char) - Allocated keys."
+msgid "Keys"
+msgstr "Clés"
+
+#: includes/features/class-analytics.php:975
+msgctxt "Noun - Allocated keys."
+msgid "Keys"
+msgstr "Clés"
+
+#: includes/features/class-analytics.php:958
+msgid "Objects actually present in cache."
+msgstr "Objets actuellement présents dans le cache."
+
+#: includes/features/class-analytics.php:957
+msgctxt "Noun - Short (max 4 char) - Cached objects."
+msgid "Obj."
+msgstr "Obj."
+
+#: includes/features/class-analytics.php:956
+msgctxt "Noun - Cached objects."
+msgid "Objects"
+msgstr "Objets"
+
+#: includes/features/class-analytics.php:935
+msgid "Free memory available for APCu."
+msgstr "Mémoire libre disponible pour APCu."
+
+#: includes/features/class-analytics.php:934
+msgctxt "Noun - Short (max 4 char) - Memory free of allocation."
+msgid "Mem."
+msgstr "Mem."
+
+#: includes/features/class-analytics.php:933
+msgctxt "Noun - Memory free of allocation."
+msgid "Free memory"
+msgstr "Mémoire libre"
+
+#: includes/features/class-analytics.php:912
+msgid "Successful calls to the cache."
+msgstr "Appels réussis au cache."
+
+#: includes/features/class-analytics.php:911
+msgctxt "Noun - Short (max 4 char) - Cache hit."
+msgid "Hits"
+msgstr "Scc."
+
+#: includes/features/class-analytics.php:910
+msgctxt "Noun - Cache hit."
+msgid "Hits"
+msgstr "Scc."
+
+#: includes/features/class-gc.php:45
+msgid "Every fifteen minutes"
+msgstr "Toutes les quinze minutes"
 
 #. translators: as in the sentence "View APCu key performance indicators and
 #. activity metrics for your network." or "View APCu key performance indicators
@@ -56,55 +200,55 @@ msgstr "APCu"
 msgid "APCu Management"
 msgstr "Gestion APCu"
 
-#: perfopsone/class-adminmenus.php:378
+#: perfopsone/class-adminmenus.php:406
 msgid "Requires at least PHP %1$s%2$s and WordPress %3$s%4$s."
 msgstr "Nécessite au moins PHP %1$s%2$s et WordPress %3$s%4$s."
 
-#: perfopsone/class-adminmenus.php:369
+#: perfopsone/class-adminmenus.php:397
 msgid "contribution"
 msgstr "contribution"
 
-#: perfopsone/class-adminmenus.php:368
+#: perfopsone/class-adminmenus.php:396
 msgid "support"
 msgstr "assistance"
 
-#: perfopsone/class-adminmenus.php:367
+#: perfopsone/class-adminmenus.php:395
 msgid "about"
 msgstr "à propos"
 
-#: perfopsone/class-adminmenus.php:366
+#: perfopsone/class-adminmenus.php:394
 msgid "settings"
 msgstr "réglages"
 
-#: perfopsone/class-adminmenus.php:241
+#: perfopsone/class-adminmenus.php:268
 msgid "No review yet."
 msgstr "Pas encore d’avis."
 
-#: perfopsone/class-adminmenus.php:238
+#: perfopsone/class-adminmenus.php:265
 msgid "%s reviews."
 msgstr "%s avis."
 
-#: perfopsone/class-adminmenus.php:233
+#: perfopsone/class-adminmenus.php:260
 msgid "%s downloads."
 msgstr "%s téléchargements."
 
-#: perfopsone/class-adminmenus.php:228
+#: perfopsone/class-adminmenus.php:255
 msgid "%s+ installs."
 msgstr "%s+ installations."
 
-#: perfopsone/class-adminmenus.php:211 perfopsone/class-adminmenus.php:218
+#: perfopsone/class-adminmenus.php:238 perfopsone/class-adminmenus.php:245
 msgid "need update"
 msgstr "nécessite une mise à jour"
 
-#: perfopsone/class-adminmenus.php:209 perfopsone/class-adminmenus.php:216
+#: perfopsone/class-adminmenus.php:236 perfopsone/class-adminmenus.php:243
 msgid "OK"
 msgstr "OK"
 
-#: perfopsone/class-adminmenus.php:203
+#: perfopsone/class-adminmenus.php:230
 msgid "Need to be updated to %s."
 msgstr "Nécessite d’être mis à jour vers %s."
 
-#: perfopsone/class-adminmenus.php:108
+#: perfopsone/class-adminmenus.php:112
 msgid "This analytics feature is currently disabled. Click here to activate it."
 msgstr "Cette fonctionnalité d’analyse est actuellement désactivée. Cliquez ici pour l’activer."
 
@@ -144,19 +288,19 @@ msgstr "Statistiques %s"
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: includes/system/class-environment.php:172
+#: includes/system/class-environment.php:173
 msgid "Debug disabled"
 msgstr "Débogage désactivé"
 
-#: includes/system/class-environment.php:172
+#: includes/system/class-environment.php:173
 msgid "Debug enabled"
 msgstr "Débogage activé"
 
-#: includes/system/class-environment.php:166
+#: includes/system/class-environment.php:167
 msgid "display"
 msgstr "affichage"
 
-#: includes/system/class-environment.php:161
+#: includes/system/class-environment.php:162
 msgid "log"
 msgstr "registre"
 
@@ -260,101 +404,103 @@ msgstr "actuellement"
 msgid "%s ago"
 msgstr "il y a %s"
 
-#: includes/system/class-sitehealth.php:320
+#: includes/system/class-sitehealth.php:375
 msgid "You should consider using PHP Intl extension. It would improve localization features on your site."
 msgstr "Vous devriez envisager d’utiliser l’extension PHP Intl. Cela permettrait d’améliorer les fonctionnalités de traduction sur votre site."
 
-#: includes/system/class-sitehealth.php:314
+#: includes/system/class-sitehealth.php:369
 msgid "You should use Intl extension"
 msgstr "Vous devriez utiliser l’extension Intl"
 
-#: includes/system/class-sitehealth.php:308
+#: includes/system/class-sitehealth.php:363
 msgid "Your site uses PHP Intl extension to improve localization features. That's great."
 msgstr "Votre site utilise l’extension PHP Intl pour améliorer les fonctionnalités de traduction. C’est super."
 
-#: includes/system/class-sitehealth.php:305
-#: includes/system/class-sitehealth.php:317
+#: includes/system/class-sitehealth.php:360
+#: includes/system/class-sitehealth.php:372
 msgid "Internationalization"
 msgstr "Internationalisation"
 
-#: includes/system/class-sitehealth.php:302
+#: includes/system/class-sitehealth.php:357
 msgid "Your site uses Intl extension"
 msgstr "Votre site utilise l’extension Intl"
 
-#: includes/system/class-sitehealth.php:285
+#: includes/system/class-sitehealth.php:340
 msgid "I18n Extension Test"
 msgstr "Test d’extension I18n"
 
-#: includes/system/class-sitehealth.php:266
+#: includes/system/class-sitehealth.php:267
 msgid "You should consider using OPcache. It would improve PHP performance of your site."
 msgstr "Vous devriez envisager d’utiliser OPcache. Cela permettrait d’améliorer les performances PHP de votre site."
 
-#: includes/system/class-sitehealth.php:260
+#: includes/system/class-sitehealth.php:261
 msgid "You should use OPcache"
 msgstr "Vous devriez utiliser OPcache"
 
-#: includes/system/class-sitehealth.php:254
+#: includes/system/class-sitehealth.php:255
 msgid "Your site uses OPcache to improve PHP performance. That's great."
 msgstr "Votre site utilise OPcache pour améliorer les performances de PHP. C’est super."
 
-#: includes/system/class-sitehealth.php:248
+#: includes/system/class-sitehealth.php:249
 msgid "Your site uses OPcache"
 msgstr "Votre site utilise OPcache"
 
-#: includes/system/class-sitehealth.php:231
+#: includes/system/class-sitehealth.php:232
 msgid "OPcache Test"
 msgstr "Test OPcache"
 
-#: includes/system/class-sitehealth.php:212
+#: includes/system/class-sitehealth.php:213
 msgid "Your site uses a dedicated object caching mechanism. That's great."
 msgstr "Votre site utilise un mécanisme dédié de mise cache d’objets. C’est super."
 
-#: includes/system/class-sitehealth.php:206
+#: includes/system/class-sitehealth.php:207
 msgid "Your site uses object caching"
 msgstr "Votre site utilise la mise en cache d’objets"
 
-#: includes/system/class-sitehealth.php:200
+#: includes/system/class-sitehealth.php:201
 msgid "Your site uses APCu, but only a few plugins know how to take advantage of it."
 msgstr "Votre site utilise APCu, mais seules quelques extensions savent comment en profiter."
 
-#: includes/system/class-sitehealth.php:194
+#: includes/system/class-sitehealth.php:195
 msgid "You should improve object caching"
 msgstr "Vous devriez améliorer la mise en cache d’objets"
 
-#: includes/system/class-sitehealth.php:188
-#: includes/system/class-sitehealth.php:200
+#: includes/system/class-sitehealth.php:189
+#: includes/system/class-sitehealth.php:201
 msgid "You should consider using a dedicated object caching mechanism, like Memcached or Redis, to improve your site's speed."
 msgstr "Vous devriez envisager d’utiliser un mécanisme dédié de mise en cache d’objets, comme Memcached ou Redis, pour améliorer la vitesse de votre site."
 
-#: includes/system/class-sitehealth.php:188
+#: includes/system/class-sitehealth.php:189
 msgid "Your site uses database transient."
 msgstr "Votre site utilise des Transients stockés en base de données."
 
-#: includes/system/class-sitehealth.php:185
-#: includes/system/class-sitehealth.php:197
-#: includes/system/class-sitehealth.php:209
-#: includes/system/class-sitehealth.php:251
-#: includes/system/class-sitehealth.php:263
+#: includes/system/class-sitehealth.php:186
+#: includes/system/class-sitehealth.php:198
+#: includes/system/class-sitehealth.php:210
+#: includes/system/class-sitehealth.php:252
+#: includes/system/class-sitehealth.php:264
+#: includes/system/class-sitehealth.php:306
+#: includes/system/class-sitehealth.php:318
 msgid "Performance"
 msgstr "Performance"
 
-#: includes/system/class-sitehealth.php:182
+#: includes/system/class-sitehealth.php:183
 msgid "You should use object caching"
 msgstr "Vous devriez utiliser la mise en cache d’objets"
 
-#: includes/system/class-sitehealth.php:164
+#: includes/system/class-sitehealth.php:165
 msgid "Object Cache Test"
 msgstr "Test de cache d’objets"
 
-#: includes/system/class-sitehealth.php:147
+#: includes/system/class-sitehealth.php:148
 msgid "Plugin diagnostic information"
 msgstr "Informations de diagnostique de l’extension"
 
-#: includes/system/class-sitehealth.php:130
+#: includes/system/class-sitehealth.php:131
 msgid "OPcache settings and status"
 msgstr "Réglages et état OPcache"
 
-#: includes/system/class-sitehealth.php:122
+#: includes/system/class-sitehealth.php:123
 msgid "Object cache"
 msgstr "Cache d’objets"
 
@@ -385,17 +531,13 @@ msgid "MIT license"
 msgstr "Licence MIT"
 
 #: includes/libraries/class-libraries.php:67
-#: includes/libraries/class-libraries.php:79
+#: includes/libraries/class-libraries.php:78
 #: includes/libraries/class-libraries.php:172
 #: includes/libraries/class-libraries.php:180
 #: includes/libraries/class-libraries.php:187
 #: includes/libraries/class-libraries.php:194
 msgid "%s & contributors"
 msgstr "%s et contributeurs"
-
-#: includes/plugin/class-updater.php:94
-msgid "Sorry, unable to find or read changelog file."
-msgstr "Désolé, il est impossible de trouver ou de lire le registre des modifications."
 
 #: includes/plugin/class-updater.php:49
 msgid "See <a href=\"%s\">what's new</a>."
@@ -413,198 +555,198 @@ msgstr "%1$s a été correctement installé."
 msgid "Every five minutes"
 msgstr "Toutes les cinq minutes"
 
-#: includes/features/class-analytics.php:1358
+#: includes/features/class-analytics.php:1567
 msgid "Last Month"
 msgstr "Mois dernier"
 
-#: includes/features/class-analytics.php:1357
+#: includes/features/class-analytics.php:1566
 msgid "This Month"
 msgstr "Mois en cours"
 
-#: includes/features/class-analytics.php:1356
+#: includes/features/class-analytics.php:1565
 msgid "Yesterday"
 msgstr "Hier"
 
-#: includes/features/class-analytics.php:1355
+#: includes/features/class-analytics.php:1564
 msgid "Today"
 msgstr "Aujourd’hui"
 
-#: includes/features/class-analytics.php:1353
+#: includes/features/class-analytics.php:1562
 msgid "Cancel"
 msgstr "Annuler"
 
-#: includes/features/class-analytics.php:1353
+#: includes/features/class-analytics.php:1562
 msgid "Custom Range"
 msgstr "Personnalisé"
 
-#: includes/features/class-analytics.php:1249
+#: includes/features/class-analytics.php:1458
 msgid "No Data"
 msgstr "Aucune donnée"
 
-#: includes/features/class-analytics.php:1198
+#: includes/features/class-analytics.php:1407
 msgid "Memory Usage"
 msgstr "Utilisation de la mémoire"
 
-#: includes/features/class-analytics.php:1172
+#: includes/features/class-analytics.php:1381
 msgid "Time ratio with an operational APCu."
 msgstr "Ratio de temps avec APCu opérationnel."
 
-#: includes/features/class-analytics.php:1171
+#: includes/features/class-analytics.php:1380
 msgctxt "Noun - Ratio of time when APCu is not disabled."
 msgid "Availability"
 msgstr "Disponibilité"
 
-#: includes/features/class-analytics.php:1167
+#: includes/features/class-analytics.php:1376
 msgid "Ratio of the small memory blocks to the total memory size."
 msgstr "Le rapport entre les petits blocs de mémoire et la taille totale de la mémoire."
 
-#: includes/features/class-analytics.php:1166
+#: includes/features/class-analytics.php:1375
 msgctxt "Noun - Ratio of the blocks < 5M to the total memory size."
 msgid "Fragmentation"
 msgstr "Fragmentation"
 
-#: includes/features/class-analytics.php:1162
+#: includes/features/class-analytics.php:1371
 msgid "Ratio of the allocated keys to the total available keys slots."
 msgstr "Le rapport entre le nombre de clés allouées et le nombre total d’emplacements de clés."
 
-#: includes/features/class-analytics.php:1161
+#: includes/features/class-analytics.php:1370
 msgctxt "Noun - Ratio of the allocated keys to the total available keys slots."
 msgid "Keys Saturation"
 msgstr "Saturation des clés"
 
-#: includes/features/class-analytics.php:1157
+#: includes/features/class-analytics.php:1366
 msgid "Number of cached objects."
 msgstr "Nombre d’objets mis en cache."
 
-#: includes/features/class-analytics.php:1156
+#: includes/features/class-analytics.php:1365
 msgctxt "Noun - Number of already cached objects."
 msgid "Objects"
 msgstr "Objets"
 
-#: includes/features/class-analytics.php:1152
+#: includes/features/class-analytics.php:1361
 msgid "Ratio of free available memory."
 msgstr "Ratio de mémoire disponible."
 
-#: includes/features/class-analytics.php:1151
+#: includes/features/class-analytics.php:1360
 msgctxt "Noun - Memory free of allocation."
 msgid "Free Memory"
 msgstr "Mémoire libre"
 
-#: includes/features/class-analytics.php:1147
+#: includes/features/class-analytics.php:1356
 msgid "The ratio between hit and total calls."
 msgstr "Le rapport entre le nombre de succès et le nombre total d’appels."
 
-#: includes/features/class-analytics.php:1122
+#: includes/features/class-analytics.php:1331
 msgid "Metrics Variations"
 msgstr "Variations des métriques"
 
-#: includes/features/class-analytics.php:1112
+#: includes/features/class-analytics.php:1321
 msgid "Availability variation."
 msgstr "Variation de la disponibilité."
 
-#: includes/features/class-analytics.php:1111
+#: includes/features/class-analytics.php:1320
 msgid "Fragmentation variation."
 msgstr "Variation de la fragmentation."
 
-#: includes/features/class-analytics.php:1110
+#: includes/features/class-analytics.php:1319
 msgid "Keys distribution."
 msgstr "Distribution des clés."
 
-#: includes/features/class-analytics.php:1109
+#: includes/features/class-analytics.php:1318
 msgid "Objects variation."
 msgstr "Variation d’objets."
 
-#: includes/features/class-analytics.php:1108
+#: includes/features/class-analytics.php:1317
 msgid "Memory distribution."
 msgstr "Distribution de la mémoire."
 
-#: includes/features/class-analytics.php:1107
+#: includes/features/class-analytics.php:1316
 msgid "Hit, miss and insert distribution."
 msgstr "Distribution des taux de succès, d’échec et d’insertion."
 
-#: includes/features/class-analytics.php:1106
+#: includes/features/class-analytics.php:1315
 msgid "Hit ratio variation."
 msgstr "Variation du taux de succès."
 
-#: includes/features/class-analytics.php:1021
+#: includes/features/class-analytics.php:1221
 msgid "available %s"
 msgstr "disponible %s"
 
-#: includes/features/class-analytics.php:1019
+#: includes/features/class-analytics.php:1219
 msgid "no availability"
 msgstr "aucune disponibilité"
 
-#: includes/features/class-analytics.php:1013
+#: includes/features/class-analytics.php:1213
 msgid "%s keys (avg.)"
 msgstr "%s clés (moy.)"
 
-#: includes/features/class-analytics.php:1010
+#: includes/features/class-analytics.php:1210
 msgid "%s blocks (avg.)"
 msgstr "%s blocs (moy.)"
 
-#: includes/features/class-analytics.php:1007
+#: includes/features/class-analytics.php:1207
 msgid "total memory: %s"
 msgstr "mémoire totale : %s"
 
-#: includes/features/class-analytics.php:1003
+#: includes/features/class-analytics.php:1203
 msgid "%s hits"
 msgstr "%s succès"
 
-#: includes/features/class-analytics.php:848
+#: includes/features/class-analytics.php:852
 #: includes/system/class-conversion.php:46
 msgctxt "Abbreviation - Stands for \"thousand\"."
 msgid "K"
 msgstr "K"
 
-#: includes/features/class-analytics.php:819
+#: includes/features/class-analytics.php:823
 #: includes/system/class-conversion.php:84
 msgctxt "Abbreviation - Stands for \"megabytes\"."
 msgid "MB"
 msgstr "Mo"
 
-#: includes/features/class-analytics.php:647
+#: includes/features/class-analytics.php:651
 msgid "Availability"
 msgstr "Disponibilité"
 
-#: includes/features/class-analytics.php:630
+#: includes/features/class-analytics.php:634
 msgid "Fragmentation"
 msgstr "Fragmentation"
 
-#: includes/features/class-analytics.php:611
+#: includes/features/class-analytics.php:615
 msgid "Free Key Slots"
 msgstr "Emplacements de clés libres"
 
-#: includes/features/class-analytics.php:607
+#: includes/features/class-analytics.php:611
 msgid "Used Key Slots"
 msgstr "Emplacements de clés utilisés"
 
-#: includes/features/class-analytics.php:591
-#: includes/features/class-analytics.php:1218
+#: includes/features/class-analytics.php:595
+#: includes/features/class-analytics.php:1427
 msgid "Objects Count"
 msgstr "Nombre d’objets"
 
-#: includes/features/class-analytics.php:572
+#: includes/features/class-analytics.php:576
 msgid "Free Memory"
 msgstr "Mémoire libre"
 
-#: includes/features/class-analytics.php:568
+#: includes/features/class-analytics.php:572
 msgid "Used Memory"
 msgstr "Mémoire Utilisée"
 
-#: includes/features/class-analytics.php:552
+#: includes/features/class-analytics.php:556
 msgid "Insert Count"
 msgstr "Nombre d’insertions"
 
-#: includes/features/class-analytics.php:548
+#: includes/features/class-analytics.php:552
 msgid "Miss Count"
 msgstr "Nombre d’échecs"
 
-#: includes/features/class-analytics.php:544
+#: includes/features/class-analytics.php:548
 msgid "Hit Count"
 msgstr "Nombre de succès"
 
-#: includes/features/class-analytics.php:523
-#: includes/features/class-analytics.php:1146
+#: includes/features/class-analytics.php:527
+#: includes/features/class-analytics.php:1355
 msgctxt "Noun - Cache hit ratio."
 msgid "Hit Ratio"
 msgstr "Taux de succès"
@@ -695,111 +837,113 @@ msgstr "Horodatage"
 msgid "Object"
 msgstr "Objet"
 
-#: admin/class-apcu-manager-admin.php:422
+#: admin/class-apcu-manager-admin.php:442
 msgid "Maximum age of data to keep for statistics."
 msgstr "Âge maximum des données à conserver pour les statistiques."
 
-#: admin/class-apcu-manager-admin.php:414
+#: admin/class-apcu-manager-admin.php:434
 msgid "Historical data"
 msgstr "Données d’historiques"
 
-#: admin/class-apcu-manager-admin.php:406
+#: admin/class-apcu-manager-admin.php:410
+#: admin/class-apcu-manager-admin.php:426
 msgid "Note: for this to work, your WordPress site must have an operational CRON."
 msgstr "Notez que pour que cela fonctionne, votre site WordPress doit avoir un CRON opérationnel."
 
-#: admin/class-apcu-manager-admin.php:406
+#: admin/class-apcu-manager-admin.php:426
 msgid "If checked, APCu Manager will analyze APCu operations and store statistics every five minutes."
 msgstr "Si coché, APCu Manager analysera le fonctionnement d’APCu et stockera les statistiques toutes les cinq minutes."
 
-#: admin/class-apcu-manager-admin.php:403
+#: admin/class-apcu-manager-admin.php:407
+#: admin/class-apcu-manager-admin.php:423
 msgid "Activated"
 msgstr "Activé"
 
-#: admin/class-apcu-manager-admin.php:398
+#: admin/class-apcu-manager-admin.php:418
 msgid "Analytics"
 msgstr "Statistiques"
 
-#: admin/class-apcu-manager-admin.php:384
+#: admin/class-apcu-manager-admin.php:388
 msgid "%d month"
 msgid_plural "%d months"
 msgstr[0] "%d mois"
 msgstr[1] "%d mois"
 
-#: admin/class-apcu-manager-admin.php:380
+#: admin/class-apcu-manager-admin.php:384
 msgid "%d week"
 msgid_plural "%d weeks"
 msgstr[0] "%d semaine"
 msgstr[1] "%d semaines"
 
-#: admin/class-apcu-manager-admin.php:366
+#: admin/class-apcu-manager-admin.php:370
 msgid "Once Daily"
 msgstr "Une fois par jour"
 
-#: admin/class-apcu-manager-admin.php:365
+#: admin/class-apcu-manager-admin.php:369
 msgid "Twice Daily"
 msgstr "Deux fois par jour"
 
-#: admin/class-apcu-manager-admin.php:364
+#: admin/class-apcu-manager-admin.php:368
 msgid "Once Hourly"
 msgstr "Une fois par heure"
 
-#: admin/class-apcu-manager-admin.php:363
+#: admin/class-apcu-manager-admin.php:367
 msgid "Never"
 msgstr "Jamais"
 
-#: admin/class-apcu-manager-admin.php:347
+#: admin/class-apcu-manager-admin.php:351
 msgid "Note: APCu Manager respects DISABLE_NAG_NOTICES flag."
 msgstr "Note : APCu Manager respecte l’indicateur DISABLE_NAG_NOTICES."
 
-#: admin/class-apcu-manager-admin.php:347
+#: admin/class-apcu-manager-admin.php:351
 msgid "Allows APCu Manager to display admin notices throughout the admin dashboard."
 msgstr "Autoriser APCu Manager à afficher les avis d’administration dans le Tableau de bord."
 
-#: admin/class-apcu-manager-admin.php:344
+#: admin/class-apcu-manager-admin.php:348
 msgid "Display"
 msgstr "Affichage"
 
-#: admin/class-apcu-manager-admin.php:339
+#: admin/class-apcu-manager-admin.php:343
 msgid "Admin notices"
 msgstr "Avis d’administration"
 
-#: admin/class-apcu-manager-admin.php:331
+#: admin/class-apcu-manager-admin.php:335
 msgid "If checked, APCu Manager will use a public CDN (jsDelivr) to serve scripts and stylesheets."
 msgstr "Si coché, APCu Manager utilisera un CDN public (jsDelivr) pour la distribution des scripts et des feuilles de style."
 
-#: admin/class-apcu-manager-admin.php:328
+#: admin/class-apcu-manager-admin.php:332
 msgid "Use public CDN"
 msgstr "Utiliser un CDN public"
 
-#: admin/class-apcu-manager-admin.php:323
+#: admin/class-apcu-manager-admin.php:327
 msgid "Resources"
 msgstr "Ressources"
 
-#: admin/class-apcu-manager-admin.php:312
+#: admin/class-apcu-manager-admin.php:316
 msgid "Logging"
 msgstr "Enregistrement"
 
-#: admin/class-apcu-manager-admin.php:308
+#: admin/class-apcu-manager-admin.php:312
 msgid "Your site does not use any logging plugin. To log all events triggered in APCu Manager, I recommend you to install the excellent (and free) %s. But it is not mandatory."
 msgstr "Votre site n’utilise aucune extension d’enregistrement. Pour enregistrer tous les évènements déclenchés par APCu Manager, je vous recommande d’installer l’excellent (et gratuit) %s. Mais ce n’est pas obligatoire."
 
-#: admin/class-apcu-manager-admin.php:305
+#: admin/class-apcu-manager-admin.php:309
 msgid "Your site is currently using %s."
 msgstr "Votre site utilise actuellement %s."
 
-#: admin/class-apcu-manager-admin.php:288
+#: admin/class-apcu-manager-admin.php:292
 msgid "Plugin settings have not been reset to defaults. Please try again."
 msgstr "Les réglages n’ont pas été réinitialisés à leurs valeurs par défaut. Veuillez réessayer."
 
-#: admin/class-apcu-manager-admin.php:283
+#: admin/class-apcu-manager-admin.php:287
 msgid "Plugin settings have been reset to defaults."
 msgstr "Le réglages ont été réinitialisées aux valeurs par défaut."
 
-#: admin/class-apcu-manager-admin.php:266
+#: admin/class-apcu-manager-admin.php:270
 msgid "Plugin settings have not been saved. Please try again."
 msgstr "Les réglages n’ont pas été mis à jour. Veuillez réessayer."
 
-#: admin/class-apcu-manager-admin.php:261
+#: admin/class-apcu-manager-admin.php:265
 msgid "Plugin settings have been saved."
 msgstr "Les réglages ont été mis à jour."
 
@@ -831,7 +975,7 @@ msgstr "Options de l’extension"
 msgid "Plugin Features"
 msgstr "Fonctionnalités de l’extension"
 
-#: includes/features/class-analytics.php:1072
+#: includes/features/class-analytics.php:1281
 #: admin/class-apcu-manager-admin.php:127
 msgid "APCu Analytics"
 msgstr "Statistiques APCu"
@@ -840,7 +984,7 @@ msgstr "Statistiques APCu"
 msgid "Delete All"
 msgstr "Tout supprimer"
 
-#: includes/features/class-analytics.php:1353
+#: includes/features/class-analytics.php:1562
 #: admin/partials/apcu-manager-admin-tools-lines.php:22
 msgid "Apply"
 msgstr "Appliquer"
@@ -873,25 +1017,21 @@ msgstr "Cette version de %s est une « release candidate ». Bien que prête p
 msgid "This version of %s is not production-ready. It is a development preview. Use it at your own risk!"
 msgstr "Cette version de %s n’est pas destinée à être mise en production. Il s’agit d’une « development preview ». Utilisez-la à vos risques et périls !"
 
-#: admin/partials/apcu-manager-admin-settings-main.php:65
+#: admin/partials/apcu-manager-admin-settings-main.php:64
 msgid "About"
 msgstr "À propos"
 
-#: admin/partials/apcu-manager-admin-settings-main.php:52
+#: admin/partials/apcu-manager-admin-settings-main.php:51
 msgid "Options"
 msgstr "Options"
 
 #. translators: as in the sentence "APCu Manager Settings" or "WordPress
 #. Settings"
 #: perfopsone/class-adminmenus.php:70
-#: admin/partials/apcu-manager-admin-settings-main.php:36
+#: admin/partials/apcu-manager-admin-settings-main.php:35
 #: admin/class-apcu-manager-admin.php:108
 msgid "%s Settings"
 msgstr "Réglages %s"
-
-#: admin/partials/apcu-manager-admin-settings-main.php:30
-msgid "Note: <a href=\"%s\">management tools</a> and <a href=\"%s\">analytics reports</a> are available via the <strong>tools menu</strong>."
-msgstr "Notez que les <a href=\"%s\">outils de gestion</a> et les <a href=\"%s\">rapports d’analyse</a> sont disponibles via le <strong>menu outils.</strong>."
 
 #: admin/partials/apcu-manager-admin-settings-options.php:31
 msgid "Reset to Defaults"

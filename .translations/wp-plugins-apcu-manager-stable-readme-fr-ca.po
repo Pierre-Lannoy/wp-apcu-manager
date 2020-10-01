@@ -1,14 +1,14 @@
-# Translation of Plugins - APCu Manager - Stable Readme (latest release) in French (France)
+# Translation of Plugins - APCu Manager - Stable Readme (latest release) in French (Canada)
 # This file is distributed under the same license as the Plugins - APCu Manager - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-01 11:53+0200\n"
+"PO-Revision-Date: 2020-10-01 11:55+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Poedit 2.2.4\n"
-"Language: fr\n"
+"Language: fr_CA\n"
 "Project-Id-Version: Plugins - APCu Manager - Stable Readme (latest release)\n"
 "POT-Creation-Date: \n"
 "Last-Translator: \n"
@@ -40,15 +40,15 @@ msgstr "activer ou désactiver le réglages principaux - voir <code>wp help apcu
 
 #. Found in description paragraph.
 msgid "This plugin doesn't handle personally identifiable information (PII)."
-msgstr "Cette extension ne manipule pas d’informations personnelles identifiables (PII)."
+msgstr "Cette extension ne traite pas de données à caractère personnel (DCP)."
 
 #. Found in description paragraph.
 msgid "This plugin doesn't set any cookie in the user's browser."
-msgstr "Cette extension ne positionne aucun cookie dans le navigateur de l’utilisateur."
+msgstr "Cette extension ne dépose pas de témoin dans le fureteur de l’utilisateur."
 
 #. Found in description paragraph.
 msgid "This plugin, as any piece of software, is neither compliant nor non-compliant with privacy laws and regulations. It is your responsibility to use it with respect for the personal data of your users and applicable laws."
-msgstr "Ce plugin, comme tout logiciel, n’est ni conforme ni non conforme aux lois et règlements sur la protection de la vie privée. Il est de votre responsabilité de l’utiliser dans le respect des données personnelles de vos utilisateurs et des lois applicables."
+msgstr "Cette extension, comme tout autre logiciel, n’est ni conforme ni non conforme aux lois et règlements sur la protection de la vie privée. Il est de votre responsabilité de l’utiliser dans le respect des données personnelles de vos utilisateurs et des lois applicables."
 
 #. Found in description header.
 msgid "Privacy"
@@ -124,7 +124,7 @@ msgstr "Cliquez sur le bouton « Installer maintenant »."
 
 #. Found in installation list item.
 msgid "Search for 'APCu Manager'."
-msgstr "Recherchez «&nbsp;APCu Manager&nbsp;»."
+msgstr "Recherchez « APCu Manager »."
 
 #. Found in installation list item.
 msgid "Visit 'Plugins &gt; Add New'."
@@ -220,4 +220,4 @@ msgstr "Statistiques quotidiennes"
 
 #. Found in changelog paragraph.
 msgid "Please, see <a href=\"https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/CHANGELOG.md\">full changelog</a> on GitHub."
-msgstr "Merci de consulter le <a href=\"https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/CHANGELOG.md\">journal des modifications</a> sur GitHub."
+msgstr "Merci de consulter le <a href=\"https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/CHANGELOG.md\">registre des modifications</a> sur GitHub."
