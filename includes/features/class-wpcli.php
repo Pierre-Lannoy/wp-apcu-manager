@@ -211,6 +211,8 @@ class Wpcli {
 	/**
 	 * Modify APCu Manager main settings.
 	 *
+	 * ## OPTIONS
+	 *
 	 * <enable|disable>
 	 * : The action to take.
 	 *
@@ -274,6 +276,8 @@ class Wpcli {
 
 	/**
 	 * Get APCu analytics for today.
+	 *
+	 * ## OPTIONS
 	 *
 	 * [--format=<format>]
 	 * : Set the output format. Note if json or yaml is chosen: full metadata is outputted too.
