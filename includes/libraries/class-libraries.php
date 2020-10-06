@@ -81,6 +81,17 @@ class Libraries {
 			'langs'   => 'en',
 		];
 		self::$mono_libraries             = [];
+		self::$mono_libraries['spyc']     = [
+			'name'    => 'Spyc',
+			'detect'  => 'Spyc',
+			'base'    => APCM_VENDOR_DIR . 'spyc/',
+			'version' => '0.6.2',
+			// phpcs:ignore
+			'author'  => sprintf( esc_html__( '%s, %s & contributors', 'apcu-manager' ), 'Vlad Andersen', 'Chris Wanstrath' ),
+			'url'     => 'https://github.com/mustangostang/spyc/',
+			'license' => 'mit',
+			'langs'   => 'en',
+		];
 	}
 
 	/**

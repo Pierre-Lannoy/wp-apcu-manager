@@ -16,6 +16,7 @@ use APCuManager\System\Environment;
 use APCuManager\System\Option;
 use APCuManager\Plugin\Feature\Analytics;
 use APCuManager\System\Markdown;
+use Spyc;
 
 /**
  * WP-CLI for APCu Manager.
@@ -275,7 +276,7 @@ class Wpcli {
 	 * Get APCu analytics for today.
 	 *
 	 * [--format=<format>]
-	 * : Set the output format. Note if json is chosen: full metadata is outputted too.
+	 * : Set the output format. Note if json or yaml is chosen: full metadata is outputted too.
 	 * ---
 	 * default: table
 	 * options:
@@ -321,7 +322,12 @@ class Wpcli {
 		}
 		$format = \WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'table' );
 		if ( 'json' === $format ) {
-			self::line( wp_json_encode( $analytics ), wp_json_encode( $analytics ), $stdout );
+			$detail = wp_json_encode( $analytics );
+			self::line( $detail, $detail, $stdout );
+		} elseif ( 'yaml' === $format ) {
+			unset( $analytics['assets'] );
+			$detail = Spyc::YAMLDump( $analytics, true, true, true );
+			self::line( $detail, $detail, $stdout );
 		} else {
 			\WP_CLI\Utils\format_items( $assoc_args['format'], $result, [ 'kpi', 'description', 'value', 'ratio', 'variation' ] );
 		}
