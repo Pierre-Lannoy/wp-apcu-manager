@@ -8,11 +8,11 @@ APCu Manager is fully usable from command-line, thanks to [WP-CLI](https://wp-cl
 
 You can get APCu analytics for today (compared with yesterday). To do that, use the `wp apcu analytics` command.
 
-By default, the outputted format is a simple table. If you want to customize the format, just use `--format=<format>`. Note if you choose `json` as format, the output will contain full data and metadata for the current day.
+By default, the outputted format is a simple table. If you want to customize the format, just use `--format=<format>`. Note if you choose `json` or `yaml` as format, the output will contain full data and metadata for the current day.
 
 ### Examples
 
-To list the loggers, type the following command:
+To display APCu analytics, type the following command:
 ```console
 pierre@dev:~$ wp apcu analytics
 +--------------+-----------------------------------------------+-------+--------+-----------+
