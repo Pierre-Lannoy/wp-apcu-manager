@@ -10,6 +10,23 @@ You can get APCu analytics for today (compared with yesterday). To do that, use 
 
 By default, the outputted format is a simple table. If you want to customize the format, just use `--format=<format>`. Note if you choose `json` as format, the output will contain full data and metadata for the current day.
 
+### Examples
+
+To list the loggers, type the following command:
+```console
+pierre@dev:~$ wp apcu analytics
++--------------+-----------------------------------------------+-------+--------+-----------+
+| kpi          | description                                   | value | ratio  | variation |
++--------------+-----------------------------------------------+-------+--------+-----------+
+| Hits         | Successful calls to the cache.                | 11K   | 81.51% | +0.68%    |
+| Free memory  | Free memory available for APCu.               | 32MB  | 99.53% | +0.18%    |
+| Keys         | Keys allocated by APCu.                       | 152   | 3.7%   | -0.38%    |
+| Small blocks | Used memory small blocks (size &lt; 5M).      | 29    | 0.38%  | +90.31%   |
+| Availability | Extrapolated availability time over 24 hours. | 24 hr | 100%   | 0%        |
+| Objects      | Objects currently present in cache.           | 152   | -      | -0.38%    |
++--------------+-----------------------------------------------+-------+--------+-----------+
+```
+
 ## Getting APCu Manager status
 
 To get detailed status and operation mode, use the `wp apcu status` command.

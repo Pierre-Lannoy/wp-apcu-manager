@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Improved IP detection  (thanks to [Ludovic Riaudel](https://github.com/lriaudel)).
 - [WP-CLI] `wp apcu settings` and `wp apcu analytics` now support `--stdout` flag.
 - [WP-CLI] Improved `wp apcu analytics` yaml formatting.
-- [WP-CLI] Improved documentation.
+- [WP-CLI] Improved documentation (with examples).
 
 ### Fixed
 - Typos in admin screens.
