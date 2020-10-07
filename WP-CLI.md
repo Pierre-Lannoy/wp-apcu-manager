@@ -3,6 +3,7 @@ APCu Manager is fully usable from command-line, thanks to [WP-CLI](https://wp-cl
 1. [Obtaining statistics about APCu usage](#obtaining-statistics-about-apcu-usage) - `wp apcu analytics`
 2. [Getting APCu Manager status](#getting-apcu-manager-status) - `wp apcu status`
 3. [Managing main settings](#managing-main-settings) - `wp apcu settings`
+4. [Misc flags](#misc-flags)
 
 ## Obtaining statistics about APCu usage
 
@@ -53,3 +54,14 @@ To disable garbage collection without confirmation prompt, type the following co
 pierre@dev:~$ wp apcu settings disable gc --yes
 Success: garbage collection is now deactivated.
 ```
+
+## Misc flags
+
+For most commands, APCu Manager lets you use the following flags:
+- `--yes`: automatically answer "yes" when a question is prompted during the command execution.
+- `--stdout`: outputs a clean STDOUT string so you can pipe or store result of command execution.
+
+> It's not mandatory to use `--stdout` when using `--format=count` or `--format=ids`: in such cases `--stdout` is assumed.
+
+> Note APCu Manager sets exit code so you can use `$?` to write scripts.
+> To know the meaning of Traffic exit codes, just use the command `wp apcu exitcode list`.
