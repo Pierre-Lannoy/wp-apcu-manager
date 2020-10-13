@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - The analytics dashboard now displays a warning if analytics features are not activated.
 
 ### Fixed
+- In admin dashboard, the statistics link is visible even if analytics features are not activated.
 - Typos in admin screens.
 - [WP-CLI] Typos in documentation.
 

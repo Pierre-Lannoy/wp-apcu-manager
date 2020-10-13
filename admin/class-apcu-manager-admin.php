@@ -172,7 +172,9 @@ class Apcu_Manager_Admin {
 	public function add_actions_links( $actions, $plugin_file, $plugin_data, $context ) {
 		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'admin.php?page=apcm-settings' ) ), esc_html__( 'Settings', 'apcu-manager' ) );
 		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'admin.php?page=apcm-tools' ) ), esc_html__( 'Tools', 'apcu-manager' ) );
-		$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'admin.php?page=apcm-viewer' ) ), esc_html__( 'Statistics', 'apcu-manager' ) );
+		if ( Option::network_get( 'analytics' ) ) {
+			$actions[] = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'admin.php?page=apcm-viewer' ) ), esc_html__( 'Statistics', 'apcu-manager' ) );
+		}
 		return $actions;
 	}
 
