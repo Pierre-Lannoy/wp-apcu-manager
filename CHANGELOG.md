@@ -3,7 +3,7 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased - will be 2.1.0]
+## [2.1.0] - 2020-10-13
 
 ### Added
 - [WP-CLI] New command to discover exit codes: see `wp help apcu exitcode` for details.
@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [WP-CLI] Typos in documentation.
 
 ### Removed
-- The "Objects Count" box in analytics page.
+- The "Objects Count" box in analytics page because it was useless.
 
 ## [2.0.0] - 2020-09-29
 
