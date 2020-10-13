@@ -1424,7 +1424,7 @@ class Analytics {
 	 */
 	public function get_count_box() {
 		$result  = '<div class="apcm-40-module">';
-		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Objects Breakdown', 'apcu-manager' ) . '</span></div>';
+		$result .= '<div class="apcm-module-title-bar"><span class="apcm-module-title">' . esc_html__( 'Objects', 'apcu-manager' ) . '</span></div>';
 		$result .= '<div class="apcm-module-content" id="apcm-count">' . $this->get_graph_placeholder( 200 ) . '</div>';
 		$result .= '</div>';
 		$result .= $this->get_refresh_script(
