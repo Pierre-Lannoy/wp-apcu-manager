@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [WP-CLI] Improved `wp apcu analytics` yaml formatting.
 - [WP-CLI] Improved documentation (with examples).
 - The analytics dashboard now displays a warning if analytics features are not activated.
+- Prepares PerfOps menus to future 5.6 version of WordPress.
 
 ### Fixed
 - In admin dashboard, the statistics link is visible even if analytics features are not activated.
