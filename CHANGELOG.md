@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 - [WP-CLI] New command to discover exit codes: see `wp help apcu exitcode` for details.
 - APCu Manager now integrates [Spyc](https://github.com/mustangostang/spyc) as yaml parser.
+- New "Objects Breakdown" box in analytics page.
 
 ### Changed
 - Improved IP detection  (thanks to [Ludovic Riaudel](https://github.com/lriaudel)).
@@ -18,6 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 - Typos in admin screens.
 - [WP-CLI] Typos in documentation.
+
+### Removed
+- The "Objects Count" box in analytics page.
 
 ## [2.0.0] - 2020-09-29
 
