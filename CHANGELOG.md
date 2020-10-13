@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [WP-CLI] `wp apcu settings` and `wp apcu analytics` now support `--stdout` flag.
 - [WP-CLI] Improved `wp apcu analytics` yaml formatting.
 - [WP-CLI] Improved documentation (with examples).
+- The analytics dashboard now displays a warning if analytics features are not activated.
 
 ### Fixed
 - Typos in admin screens.
