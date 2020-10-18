@@ -2,17 +2,25 @@
 # This file is distributed under the same license as the Plugins - APCu Manager - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-01 12:21+0200\n"
+"PO-Revision-Date: 2020-10-18 18:37+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.4.1\n"
 "Language: fr\n"
 "Project-Id-Version: Plugins - APCu Manager - Stable (latest release)\n"
 "POT-Creation-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
+
+#: includes/libraries/class-libraries.php:90
+msgid "%s, %s & contributors"
+msgstr "%s, %s et contributeurs"
+
+#: includes/features/class-analytics.php:1427
+msgid "Objects"
+msgstr "Objets"
 
 #: perfopsone/class-adminmenus.php:74
 msgid "%s Consoles"
@@ -32,7 +40,7 @@ msgstr "Vous devriez autoriser la communication inter-processus"
 
 #: includes/system/class-sitehealth.php:309
 msgid "Your site can use shared memory to allow inter-process communication. That's great."
-msgstr "Votre site peut utiliser la mémoire partagée pour permettre la communication inter-processus. C'est super."
+msgstr "Votre site peut utiliser la mémoire partagée pour permettre la communication inter-processus. C’est super."
 
 #: includes/system/class-sitehealth.php:303
 msgid "Your site can use shared memory"
@@ -46,11 +54,11 @@ msgstr "Test de mémoire partagée"
 msgid "Sorry, unable to find or read the specified file."
 msgstr "Désolé, il est impossible de trouver ou de lire le fichier spécifié."
 
-#: admin/class-apcu-manager-admin.php:410
+#: admin/class-apcu-manager-admin.php:412
 msgid "If checked, APCu Manager will delete cached objects as soon as they're out of date."
 msgstr "Si coché, APCu Manager supprimera les objets dès qu’ils seront périmés."
 
-#: admin/class-apcu-manager-admin.php:402
+#: admin/class-apcu-manager-admin.php:404
 msgid "Garbage collector"
 msgstr "Ramasse miettes"
 
@@ -113,7 +121,7 @@ msgid "Keys"
 msgstr "Clés"
 
 #: includes/features/class-analytics.php:958
-msgid "Objects actually present in cache."
+msgid "Objects currently present in cache."
 msgstr "Objets actuellement présents dans le cache."
 
 #: includes/features/class-analytics.php:957
@@ -506,36 +514,36 @@ msgstr "Cache d’objets"
 
 #. translators: as in the sentence "Product W version X by author Y (license
 #. Z)"
-#: includes/libraries/class-libraries.php:204
+#: includes/libraries/class-libraries.php:215
 msgid "<a href=\"%1$s\">%2$s %3$s</a>%4$s by %5$s (%6$s)"
 msgstr "<a href=\"%1$s\">%2$s %3$s</a>%4$s par %5$s (%6$s)"
 
-#: includes/libraries/class-libraries.php:128
+#: includes/libraries/class-libraries.php:139
 msgid "unknown license"
 msgstr "licence inconnue"
 
-#: includes/libraries/class-libraries.php:125
+#: includes/libraries/class-libraries.php:136
 msgid "GPL-3.0 license"
 msgstr "Licence GPL-3.0"
 
-#: includes/libraries/class-libraries.php:122
+#: includes/libraries/class-libraries.php:133
 msgid "GPL-2.0 license"
 msgstr "Licence GPL-2.0"
 
-#: includes/libraries/class-libraries.php:119
+#: includes/libraries/class-libraries.php:130
 msgid "Apache license, version 2.0"
 msgstr "Licence Apache, version 2.0"
 
-#: includes/libraries/class-libraries.php:116
+#: includes/libraries/class-libraries.php:127
 msgid "MIT license"
 msgstr "Licence MIT"
 
 #: includes/libraries/class-libraries.php:67
 #: includes/libraries/class-libraries.php:78
-#: includes/libraries/class-libraries.php:172
-#: includes/libraries/class-libraries.php:180
-#: includes/libraries/class-libraries.php:187
-#: includes/libraries/class-libraries.php:194
+#: includes/libraries/class-libraries.php:183
+#: includes/libraries/class-libraries.php:191
+#: includes/libraries/class-libraries.php:198
+#: includes/libraries/class-libraries.php:205
 msgid "%s & contributors"
 msgstr "%s et contributeurs"
 
@@ -721,7 +729,6 @@ msgid "Used Key Slots"
 msgstr "Emplacements de clés utilisés"
 
 #: includes/features/class-analytics.php:595
-#: includes/features/class-analytics.php:1427
 msgid "Objects Count"
 msgstr "Nombre d’objets"
 
@@ -837,125 +844,125 @@ msgstr "Horodatage"
 msgid "Object"
 msgstr "Objet"
 
-#: admin/class-apcu-manager-admin.php:442
+#: admin/class-apcu-manager-admin.php:444
 msgid "Maximum age of data to keep for statistics."
 msgstr "Âge maximum des données à conserver pour les statistiques."
 
-#: admin/class-apcu-manager-admin.php:434
+#: admin/class-apcu-manager-admin.php:436
 msgid "Historical data"
 msgstr "Données d’historiques"
 
-#: admin/class-apcu-manager-admin.php:410
-#: admin/class-apcu-manager-admin.php:426
+#: admin/class-apcu-manager-admin.php:412
+#: admin/class-apcu-manager-admin.php:428
 msgid "Note: for this to work, your WordPress site must have an operational CRON."
 msgstr "Notez que pour que cela fonctionne, votre site WordPress doit avoir un CRON opérationnel."
 
-#: admin/class-apcu-manager-admin.php:426
+#: admin/class-apcu-manager-admin.php:428
 msgid "If checked, APCu Manager will analyze APCu operations and store statistics every five minutes."
 msgstr "Si coché, APCu Manager analysera le fonctionnement d’APCu et stockera les statistiques toutes les cinq minutes."
 
-#: admin/class-apcu-manager-admin.php:407
-#: admin/class-apcu-manager-admin.php:423
+#: admin/class-apcu-manager-admin.php:409
+#: admin/class-apcu-manager-admin.php:425
 msgid "Activated"
 msgstr "Activé"
 
-#: admin/class-apcu-manager-admin.php:418
+#: admin/class-apcu-manager-admin.php:420
 msgid "Analytics"
 msgstr "Statistiques"
 
-#: admin/class-apcu-manager-admin.php:388
+#: admin/class-apcu-manager-admin.php:390
 msgid "%d month"
 msgid_plural "%d months"
 msgstr[0] "%d mois"
 msgstr[1] "%d mois"
 
-#: admin/class-apcu-manager-admin.php:384
+#: admin/class-apcu-manager-admin.php:386
 msgid "%d week"
 msgid_plural "%d weeks"
 msgstr[0] "%d semaine"
 msgstr[1] "%d semaines"
 
-#: admin/class-apcu-manager-admin.php:370
+#: admin/class-apcu-manager-admin.php:372
 msgid "Once Daily"
 msgstr "Une fois par jour"
 
-#: admin/class-apcu-manager-admin.php:369
+#: admin/class-apcu-manager-admin.php:371
 msgid "Twice Daily"
 msgstr "Deux fois par jour"
 
-#: admin/class-apcu-manager-admin.php:368
+#: admin/class-apcu-manager-admin.php:370
 msgid "Once Hourly"
 msgstr "Une fois par heure"
 
-#: admin/class-apcu-manager-admin.php:367
+#: admin/class-apcu-manager-admin.php:369
 msgid "Never"
 msgstr "Jamais"
 
-#: admin/class-apcu-manager-admin.php:351
+#: admin/class-apcu-manager-admin.php:353
 msgid "Note: APCu Manager respects DISABLE_NAG_NOTICES flag."
 msgstr "Note : APCu Manager respecte l’indicateur DISABLE_NAG_NOTICES."
 
-#: admin/class-apcu-manager-admin.php:351
+#: admin/class-apcu-manager-admin.php:353
 msgid "Allows APCu Manager to display admin notices throughout the admin dashboard."
 msgstr "Autoriser APCu Manager à afficher les avis d’administration dans le Tableau de bord."
 
-#: admin/class-apcu-manager-admin.php:348
+#: admin/class-apcu-manager-admin.php:350
 msgid "Display"
 msgstr "Affichage"
 
-#: admin/class-apcu-manager-admin.php:343
+#: admin/class-apcu-manager-admin.php:345
 msgid "Admin notices"
 msgstr "Avis d’administration"
 
-#: admin/class-apcu-manager-admin.php:335
+#: admin/class-apcu-manager-admin.php:337
 msgid "If checked, APCu Manager will use a public CDN (jsDelivr) to serve scripts and stylesheets."
 msgstr "Si coché, APCu Manager utilisera un CDN public (jsDelivr) pour la distribution des scripts et des feuilles de style."
 
-#: admin/class-apcu-manager-admin.php:332
+#: admin/class-apcu-manager-admin.php:334
 msgid "Use public CDN"
 msgstr "Utiliser un CDN public"
 
-#: admin/class-apcu-manager-admin.php:327
+#: admin/class-apcu-manager-admin.php:329
 msgid "Resources"
 msgstr "Ressources"
 
-#: admin/class-apcu-manager-admin.php:316
+#: admin/class-apcu-manager-admin.php:318
 msgid "Logging"
 msgstr "Journalisation"
 
-#: admin/class-apcu-manager-admin.php:312
+#: admin/class-apcu-manager-admin.php:314
 msgid "Your site does not use any logging plugin. To log all events triggered in APCu Manager, I recommend you to install the excellent (and free) %s. But it is not mandatory."
 msgstr "Votre site n’utilise aucune extension de journalisation. Pour journaliser tous les évènements déclenchés par APCu Manager, je vous recommande d’installer l’excellent (et gratuit) %s. Mais ce n’est pas obligatoire."
 
-#: admin/class-apcu-manager-admin.php:309
+#: admin/class-apcu-manager-admin.php:311
 msgid "Your site is currently using %s."
 msgstr "Votre site utilise actuellement %s."
 
-#: admin/class-apcu-manager-admin.php:292
+#: admin/class-apcu-manager-admin.php:294
 msgid "Plugin settings have not been reset to defaults. Please try again."
 msgstr "Les réglages n’ont pas été réinitialisés à leurs valeurs par défaut. Veuillez réessayer."
 
-#: admin/class-apcu-manager-admin.php:287
+#: admin/class-apcu-manager-admin.php:289
 msgid "Plugin settings have been reset to defaults."
 msgstr "Le réglages ont été réinitialisées aux valeurs par défaut."
 
-#: admin/class-apcu-manager-admin.php:270
+#: admin/class-apcu-manager-admin.php:272
 msgid "Plugin settings have not been saved. Please try again."
 msgstr "Les réglages n’ont pas été mis à jour. Veuillez réessayer."
 
-#: admin/class-apcu-manager-admin.php:265
+#: admin/class-apcu-manager-admin.php:267
 msgid "Plugin settings have been saved."
 msgstr "Les réglages ont été mis à jour."
 
-#: admin/class-apcu-manager-admin.php:190
+#: admin/class-apcu-manager-admin.php:192
 msgid "GitHub repository"
 msgstr "Dépôt GitHub"
 
-#: admin/class-apcu-manager-admin.php:189
+#: admin/class-apcu-manager-admin.php:191
 msgid "Support"
 msgstr "Assistance"
 
-#: admin/class-apcu-manager-admin.php:175
+#: admin/class-apcu-manager-admin.php:176
 msgid "Statistics"
 msgstr "Statistiques"
 
@@ -975,8 +982,8 @@ msgstr "Options de l’extension"
 msgid "Plugin Features"
 msgstr "Fonctionnalités de l’extension"
 
-#: includes/features/class-analytics.php:1281
 #: admin/class-apcu-manager-admin.php:127
+#: includes/features/class-analytics.php:1281
 msgid "APCu Analytics"
 msgstr "Statistiques APCu"
 
@@ -984,8 +991,8 @@ msgstr "Statistiques APCu"
 msgid "Delete All"
 msgstr "Tout supprimer"
 
-#: includes/features/class-analytics.php:1562
 #: admin/partials/apcu-manager-admin-tools-lines.php:22
+#: includes/features/class-analytics.php:1562
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -1027,9 +1034,8 @@ msgstr "Options"
 
 #. translators: as in the sentence "APCu Manager Settings" or "WordPress
 #. Settings"
-#: perfopsone/class-adminmenus.php:70
 #: admin/partials/apcu-manager-admin-settings-main.php:35
-#: admin/class-apcu-manager-admin.php:108
+#: admin/class-apcu-manager-admin.php:108 perfopsone/class-adminmenus.php:70
 msgid "%s Settings"
 msgstr "Réglages %s"
 
