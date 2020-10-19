@@ -930,14 +930,14 @@ class Analytics {
 				case 'memory':
 					$val                      = Conversion::data_shorten( $data['kpi-bottom-memory'], 0, true );
 					$result['data']['memory'] = [
-						'name'        => esc_html_x( 'Free memory', 'Noun - Memory free of allocation.', 'apcu-manager' ),
-						'short'       => esc_html_x( 'Mem.', 'Noun - Short (max 4 char) - Memory free of allocation.', 'apcu-manager' ),
-						'description' => esc_html__( 'Free memory available for APCu.', 'apcu-manager' ),
+						'name'        => esc_html_x( 'Total memory', 'Noun - Total memory available for allocation.', 'apcu-manager' ),
+						'short'       => esc_html_x( 'Mem.', 'Noun - Short (max 4 char) - Total memory available for allocation.', 'apcu-manager' ),
+						'description' => esc_html__( 'Total memory available for APCu.', 'apcu-manager' ),
 						'dimension'   => 'memory',
 						'ratio'       => [
-							'raw'      => round( $data['kpi-main-memory'] / 100, 6 ),
-							'percent'  => round( $data['kpi-main-memory'], 2 ),
-							'permille' => round( $data['kpi-main-memory'] * 10, 2 ),
+							'raw'      => round( 1.0 - $data['kpi-main-memory'] / 100, 6 ),
+							'percent'  => round( 100.0 - $data['kpi-main-memory'], 2 ),
+							'permille' => round( 1000.0 - $data['kpi-main-memory'] * 10, 2 ),
 						],
 						'variation'   => [
 							'raw'      => round( $data['kpi-index-memory'] / 100, 6 ),
