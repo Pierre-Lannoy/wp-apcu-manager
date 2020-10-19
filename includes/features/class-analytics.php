@@ -940,9 +940,9 @@ class Analytics {
 							'permille' => round( 1000.0 - $data['kpi-main-memory'] * 10, 2 ),
 						],
 						'variation'   => [
-							'raw'      => round( $data['kpi-index-memory'] / 100, 6 ),
-							'percent'  => round( $data['kpi-index-memory'], 2 ),
-							'permille' => round( $data['kpi-index-memory'] * 10, 2 ),
+							'raw'      => - round( $data['kpi-index-memory'] / 100, 6 ),
+							'percent'  => - round( $data['kpi-index-memory'], 2 ),
+							'permille' => - round( $data['kpi-index-memory'] * 10, 2 ),
 						],
 						'value'       => [
 							'raw'   => $data['kpi-bottom-memory'],
