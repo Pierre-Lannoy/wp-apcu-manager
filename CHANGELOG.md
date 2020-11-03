@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unrelease - will be 2.1.1]
 
 ### Changed
+- Improvement in the way roles are detected.
 - [WP-CLI] Memory analytics now displays total memory and occupation ratio.
 
 ## [2.1.0] - 2020-10-13
