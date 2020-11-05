@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Improvement in the way roles are detected.
 - [WP-CLI] Memory analytics now displays total memory and occupation ratio.
 
+### Fixed
+- [SEC001] User must be wrongly detected in XML-RPC or Rest API calls.
+
 ## [2.1.0] - 2020-10-13
 
 ### Added
