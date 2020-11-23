@@ -3,8 +3,8 @@ Contributors: PierreLannoy
 Tags: analytics, APCu, cache, monitor, w3tc
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 5.5
-Stable tag: 2.1.0
+Tested up to: 5.6
+Stable tag: 2.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
