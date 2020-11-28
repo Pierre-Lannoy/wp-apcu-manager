@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - APCu Manager - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2020-10-18 18:38+0200\n"
+"PO-Revision-Date: 2020-11-28 14:47+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,6 +13,16 @@ msgstr ""
 "POT-Creation-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
+
+#: includes/features/class-analytics.php:934
+msgctxt "Noun - Short (max 4 char) - Total memory available for allocation."
+msgid "Mem."
+msgstr "Mem."
+
+#: includes/features/class-analytics.php:933
+msgctxt "Noun - Total memory available for allocation."
+msgid "Total memory"
+msgstr "Mémoire totale"
 
 #: includes/libraries/class-libraries.php:90
 msgid "%s, %s & contributors"
@@ -135,18 +145,8 @@ msgid "Objects"
 msgstr "Objets"
 
 #: includes/features/class-analytics.php:935
-msgid "Free memory available for APCu."
-msgstr "Mémoire libre disponible pour APCu."
-
-#: includes/features/class-analytics.php:934
-msgctxt "Noun - Short (max 4 char) - Memory free of allocation."
-msgid "Mem."
-msgstr "Mem."
-
-#: includes/features/class-analytics.php:933
-msgctxt "Noun - Memory free of allocation."
-msgid "Free memory"
-msgstr "Mémoire libre"
+msgid "Total memory available for APCu."
+msgstr "Mémoire totale disponible pour APCu."
 
 #: includes/features/class-analytics.php:912
 msgid "Successful calls to the cache."
@@ -203,8 +203,8 @@ msgstr "Explorez et supprimez les objets APCu utilisés par votre %s."
 msgid "APCu"
 msgstr "APCu"
 
-#: admin/partials/apcu-manager-admin-tools.php:23
 #: admin/class-apcu-manager-admin.php:93
+#: admin/partials/apcu-manager-admin-tools.php:23
 msgid "APCu Management"
 msgstr "Gestion APCu"
 
@@ -398,7 +398,7 @@ msgstr "min."
 #: includes/system/class-date.php:120
 msgctxt "Unit abbreviation - Stands for \"second\"."
 msgid "sec"
-msgstr "sec."
+msgstr "s"
 
 #: includes/system/class-date.php:87
 msgid "in %s"
@@ -700,14 +700,14 @@ msgstr "mémoire totale : %s"
 msgid "%s hits"
 msgstr "%s succès"
 
-#: includes/features/class-analytics.php:852
 #: includes/system/class-conversion.php:46
+#: includes/features/class-analytics.php:852
 msgctxt "Abbreviation - Stands for \"thousand\"."
 msgid "K"
 msgstr "K"
 
-#: includes/features/class-analytics.php:823
 #: includes/system/class-conversion.php:84
+#: includes/features/class-analytics.php:823
 msgctxt "Abbreviation - Stands for \"megabytes\"."
 msgid "MB"
 msgstr "Mo"
@@ -982,8 +982,8 @@ msgstr "Options de l’extension"
 msgid "Plugin Features"
 msgstr "Fonctionnalités de l’extension"
 
-#: admin/class-apcu-manager-admin.php:127
 #: includes/features/class-analytics.php:1281
+#: admin/class-apcu-manager-admin.php:127
 msgid "APCu Analytics"
 msgstr "Statistiques APCu"
 
@@ -991,8 +991,8 @@ msgstr "Statistiques APCu"
 msgid "Delete All"
 msgstr "Tout supprimer"
 
-#: admin/partials/apcu-manager-admin-tools-lines.php:22
 #: includes/features/class-analytics.php:1562
+#: admin/partials/apcu-manager-admin-tools-lines.php:22
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -1034,8 +1034,8 @@ msgstr "Options"
 
 #. translators: as in the sentence "APCu Manager Settings" or "WordPress
 #. Settings"
+#: perfopsone/class-adminmenus.php:70 admin/class-apcu-manager-admin.php:108
 #: admin/partials/apcu-manager-admin-settings-main.php:35
-#: admin/class-apcu-manager-admin.php:108 perfopsone/class-adminmenus.php:70
 msgid "%s Settings"
 msgstr "Réglages %s"
 
