@@ -42,17 +42,4 @@ class I18n {
 	public function __construct() {
 	}
 
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since 1.0.0
-	 */
-	public function load_plugin_textdomain() {
-		load_plugin_textdomain(
-			APCM_SLUG,
-			false,
-			APCM_LANGUAGES_DIR
-		);
-	}
-
 }
