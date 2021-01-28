@@ -21,8 +21,6 @@ use Spyc;
 /**
  * Manages APCu and get analytics about its use.
  *
- * Defines methods and properties for WP-CLI commands.
- *
  * @package Features
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
  * @since   2.0.0
