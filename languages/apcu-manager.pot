@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: APCu Manager\n"
-"POT-Creation-Date: 2020-11-28 14:46+0100\n"
+"POT-Creation-Date: 2021-02-24 00:24+0100\n"
 "PO-Revision-Date: 2019-07-08 14:07+0200\n"
 "Last-Translator: Pierre Lannoy <pierre@lannoy.fr>\n"
 "Language-Team: Pierre Lannoy <pierre@lannoy.fr>\n"
@@ -856,19 +856,19 @@ msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/system/class-environment.php:162
+#: includes/system/class-environment.php:175
 msgid "log"
 msgstr ""
 
-#: includes/system/class-environment.php:167
+#: includes/system/class-environment.php:180
 msgid "display"
 msgstr ""
 
-#: includes/system/class-environment.php:173
+#: includes/system/class-environment.php:186
 msgid "Debug enabled"
 msgstr ""
 
-#: includes/system/class-environment.php:173
+#: includes/system/class-environment.php:186
 msgid "Debug disabled"
 msgstr ""
 
