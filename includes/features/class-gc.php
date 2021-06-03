@@ -12,7 +12,7 @@
 namespace APCuManager\Plugin\Feature;
 
 use APCuManager\System\Cache;
-use APCuManager\System\Logger;
+
 use APCuManager\Plugin\Feature\Schema;
 
 /**
@@ -66,10 +66,10 @@ class GC {
 					}
 				}
 				if ( 0 !== $cpt ) {
-					Logger::info( sprintf( '%d out of date object(s) deleted.', $cpt ), 0 );
+					\DecaLog\Engine::eventsLogger( APCM_SLUG )->info( sprintf( '%d out of date object(s) deleted.', $cpt ) );
 				}
 			} catch ( \Throwable $e ) {
-				Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), [ 'code' => $e->getCode() ] );
 			}
 		}
 	}

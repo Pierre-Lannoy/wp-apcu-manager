@@ -68,7 +68,7 @@ function apcm_uninstall() {
  * @since 1.0.0
  */
 function apcm_run() {
-	\APCuManager\System\Logger::init();
+	\DecaLog\Engine::initPlugin( APCM_SLUG, APCM_PRODUCT_NAME, APCM_VERSION );
 	$plugin = new APCuManager\Plugin\Core();
 	$plugin->run();
 }

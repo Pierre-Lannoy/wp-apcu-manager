@@ -13,7 +13,7 @@ use APCuManager\System\Nag;
 use APCuManager\System\Option;
 use Exception;
 use APCuManager\Plugin\Feature\Schema;
-use APCuManager\System\Logger;
+
 use APCuManager\System\Markdown;
 
 /**
@@ -44,7 +44,7 @@ class Updater {
 				$this->update( $old );
 				// phpcs:ignore
 				$message  = sprintf( esc_html__( '%1$s has been correctly updated from version %2$s to version %3$s.', 'apcu-manager' ), APCM_PRODUCT_NAME, $old, APCM_VERSION );
-				Logger::notice( $message );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->notice( $message );
 				// phpcs:ignore
 				$message .= ' ' . sprintf( __( 'See <a href="%s">what\'s new</a>.', 'apcu-manager' ), admin_url( 'admin.php?page=apcm-settings&tab=about' ) );
 			}

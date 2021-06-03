@@ -11,7 +11,7 @@
 
 namespace APCuManager\System;
 
-use APCuManager\System\Logger;
+
 use APCuManager\System\Option;
 use APCuManager\System\File;
 
@@ -102,7 +102,7 @@ class APCu {
 					$cpt++;
 				}
 			}
-			Logger::info( sprintf( '%d object(s) deleted.', $cpt ) );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->info( sprintf( '%d object(s) deleted.', $cpt ) );
 		}
 		return $cpt;
 	}
@@ -115,7 +115,7 @@ class APCu {
 	public static function reset() {
 		if ( function_exists( 'apcu_clear_cache' ) ) {
 			apcu_clear_cache();
-			Logger::notice( 'Cache cleared.' );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->notice( 'Cache cleared.' );
 		}
 	}
 

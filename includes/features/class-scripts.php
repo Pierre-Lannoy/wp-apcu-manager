@@ -12,7 +12,7 @@
 namespace APCuManager\Plugin\Feature;
 
 use APCuManager\System\Conversion;
-use APCuManager\System\Logger;
+
 use APCuManager\System\Date;
 use APCuManager\System\Timezone;
 use APCuManager\System\APCu;
@@ -140,7 +140,7 @@ class Scripts extends \WP_List_Table {
 					}
 				}
 			} catch ( \Throwable $e ) {
-				Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), [ 'code' => $e->getCode() ] );
 			}
 		}
 	}

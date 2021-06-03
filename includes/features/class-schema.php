@@ -15,7 +15,7 @@ use APCuManager\System\APCu;
 
 use APCuManager\System\Option;
 use APCuManager\System\Database;
-use APCuManager\System\Logger;
+
 use APCuManager\System\Cache;
 
 /**
@@ -104,12 +104,12 @@ class Schema {
 		global $wpdb;
 		try {
 			$this->create_tables();
-			Logger::debug( sprintf( 'Table "%s" created.', $wpdb->base_prefix . self::$statistics ) );
-			Logger::debug( sprintf( 'Table "%s" created.', $wpdb->base_prefix . self::$details ) );
-			Logger::info( 'Schema installed.' );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Table "%s" created.', $wpdb->base_prefix . self::$statistics ) );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Table "%s" created.', $wpdb->base_prefix . self::$details ) );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->info( 'Schema installed.' );
 		} catch ( \Throwable $e ) {
-			Logger::alert( sprintf( 'Unable to create "%s" and/or "%s" table: %s', $wpdb->base_prefix . self::$statistics, $wpdb->base_prefix . self::$details, $e->getMessage() ), $e->getCode() );
-			Logger::alert( 'Schema not installed.', $e->getCode() );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->alert( sprintf( 'Unable to create "%s" and/or "%s" table: %s', $wpdb->base_prefix . self::$statistics, $wpdb->base_prefix . self::$details, $e->getMessage() ), $e->getCode() );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->alert( 'Schema not installed.', [ 'code' => $e->getCode() ] );
 		}
 	}
 
@@ -123,12 +123,12 @@ class Schema {
 		$sql = 'DROP TABLE IF EXISTS ' . $wpdb->base_prefix . self::$statistics;
 		// phpcs:ignore
 		$wpdb->query( $sql );
-		Logger::debug( sprintf( 'Table "%s" removed.', $wpdb->base_prefix . self::$statistics ) );
+		\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Table "%s" removed.', $wpdb->base_prefix . self::$statistics ) );
 		$sql = 'DROP TABLE IF EXISTS ' . $wpdb->base_prefix . self::$details;
 		// phpcs:ignore
 		$wpdb->query( $sql );
-		Logger::debug( sprintf( 'Table "%s" removed.', $wpdb->base_prefix . self::$details ) );
-		Logger::debug( 'Schema destroyed.' );
+		\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Table "%s" removed.', $wpdb->base_prefix . self::$details ) );
+		\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'Schema destroyed.' );
 	}
 
 	/**
@@ -140,11 +140,11 @@ class Schema {
 		global $wpdb;
 		try {
 			$this->create_tables();
-			Logger::debug( sprintf( 'Table "%s" updated.', $wpdb->base_prefix . self::$statistics ) );
-			Logger::debug( sprintf( 'Table "%s" updated.', $wpdb->base_prefix . self::$details ) );
-			Logger::info( 'Schema updated.' );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Table "%s" updated.', $wpdb->base_prefix . self::$statistics ) );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Table "%s" updated.', $wpdb->base_prefix . self::$details ) );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->info( 'Schema updated.' );
 		} catch ( \Throwable $e ) {
-			Logger::alert( sprintf( 'Unable to update "%s" and/or "%s" table: %s', $wpdb->base_prefix . self::$statistics, $wpdb->base_prefix . self::$details, $e->getMessage() ), $e->getCode() );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->alert( sprintf( 'Unable to update "%s" and/or "%s" table: %s', $wpdb->base_prefix . self::$statistics, $wpdb->base_prefix . self::$details, $e->getMessage() ), $e->getCode() );
 		}
 	}
 
@@ -163,12 +163,12 @@ class Schema {
 		$count    = $database->purge( self::$statistics, 'timestamp', 24 * $days );
 		$count    = $count + $database->purge( self::$details, 'timestamp', 24 * $days );
 		if ( 0 === $count ) {
-			Logger::debug( 'No old records to delete.' );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'No old records to delete.' );
 		} elseif ( 1 === $count ) {
-			Logger::debug( '1 old record deleted.' );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( '1 old record deleted.' );
 			Cache::delete_global( 'data/oldestdate' );
 		} else {
-			Logger::debug( sprintf( '%1$s old records deleted.', $count ) );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( '%1$s old records deleted.', $count ) );
 			Cache::delete_global( 'data/oldestdate' );
 		}
 

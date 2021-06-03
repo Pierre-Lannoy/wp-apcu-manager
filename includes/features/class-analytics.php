@@ -19,7 +19,7 @@ use APCuManager\System\L10n;
 use APCuManager\System\APCu;
 use APCuManager\System\Timezone;
 use APCuManager\System\UUID;
-use APCuManager\System\Logger;
+
 use APCuManager\Plugin\Feature\Capture;
 use Feather;
 

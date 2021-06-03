@@ -13,7 +13,7 @@ use APCuManager\Plugin\Feature\Analytics;
 use APCuManager\Plugin\Feature\AnalyticsFactory;
 use APCuManager\System\Assets;
 use APCuManager\System\Environment;
-use APCuManager\System\Logger;
+
 use APCuManager\System\Role;
 use APCuManager\System\Option;
 use APCuManager\System\Form;
@@ -267,12 +267,12 @@ class Apcu_Manager_Admin {
 				$message = esc_html__( 'Plugin settings have been saved.', 'apcu-manager' );
 				$code    = 0;
 				add_settings_error( 'apcm_no_error', $code, $message, 'updated' );
-				Logger::info( 'Plugin settings updated.', $code );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->info( 'Plugin settings updated.', [ 'code' => $code ] );
 			} else {
 				$message = esc_html__( 'Plugin settings have not been saved. Please try again.', 'apcu-manager' );
 				$code    = 2;
 				add_settings_error( 'apcm_nonce_error', $code, $message, 'error' );
-				Logger::warning( 'Plugin settings not updated.', $code );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->warning( 'Plugin settings not updated.', [ 'code' => $code ] );
 			}
 		}
 	}
@@ -289,12 +289,12 @@ class Apcu_Manager_Admin {
 				$message = esc_html__( 'Plugin settings have been reset to defaults.', 'apcu-manager' );
 				$code    = 0;
 				add_settings_error( 'apcm_no_error', $code, $message, 'updated' );
-				Logger::info( 'Plugin settings reset to defaults.', $code );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->info( 'Plugin settings reset to defaults.', [ 'code' => $code ] );
 			} else {
 				$message = esc_html__( 'Plugin settings have not been reset to defaults. Please try again.', 'apcu-manager' );
 				$code    = 2;
 				add_settings_error( 'apcm_nonce_error', $code, $message, 'error' );
-				Logger::warning( 'Plugin settings not reset to defaults.', $code );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->warning( 'Plugin settings not reset to defaults.', [ 'code' => $code ] );
 			}
 		}
 	}

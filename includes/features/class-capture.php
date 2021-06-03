@@ -12,7 +12,7 @@
 namespace APCuManager\Plugin\Feature;
 
 use APCuManager\System\Cache;
-use APCuManager\System\Logger;
+
 use APCuManager\Plugin\Feature\Schema;
 
 /**
@@ -111,13 +111,13 @@ class Capture {
 			$cache_id = 'data/lastcheck';
 			$old      = Cache::get_global( $cache_id );
 			if ( ! isset( $old ) ) {
-				Logger::debug( 'No APCu transient.' );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'No APCu transient.' );
 			} elseif ( ! array_key_exists( 'timestamp', $old ) ) {
-				Logger::debug( 'No APCu timestamp.' );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'No APCu timestamp.' );
 			} elseif ( 300 - self::$delta > $time - $old['timestamp'] ) {
-				Logger::debug( sprintf( 'Delta time too short: %d sec. Launching recycling process.', $time - $old['timestamp'] ) );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Delta time too short: %d sec. Launching recycling process.', $time - $old['timestamp'] ) );
 			} elseif ( 300 + self::$delta < $time - $old['timestamp'] ) {
-				Logger::debug( sprintf( 'Delta time too long: %d sec. Launching recycling process.', $time - $old['timestamp'] ) );
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( sprintf( 'Delta time too long: %d sec. Launching recycling process.', $time - $old['timestamp'] ) );
 			}
 			if ( isset( $old ) && array_key_exists( 'timestamp', $old ) && ( 300 + self::$delta > $time - $old['timestamp'] ) ) {
 				try {
@@ -166,9 +166,9 @@ class Capture {
 					}
 					Cache::set_global( $cache_id, $value, 'check' );
 					$schema->write_statistics_record_to_database( $record, $details );
-					Logger::debug( 'APCu is enabled. Statistics recorded.' );
+					\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'APCu is enabled. Statistics recorded.' );
 				} catch ( \Throwable $e ) {
-					Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
+					\DecaLog\Engine::eventsLogger( APCM_SLUG )->error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), [ 'code' => $e->getCode() ] );
 				}
 			} elseif ( isset( $old ) && array_key_exists( 'timestamp', $old ) && ( 300 - self::$delta > $time - $old['timestamp'] ) ) {
 				// What to do when delta is less than 59 sec?
@@ -179,14 +179,14 @@ class Capture {
 					Cache::set_global( $cache_id, $value, 'check' );
 					$record['status'] = 'recycle_in_progress';
 					$schema->write_statistics_record_to_database( $record, $details );
-					Logger::debug( 'APCu is enabled. Recovery cycle.' );
+					\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'APCu is enabled. Recovery cycle.' );
 				} catch ( \Throwable $e ) {
-					Logger::error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), $e->getCode() );
+					\DecaLog\Engine::eventsLogger( APCM_SLUG )->error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), [ 'code' => $e->getCode() ] );
 				}
 			}
 		} else {
 			$schema->write_statistics_record_to_database( $record );
-			Logger::debug( 'APCu is disabled. No statistics to record.' );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'APCu is disabled. No statistics to record.' );
 		}
 	}
 
