@@ -3,6 +3,13 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased - will be 2.4.0] - 2021-06-xx
+
+### Added
+- Compatibility with WordPress 5.8.
+- Integration with DecaLog SDK.
+- Traces and metrics collation and publication.
+
 ## [2.3.0] - 2021-02-24
 
 ### Added

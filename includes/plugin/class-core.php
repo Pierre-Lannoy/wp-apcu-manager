@@ -18,6 +18,7 @@ use APCuManager\System\Assets;
 use APCuManager\Library\Libraries;
 use APCuManager\System\Nag;
 use APCuManager\System\Option;
+use APCuManager\Plugin\Feature\Capture;
 
 /**
  * The core plugin class.
@@ -54,6 +55,9 @@ class Core {
 		$this->define_global_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		if ( \DecaLog\Engine::isDecalogActivated() && Option::network_get( 'metrics' ) ) {
+			Capture::metrics();
+		}
 	}
 
 

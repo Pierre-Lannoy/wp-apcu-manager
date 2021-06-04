@@ -53,6 +53,7 @@ class GC {
 	 * @since    1.0.0
 	 */
 	public static function do() {
+		$span = \DecaLog\Engine::tracesLogger( APCM_SLUG )->start_span( 'Garbage collection' );
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_delete' ) ) {
 			try {
 				$infos = apcu_cache_info( false );
@@ -72,6 +73,7 @@ class GC {
 				\DecaLog\Engine::eventsLogger( APCM_SLUG )->error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), [ 'code' => $e->getCode() ] );
 			}
 		}
+		\DecaLog\Engine::tracesLogger( APCM_SLUG )->end_span( $span );
 	}
 
 }
