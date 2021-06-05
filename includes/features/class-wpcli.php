@@ -199,8 +199,13 @@ class Wpcli {
 		} else {
 			\WP_CLI::line( 'Analytics: disabled.' );
 		}
-		if ( defined( 'DECALOG_VERSION' ) ) {
-			\WP_CLI::line( 'Logging support: yes (DecaLog v' . DECALOG_VERSION . ').');
+		if ( Option::network_get( 'metrics' ) ) {
+			\WP_CLI::line( 'Metrics collation: enabled.' );
+		} else {
+			\WP_CLI::line( 'Metrics collation: disabled.' );
+		}
+		if ( \DecaLog\Engine::isDecalogActivated() ) {
+			\WP_CLI::line( 'Logging support: ' . \DecaLog\Engine::getVersionString() . '.');
 		} else {
 			\WP_CLI::line( 'Logging support: no.' );
 		}

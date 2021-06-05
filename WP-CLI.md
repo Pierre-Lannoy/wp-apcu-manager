@@ -22,7 +22,7 @@ pierre@dev:~$ wp apcu analytics
 | Hits         | Successful calls to the cache.                | 11K   | 81.51% | +0.68%    |
 | Free memory  | Free memory available for APCu.               | 32MB  | 99.53% | +0.18%    |
 | Keys         | Keys allocated by APCu.                       | 152   | 3.7%   | -0.38%    |
-| Small blocks | Used memory small blocks (size &lt; 5M).      | 29    | 0.38%  | +90.31%   |
+| Small blocks | Used memory small blocks (size < 5M).         | 29    | 0.38%  | +90.31%   |
 | Availability | Extrapolated availability time over 24 hours. | 24 hr | 100%   | 0%        |
 | Objects      | Objects currently present in cache.           | 152   | -      | -0.38%    |
 +--------------+-----------------------------------------------+-------+--------+-----------+
@@ -38,7 +38,7 @@ To get detailed status and operation mode, use the `wp apcu status` command.
 
 ## Managing main settings
 
-To toggle on/off main settings, use `wp apcu settings <enable|disable> <gc|analytics>`.
+To toggle on/off main settings, use `wp apcu settings <enable|disable> <gc|analytics|metrics>`.
 
 If you try to disable a setting, wp-cli will ask you to confirm. To force answer to yes without prompting, just use `--yes`.
 
@@ -46,6 +46,7 @@ If you try to disable a setting, wp-cli will ask you to confirm. To force answer
 
 - `gc`: garbage collection feature
 - `analytics`: analytics feature
+- `metrics`: metrics collation
 
 ### Example
 
