@@ -194,7 +194,7 @@ class Capture {
 			}
 			\DecaLog\Engine::tracesLogger( APCM_SLUG )->end_span( $span );
 		} else {
-			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'APCu is disabled. No metrics to publish.' );
+			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'APCu is disabled. No metrics to collate.' );
 		}
 	}
 
