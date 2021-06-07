@@ -166,7 +166,7 @@ class Capture {
 						$metrics['frag'] = 0.0;
 					}
 				}
-				Cache::set_global( $cache_id, $metrics, 'statistics' );
+				Cache::set_global( $cache_id, $metrics, 'metrics' );
 				\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'APCu is enabled. Statistics recorded.' );
 			} catch ( \Throwable $e ) {
 				$metrics = null;
