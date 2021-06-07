@@ -12,6 +12,7 @@
 
 namespace APCuManager\Plugin;
 
+use APCuManager\System\Environment;
 use APCuManager\System\Loader;
 use APCuManager\System\I18n;
 use APCuManager\System\Assets;
@@ -55,7 +56,7 @@ class Core {
 		$this->define_global_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-		if ( \DecaLog\Engine::isDecalogActivated() && Option::network_get( 'metrics' ) ) {
+		if ( \DecaLog\Engine::isDecalogActivated() && Option::network_get( 'metrics' ) && Environment::exec_mode_for_metrics() ) {
 			Capture::metrics();
 		}
 	}
