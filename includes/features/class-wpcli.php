@@ -205,7 +205,7 @@ class Wpcli {
 			\WP_CLI::line( 'Metrics collation: disabled.' );
 		}
 		if ( \DecaLog\Engine::isDecalogActivated() ) {
-			\WP_CLI::line( 'Logging support: ' . \DecaLog\Engine::getVersionString() . '.');
+			\WP_CLI::line( 'Logging support: ' . \DecaLog\Engine::getVersionString() . '.' );
 		} else {
 			\WP_CLI::line( 'Logging support: no.' );
 		}
