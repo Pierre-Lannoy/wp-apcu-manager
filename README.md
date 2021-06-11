@@ -6,7 +6,7 @@
 
 __APCu Manager__ is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network.
 
-See [WordPress directory page](https://wordpress.org/plugins/apcu-manager/). 
+See [WordPress directory page](https://wordpress.org/plugins/apcu-manager/) or [official website](https://perfops.one/apcu-manager).
 
 __APCu Manager__ works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps.One suite or W3 Total Cache. Its main management features are:
 
@@ -21,6 +21,8 @@ __APCu Manager__ is also a full featured analytics reporting tool that analyzes 
 * plugins consumption.
 
 __APCu Manager__ supports multisite report delegation.
+
+> __APCu Manager__ is part of [PerfOps One](https://perfops.one/), a suite of free and open source WordPress plugins dedicated to observability and operations performance.
 
 __APCu Manager__ is a free and open source plugin for WordPress. It integrates many other free and open source works (as-is or modified). Please, see 'about' tab in the plugin settings to see the details.
 

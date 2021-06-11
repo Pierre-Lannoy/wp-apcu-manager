@@ -35,7 +35,9 @@ APCu statistics and management right in the WordPress admin dashboard.
 * toggle on/off main settings - see `wp help apcu settings` for details;
 * obtain operational statistics - see `wp help apcu analytics` for details.
 
-For a full help on WP-CLI commands in APCu Manager, please [read this guide](https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/WP-CLI.md).
+For a full help on WP-CLI commands in APCu Manager, please [read this guide](https://perfops.one/apcu-manager-wpcli).
+
+> **APCu Manager** is part of [PerfOps One](https://perfops.one/), a suite of free and open source WordPress plugins dedicated to observability and operations performance.
 
 **APCu Manager** is a free and open source plugin for WordPress. It integrates many other free and open source works (as-is or modified). Please, see 'about' tab in the plugin settings to see the details.
 
@@ -101,7 +103,7 @@ You can report bugs and suggest ideas via the [GitHub issue tracker](https://git
 
 == Changelog ==
 
-Please, see [full changelog](https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/CHANGELOG.md) on GitHub.
+Please, see [full changelog](https://perfops.one/apcu-manager-changelog).
 
 == Upgrade Notice ==
 
