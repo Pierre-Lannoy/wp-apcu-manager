@@ -189,7 +189,7 @@ class Apcu_Manager_Admin {
 	public function add_row_meta( $links, $file ) {
 		if ( 0 === strpos( $file, APCM_SLUG . '/' ) ) {
 			$links[] = '<a href="https://wordpress.org/support/plugin/' . APCM_SLUG . '/">' . __( 'Support', 'apcu-manager' ) . '</a>';
-			$links[] = '<a href="https://github.com/Pierre-Lannoy/wp-apcu-manager">' . __( 'GitHub repository', 'apcu-manager' ) . '</a>';
+			$links[] = '<a href="https://perfops.one">PefOps One</a>';
 		}
 		return $links;
 	}
