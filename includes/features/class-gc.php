@@ -53,7 +53,7 @@ class GC {
 	 * @since    1.0.0
 	 */
 	public static function do() {
-		$span = \DecaLog\Engine::tracesLogger( APCM_SLUG )->start_span( 'Garbage collection' );
+		$span = \DecaLog\Engine::tracesLogger( APCM_SLUG )->start_span( 'Garbage collection', DECALOG_SPAN_MAIN_RUN );
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_delete' ) ) {
 			try {
 				$infos = apcu_cache_info( false );
