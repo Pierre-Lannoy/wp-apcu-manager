@@ -103,7 +103,7 @@ class Capture {
 	 */
 	public static function metrics() {
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_sma_info' ) ) {
-			$span     = \DecaLog\Engine::tracesLogger( APCM_SLUG )->start_span( 'Metrics collation', DECALOG_SPAN_PLUGINS_LOAD );
+			$span     = \DecaLog\Engine::tracesLogger( APCM_SLUG )->startSpan( 'Metrics collation', DECALOG_SPAN_PLUGINS_LOAD );
 			$cache_id = 'metrics/lastcheck';
 			$metrics  = Cache::get_global( $cache_id );
 			if ( ! isset( $metrics ) ) {
@@ -192,7 +192,7 @@ class Capture {
 					$monitor->createProdGauge( 'insert_ratio', $metrics['ins_ratio'], 'APCu insert ratio - [percent]' );
 				}
 			}
-			\DecaLog\Engine::tracesLogger( APCM_SLUG )->end_span( $span );
+			\DecaLog\Engine::tracesLogger( APCM_SLUG )->endSpan( $span );
 		} else {
 			\DecaLog\Engine::eventsLogger( APCM_SLUG )->debug( 'APCu is disabled. No metrics to collate.' );
 		}
