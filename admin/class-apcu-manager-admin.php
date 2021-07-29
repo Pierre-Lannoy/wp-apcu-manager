@@ -20,7 +20,7 @@ use APCuManager\System\Form;
 use APCuManager\System\Blog;
 use APCuManager\System\Date;
 use APCuManager\System\Timezone;
-use PerfOpsOne\AdminMenus;
+use PerfOpsOne\Menus;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -144,7 +144,7 @@ class Apcu_Manager_Admin {
 	 */
 	public function init_admin_menus() {
 		add_filter( 'init_perfops_admin_menus', [ $this, 'init_perfops_admin_menus' ] );
-		AdminMenus::initialize();
+		Menus::initialize();
 	}
 
 	/**

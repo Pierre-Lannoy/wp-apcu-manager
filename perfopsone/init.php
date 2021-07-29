@@ -15,3 +15,7 @@ if ( ! defined( 'PERFOO_INITIALIZED' ) ) {
 	define( 'PERFOO_INITIALIZED', true );
 }
 
+//TODO: remove debug require_once statement
+
+require_once __DIR__ . '/autoload.php';
+
