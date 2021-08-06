@@ -369,7 +369,6 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 					} return ( strtoupper( $a['title'] ) < strtoupper( $b['title'] ) ) ? -1 : 1;
 				}
 			);
-			wp_enqueue_script( APCM_ASSETS_ID );
 			$disp        = '';
 			$disp       .= '<div class="perfopsone-admin-wrap">';
 			$disp       .= ' <div class="perfopsone-admin-inside">';
@@ -401,7 +400,38 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 			$disp       .= '   .perfopsone-admin-inside .poo-switch-toggle {vertical-align: middle;cursor: pointer;}';
 			$disp       .= '   .perfopsone-admin-inside .poo-switch-off img {filter: grayscale(70%) opacity(80%) brightness(140%)}';
 			$disp       .= '   .perfopsone-admin-inside .poo-switch-on img {transform: rotate(180deg);}';
+			$disp       .= '   .perfopsone-admin-inside .poo-blink img {animation: blinker 800ms infinite;}';
+			$disp       .= '    @keyframes blinker {from {opacity:1} 50% {opacity: 0.2} to {opacity: 1}}';
 			$disp       .= '  </style>';
+			$disp       .= '  <script type="text/javascript">';
+			$disp       .= '   jQuery(document).ready( function($) {';
+			$disp       .= '     $( ".poo-switch" ).on(';
+			$disp       .= '       "click",';
+			$disp       .= '       function() {';
+			$disp       .= '         const toggle = $(this).find(".poo-switch-toggle");';
+			$disp       .= '         var data = {';
+			$disp       .= '           action: "poo_switch_autoupdate",';
+			$disp       .= '           plugin: $( this ).data( "value" ),';
+			$disp       .= '           poo_nonce : "dfcgsdf"';
+			$disp       .= '         };';
+			$disp       .= '         $(toggle).addClass( "poo-blink" );';
+			$disp       .= '         jQuery.post( ajaxurl, data, function ( response ) {';
+			$disp       .= '           if ( response ) {';
+			$disp       .= '             var cold = "poo-switch-on";';
+			$disp       .= '             var cnew = "poo-switch-off";';
+			$disp       .= '             if ( $(toggle).hasClass( "poo-switch-off" ) ) {';
+			$disp       .= '               cold = "poo-switch-off";';
+			$disp       .= '               cnew = "poo-switch-on";';
+			$disp       .= '             }';
+			$disp       .= '             $(toggle).removeClass( "poo-blink" );';
+			$disp       .= '             $(toggle).removeClass( cold );';
+			$disp       .= '             $(toggle).addClass( cnew );';
+			$disp       .= '           }';
+			$disp       .= '         });';
+			$disp       .= '       }';
+			$disp       .= '     );';
+			$disp       .= '   } );';
+			$disp       .= '  </script>';
 			$main_update = '<span class="poo-noneed-update">' . esc_html__( 'Up to date', 'apcu-manager' ) . '</span>';
 			foreach ( $items as $item ) {
 				if ( $item['need_update'] ) {
