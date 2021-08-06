@@ -75,6 +75,19 @@ class Plugin {
 	}
 
 	/**
+	 * Verify the auto-update status.
+	 *
+	 * @return  boolean True if plugin is auto-updatable, false otherwise.
+	 * @since 2.0.0
+	 */
+	public function auto_update() {
+		if ( ! $this->is_detected() ) {
+			return false;
+		}
+		return array_key_exists( $this->slug, (array) get_site_option( 'auto_update_plugins', [] ) );
+	}
+
+	/**
 	 * Get a value.
 	 *
 	 * @param string    $key   The value to retrieve.

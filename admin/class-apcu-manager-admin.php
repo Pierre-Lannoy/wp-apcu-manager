@@ -82,7 +82,7 @@ class Apcu_Manager_Admin {
 	 * @return array    The completed menus array.
 	 * @since 1.0.0
 	 */
-	public function init_perfops_admin_menus( $perfops ) {
+	public function init_perfopsone_admin_menus( $perfops ) {
 		if ( Role::SUPER_ADMIN === Role::admin_type() || Role::SINGLE_ADMIN === Role::admin_type() ) {
 			$perfops['tools'][]    = [
 				'name'          => esc_html__( 'APCu', 'apcu-manager' ),
@@ -94,7 +94,6 @@ class Apcu_Manager_Admin {
 				'menu_title'    => esc_html__( 'APCu', 'apcu-manager' ),
 				'capability'    => 'manage_options',
 				'callback'      => [ $this, 'get_tools_page' ],
-				'position'      => 50,
 				'plugin'        => APCM_SLUG,
 				'activated'     => true,
 				'remedy'        => '',
@@ -109,7 +108,6 @@ class Apcu_Manager_Admin {
 				'menu_title'    => APCM_PRODUCT_NAME,
 				'capability'    => 'manage_options',
 				'callback'      => [ $this, 'get_settings_page' ],
-				'position'      => 50,
 				'plugin'        => APCM_SLUG,
 				'version'       => APCM_VERSION,
 				'activated'     => true,
@@ -128,7 +126,6 @@ class Apcu_Manager_Admin {
 				'menu_title'    => esc_html__( 'APCu', 'apcu-manager' ),
 				'capability'    => 'manage_options',
 				'callback'      => [ $this, 'get_viewer_page' ],
-				'position'      => 50,
 				'plugin'        => APCM_SLUG,
 				'activated'     => Option::network_get( 'analytics' ),
 				'remedy'        => esc_url( admin_url( 'admin.php?page=apcm-settings' ) ),
@@ -143,7 +140,7 @@ class Apcu_Manager_Admin {
 	 * @since 1.0.0
 	 */
 	public function init_admin_menus() {
-		add_filter( 'init_perfops_admin_menus', [ $this, 'init_perfops_admin_menus' ] );
+		add_filter( 'init_perfopsone_admin_menus', [ $this, 'init_perfopsone_admin_menus' ] );
 		Menus::initialize();
 	}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Initialization of PerfOpsOne globals.
+ * Initialization of PerfOps One globals.
  *
  * @package PerfOpsOne
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
@@ -11,11 +11,13 @@ if ( ! defined( 'PERFOO_INITIALIZED' ) ) {
 	define( 'PERFOO_PRODUCT_NAME', 'PerfOps One' );
 	define( 'PERFOO_PRODUCT_URL', 'https://perfops.one' );
 	define( 'PERFOO_PRODUCT_SHORTNAME', 'PerfOps One' );
+	require_once __DIR__ . '/functions.php';
 	require_once __DIR__ . '/autoload.php';
 	define( 'PERFOO_INITIALIZED', true );
 }
 
-//TODO: remove debug require_once statement
+//TODO: remove debug require_once statements
 
+require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/autoload.php';
 

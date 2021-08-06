@@ -1,10 +1,10 @@
 <?php
 /**
- * Standard PerfOpsOne menus handling.
+ * Standard PerfOps One menus handling.
  *
  * @package PerfOpsOne
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
- * @since   1.0.0
+ * @since   2.0.0
  */
 
 namespace PerfOpsOne;
@@ -14,72 +14,108 @@ use APCuManager\System\Conversion;
 use PerfOpsOne\Resources;
 
 /**
- * Standard PerfOpsOne menus handling.
+ * Standard PerfOps One menus handling.
  *
- * This class defines all code necessary to initialize and handle PerfOpsOne admin menus.
+ * This class defines all code necessary to initialize and handle PerfOps One admin menus.
  *
  * @package Plugin
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
- * @since   1.0.0
+ * @since   2.0.0
  */
 
 if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
+
 	class Menus {
 
 		/**
-		 * The PerfOpsOne admin menus.
+		 * The PerfOps One admin menus.
 		 *
-		 * @since  1.0.0
-		 * @var    array    $menus    Maintains the PerfOpsOne admin menus.
+		 * @since  2.0.0
+		 * @var    array    $menus    Maintains the PerfOps One admin menus.
 		 */
 		private static $menus = [];
 
 		/**
-		 * The PerfOpsOne admin slugs.
+		 * The PerfOps One admin menus positions.
 		 *
-		 * @since  1.0.0
-		 * @var    array    $slugs    Maintains the PerfOpsOne admin slugs.
+		 * @since  2.0.0
+		 * @var    array    $menus    Maintains the PerfOps One admin menus positions.
+		 */
+		private static $menus_positions = [ 'records', 'consoles', 'tools', 'analytics', 'insights' ];
+
+		/**
+		 * The PerfOps One admin slugs.
+		 *
+		 * @since  2.0.0
+		 * @var    array    $slugs    Maintains the PerfOps One admin slugs.
 		 */
 		private static $slugs = [];
 
 		/**
 		 * Initialize the admin menus.
 		 *
-		 * @since 1.0.0
+		 * @since 2.0.0
 		 */
 		public static function initialize() {
-			add_menu_page( PERFOO_PRODUCT_NAME, PERFOO_PRODUCT_NAME, 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_settings_page' ], Resources::get_menu_base64_logo(), 79 );
-			add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Control Center', 'apcu-manager' ), __( 'Control Center', 'apcu-manager' ), 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_settings_page' ], 0 );
-			foreach ( apply_filters( 'init_perfops_admin_menus', [] ) as $menu => $submenus ) {
-				if ( ! in_array( 'perfopsone-' . $menu, self::$slugs, true ) ) {
+			$current = null;
+			$cmenu   = null;
+			if ( ! ( $page = filter_input( INPUT_GET, 'page' ) ) ) {
+				$page = filter_input( INPUT_POST, 'page' );
+			}
+			foreach ( apply_filters( 'init_perfopsone_admin_menus', [] ) as $menu => $elements ) {
+				foreach ( $elements as $item ) {
+					if ( ! in_array( $item['slug'], self::$slugs, true ) ) {
+						self::$slugs[]          = $item['slug'];
+						self::$menus[ $menu ][] = $item;
+						if ( $item['activated'] ) {
+							if ( $page !== $item['slug'] ) {
+								$hook_suffix = add_submenu_page( 'perfopsone' . $menu, $item['page_title'], $item['menu_title'], $item['capability'], $item['slug'], $item['callback'] );
+								if ( isset( $item['post_callback'] ) && is_callable( $item['post_callback'] ) && $hook_suffix ) {
+									call_user_func( $item['post_callback'], $hook_suffix );
+								}
+							} else {
+								$current = $item;
+								$cmenu   = $menu;
+							}
+						}
+					}
+				}
+			}
+			add_menu_page( PERFOO_PRODUCT_NAME, PERFOO_PRODUCT_NAME, 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_dashboard_page' ], Resources::get_menu_base64_logo(), 79 );
+			add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Control Center', 'apcu-manager' ), __( 'Control Center', 'apcu-manager' ), 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_settings_page' ] );
+			if ( isset( $current ) && 'settings' === $cmenu ) {
+				if ( $current['activated'] ) {
+					$hook_suffix = add_submenu_page( 'perfopsone-dashboard', $current['page_title'], '&nbsp;&nbsp;' . $current['menu_title'] . '&emsp;➜', $current['capability'], $current['slug'], $current['callback'] );
+					if ( isset( $current['post_callback'] ) && is_callable( $current['post_callback'] ) && $hook_suffix ) {
+						call_user_func( $current['post_callback'], $hook_suffix );
+					}
+				}
+			}
+			foreach ( self::$menus_positions as $menu ) {
+				if ( array_key_exists( $menu, self::$menus ) ) {
 					switch ( $menu ) {
 						case 'analytics':
-							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Analytics', 'apcu-manager' ), __( 'Analytics', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_analytics_page' ], 0 );
+							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Analytics', 'apcu-manager' ), __( 'Analytics', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_analytics_page' ] );
 							break;
 						case 'tools':
-							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Tools', 'apcu-manager' ), __( 'Tools', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_tools_page' ], 0 );
+							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Tools', 'apcu-manager' ), __( 'Tools', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_tools_page' ] );
 							break;
 						case 'insights':
-							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Reports', 'apcu-manager' ), __( 'Reports', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_insights_page' ], 0 );
+							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Reports', 'apcu-manager' ), __( 'Reports', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_insights_page' ] );
 							break;
 						case 'records':
-							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Catalogues', 'apcu-manager' ), __( 'Catalogues', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_records_page' ], 0 );
+							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Catalogues', 'apcu-manager' ), __( 'Catalogues', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_records_page' ] );
 							break;
 						case 'consoles':
-							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Consoles', 'apcu-manager' ), __( 'Consoles', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_consoles_page' ], 0 );
+							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Consoles', 'apcu-manager' ), __( 'Consoles', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_consoles_page' ] );
 							break;
 					}
-					self::$slugs[] = 'perfopsone-' . $menu;
 				}
-				foreach ( $submenus as $submenu ) {
-					if ( ! in_array( $submenu['slug'], self::$slugs, true ) ) {
-						self::$slugs[]          = $submenu['slug'];
-						self::$menus[ $menu ][] = $submenu;
-						if ( $submenu['activated'] ) {
-							$hook_suffix = add_submenu_page( 'perfopsone-' . $menu, $submenu['page_title'], $submenu['menu_title'], $submenu['capability'], $submenu['slug'], $submenu['callback'] );
-							if ( isset( $submenu['post_callback'] ) && is_callable( $submenu['post_callback'] ) && $hook_suffix ) {
-								call_user_func( $submenu['post_callback'], $hook_suffix );
-							}
+				if ( isset( $current ) && $menu === $cmenu ) {
+					if ( $current['activated'] ) {
+						$hook_suffix = add_submenu_page( 'perfopsone-dashboard', $current['page_title'], '&nbsp;&nbsp;' . $current['menu_title'] . '&emsp;➜', $current['capability'], $current['slug'], $current['callback'] );
+						if ( isset( $current['post_callback'] ) && is_callable( $current['post_callback'] ) && $hook_suffix ) {
+							call_user_func( $current['post_callback'], $hook_suffix );
 						}
 					}
 				}
@@ -87,9 +123,35 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		}
 
 		/**
+		 * Get the dashboard main page.
+		 *
+		 * @since 2.0.0
+		 */
+		public static function get_dashboard_page() {
+			if ( array_key_exists( 'settings', self::$menus ) ) {
+				$items = [];
+				foreach ( self::$menus['settings'] as $item ) {
+					$i                = [];
+					$d                = new Plugin( $item['plugin'] );
+					$i['title']       = $item['menu_title'];
+					$i['slug']        = $item['plugin'];
+					$i['id']          = 'settings-' . $item['slug'];
+					$i['icon']        = call_user_func( $item['icon_callback'] );
+					$i['need_update'] = $d->waiting_update();
+					$i['auto_update'] = $d->auto_update();
+					if ( $item['activated'] && $d->is_detected() ) {
+						$i['url'] = esc_url( admin_url( 'admin.php?page=' . $item['slug'] ) );
+						$items[]  = $i;
+					}
+				}
+				self::display_as_controls( $items );
+			}
+		}
+
+		/**
 		 * Get the analytics main page.
 		 *
-		 * @since 1.0.0
+		 * @since 2.0.0
 		 */
 		public static function get_analytics_page() {
 			if ( array_key_exists( 'analytics', self::$menus ) ) {
@@ -115,7 +177,7 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		/**
 		 * Get the tools main page.
 		 *
-		 * @since 1.0.0
+		 * @since 2.0.0
 		 */
 		public static function get_tools_page() {
 			if ( array_key_exists( 'tools', self::$menus ) ) {
@@ -138,7 +200,7 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		/**
 		 * Get the insights main page.
 		 *
-		 * @since 1.0.0
+		 * @since 2.0.0
 		 */
 		public static function get_insights_page() {
 			if ( array_key_exists( 'insights', self::$menus ) ) {
@@ -161,7 +223,7 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		/**
 		 * Get the records main page.
 		 *
-		 * @since 1.0.0
+		 * @since 2.0.0
 		 */
 		public static function get_records_page() {
 			if ( array_key_exists( 'records', self::$menus ) ) {
@@ -207,7 +269,7 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		/**
 		 * Get the settings main page.
 		 *
-		 * @since 1.0.0
+		 * @since 2.0.0
 		 */
 		public static function get_settings_page() {
 			if ( array_key_exists( 'settings', self::$menus ) ) {
@@ -288,7 +350,7 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 						$items[]  = $i;
 					}
 				}
-				self::display_as_lines( $items );
+				//self::display_as_lines( $items );
 			}
 		}
 
@@ -296,7 +358,114 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		 * Displays items as bubbles.
 		 *
 		 * @param array $items  The items to display.
-		 * @since 1.0.0
+		 * @since 2.0.0
+		 */
+		private static function display_as_controls( $items ) {
+			uasort(
+				$items,
+				function ( $a, $b ) {
+					if ( $a['title'] === $b['title'] ) {
+						return 0;
+					} return ( strtoupper( $a['title'] ) < strtoupper( $b['title'] ) ) ? -1 : 1;
+				}
+			);
+			wp_enqueue_script( APCM_ASSETS_ID );
+			$disp        = '';
+			$disp       .= '<div class="perfopsone-admin-wrap">';
+			$disp       .= ' <div class="perfopsone-admin-inside">';
+			$disp       .= '  <style>';
+			$disp       .= '   .perfopsone-admin-wrap {width:100%;text-align:center;padding:0px;margin-top:0;}';
+			$disp       .= '   .perfopsone-admin-inside {display:grid;grid-template-columns: repeat(auto-fill, 470px);justify-content: center;padding-top:10px;padding-right:20px;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-container {flex:none;padding:10px;cursor:default;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-actionable:hover {border-radius:6px;background: #f5f5f5;border:1px solid #e0e0e0;filter: grayscale(0%) opacity(100%);}';
+			$disp       .= '   .perfopsone-admin-inside .poo-actionable {overflow:hidden;width:100%;height:100px;border-radius:6px;background: #f5f5f5;border:1px solid #e7e7e7;filter: grayscale(12%) opacity(88%);}';
+			$disp       .= '   .perfopsone-admin-inside .poo-actionable {color:#73879C;width: 450px;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-actionable a {font-style:normal;text-decoration:none;color:inherit;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-icon {display:block;width:120px;float:left;padding-top:10px;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-title {height: 0;font-size:1.8em;font-weight: 600;margin-bottom: 10px;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-main {width:70%;display: grid;text-align:left;padding-top:18px;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-actions {font-size:larger;text-align: center;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-action {border:1px solid #e7e7e7;border-radius:4px;padding: 4px 8px 7px 4px;margin: 0 4px;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-action img {vertical-align: middle;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-action:hover img {filter: invert(0%) sepia(86%) saturate(0%) hue-rotate(231deg) brightness(146%) contrast(127%);}';
+			$disp       .= '   .perfopsone-admin-inside .poo-action:hover {color:#FFF;background:#73879C;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-links-support:hover {filter: invert(59%) sepia(9%) saturate(1614%) hue-rotate(167deg) brightness(81%) contrast(94%);}';
+			$disp       .= '   .perfopsone-admin-inside .poo-links-star:hover {filter: invert(6%) sepia(96%) saturate(320%) hue-rotate(0deg) brightness(115%) contrast(91%);}';
+			$disp       .= '   .perfopsone-admin-inside .poo-links-contrib:hover {filter: invert(100%) sepia(36%) saturate(7379%) hue-rotate(121deg) brightness(0%) contrast(100%);}';
+			$disp       .= '   .perfopsone-admin-inside .poo-util {display: grid;margin: 14px;min-width: fit-content;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-update {min-width: fit-content;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-autoupdate {min-width: fit-content;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-need-update {display: inline-block;;border-radius:2px;background:rgb(255,147,8);color:rgb(255,255,255);text-transform: uppercase;font-weight: bolder;width: 106px;height: fit-content;font-size: x-small;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-noneed-update {display: inline-block;;border-radius:2px;background:rgb(68,93,159);color:rgb(255,255,255);text-transform: uppercase;font-weight: bolder;width: 106px;height: fit-content;font-size: x-small;}';
+			$disp       .= '   .perfopsone-admin-inside a:focus {box-shadow:none;outline:none;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-switch-toggle {vertical-align: middle;cursor: pointer;}';
+			$disp       .= '   .perfopsone-admin-inside .poo-switch-off img {filter: grayscale(70%) opacity(80%) brightness(140%)}';
+			$disp       .= '   .perfopsone-admin-inside .poo-switch-on img {transform: rotate(180deg);}';
+			$disp       .= '  </style>';
+			$main_update = '<span class="poo-noneed-update">' . esc_html__( 'Up to date', 'apcu-manager' ) . '</span>';
+			foreach ( $items as $item ) {
+				if ( $item['need_update'] ) {
+					$update      = '<a href=" ' .admin_url( 'update-core.php' ) . '"><span class="poo-need-update">' . esc_html__( 'Need update', 'apcu-manager' ) . '</span></a>';
+					$main_update = $update;
+				} else {
+					$update = '<span class="poo-noneed-update">' . esc_html__( 'Up to date', 'apcu-manager' ) . '</span>';
+				}
+				if ( ! current_user_can( 'update_plugins' ) || ! wp_is_auto_update_enabled_for_type( 'plugin' ) || ( is_multisite() && ! is_network_admin() ) ) {
+					$auto = '';
+				} else {
+					$auto  = '<div class="poo-switch" data-value="' . $item['slug'] . '">' . esc_html__( 'auto-update', 'apcu-manager' ) . ' &nbsp;';
+					$auto .= '<span id="poo-switch-toggle-' . $item['slug'] . '" class="poo-switch-toggle poo-switch-' . ( $item['auto_update'] ? 'on' : 'off' ) . '"><img style="width:17px;padding:0;margin-top: 3px;" src="' . \Feather\Icons::get_base64( 'toggle-left', '#7EA7E4', '#394486', 2 ) . '" /></span>';
+					$auto .= ' </div>';
+				}
+				$support  = '<a title="' . esc_html__( 'Get support', 'apcu-manager' ) . '" alt="' . esc_html__( 'Get support', 'apcu-manager' ) . '" class="poo-links-support" href="https://wordpress.org/support/plugin/' . $item['slug'] . '" target="_blank"><img style="width:16px;padding:0 4px;" src="' . \Feather\Icons::get_base64( 'message-circle', 'none', '#73879C', 3 ) . '" /></a>';
+				$contrib  = '<a title="' . esc_html__( 'Contribute', 'apcu-manager' ) . '" alt="' . esc_html__( 'Contribute', 'apcu-manager' ) . '" class="poo-links-contrib" href="https://github.com/Pierre-Lannoy/wp-' . $item['slug'] . '" target="_blank"><img style="width:16px;padding:0 4px;" src="' . \Feather\Icons::get_base64( 'github', 'none', '#73879C', 3 ) . '" /></a>';
+				$star     = '<a title="' . esc_html__( 'Make a review', 'apcu-manager' ) . '" alt="' . esc_html__( 'Make a review', 'apcu-manager' ) . '" class="poo-links-star" href="https://wordpress.org/support/plugin/' . $item['slug'] . '/reviews" target="_blank"><img style="width:16px;padding:0 4px;" src="' . \Feather\Icons::get_base64( 'star', 'none', '#73879C', 3 ) . '" /></a>';
+				$settings = '<a class="poo-action" href="' . $item['url'] . '"/><img style="width:18px;padding:0 4px;" src="' . \Feather\Icons::get_base64( 'settings', 'none', '#73879C', 3 ) . '" />' . esc_html__( 'settings', 'apcu-manager' ) . '</a>';
+				$about    = '<a class="poo-action" href="' . $item['url'] . '&tab=about"/><img style="width:18px;padding:0 4px;" src="' . \Feather\Icons::get_base64( 'info', 'none', '#73879C', 3 ) . '" />' . esc_html__( 'about', 'apcu-manager' ) . '</a>';
+				$disp    .= '<div class="poo-container">';
+				$disp    .= ' <div class="poo-actionable">';
+				$disp    .= '   <div id="' . $item['id'] . '" style="display:flex;justify-content: center;">';
+				$disp    .= '    <div class="poo-icon"><img style="width:80px" src="' . $item['icon'] . '"/></div>';
+				$disp    .= '    <div class="poo-main">';
+				$disp    .= '     <span class="poo-title">' . $item['title'] . '</span>';
+				$disp    .= '     <span class="poo-actions">' . $settings . $about . '</span>';
+				$disp    .= '    </div>';
+				$disp    .= '    <div class="poo-util">';
+				$disp    .= '     <span class="poo-update">' . $update . '</span>';
+				$disp    .= '     <span class="poo-autoupdate">' . $auto . '</span>';
+				$disp    .= '     <span class="poo-additional">&nbsp;</span>';
+				$disp    .= '     <span class="poo-links">' . $support . $star . $contrib . '</span>';
+				$disp    .= '    </div>';
+				$disp    .= '   </div>';
+				$disp    .= ' </div>';
+				$disp    .= '</div>';
+			}
+			$site  = '<a class="poo-action" href="https://perfops.one" target="_blank"><img style="width:18px;padding:0 4px;vertical-align: bottom !important;" src="' . \Feather\Icons::get_base64( 'home', 'none', '#73879C', 3 ) . '" />' . esc_html__( 'all plugins', 'apcu-manager' ) . '</a>';
+			$disp .= '<div class="poo-container">';
+			$disp .= ' <div class="poo-actionable">';
+			$disp .= '   <div id="perfops-one" style="display:flex;justify-content: center;">';
+			$disp .= '    <div class="poo-icon"><img style="width:80px;margin-top:-10px;" src="' . Resources::get_base64_logo() . '"/></div>';
+			$disp .= '    <div class="poo-main">';
+			$disp .= '     <span class="poo-title" style="margin-bottom: 36px !important;">PerfOps One</span>';
+			$disp .= '     <span class="poo-actions">' . $site . '</span>';
+			$disp .= '    </div>';
+			$disp .= '    <div class="poo-util">';
+			$disp .= '     <span class="poo-update">' . $main_update . '</span>';
+			$disp .= '     <span class="poo-autoupdate">&nbsp;</span>';
+			$disp .= '    </div>';
+			$disp .= '   </div>';
+			$disp .= ' </div>';
+			$disp .= '</div>';
+			$disp .= ' </div>';
+			$disp .= '</div>';
+			echo $disp;
+		}
+
+		/**
+		 * Displays items as bubbles.
+		 *
+		 * @param array $items  The items to display.
+		 * @since 2.0.0
 		 */
 		private static function display_as_bubbles( $items ) {
 			uasort(
@@ -311,101 +480,30 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 			$disp .= '<div style="width:100%;text-align:center;padding:0px;margin-top:10px;margin-left:-10px;" class="perfopsone-admin-inside">';
 			$disp .= ' <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;">';
 			$disp .= '  <style>';
-			$disp .= '   .perfopsone-admin-inside .po-container {flex:none;padding:10px;}';
-			$disp .= '   .perfopsone-admin-inside .po-actionable:hover {border-radius:6px;cursor:pointer; -moz-transition: all .2s ease-in; -o-transition: all .2s ease-in; -webkit-transition: all .2s ease-in; transition: all .2s ease-in; background: #f5f5f5;border:1px solid #e0e0e0;filter: grayscale(0%) opacity(100%);}';
-			$disp .= '   .perfopsone-admin-inside .po-actionable {overflow:hidden;width:400px;height:120px;border-radius:6px;cursor:pointer; -moz-transition: all .4s ease-in; -o-transition: all .4s ease-in; -webkit-transition: all .4s ease-in; transition: all .4s ease-in; background: transparent;border:1px solid transparent;filter: grayscale(80%) opacity(66%);}';
-			$disp .= '   .perfopsone-admin-inside .po-actionable a {font-style:normal;text-decoration:none;color:#73879C;}';
-			$disp .= '   .perfopsone-admin-inside .po-icon {display:block;width:120px;float:left;padding-top:10px;}';
-			$disp .= '   .perfopsone-admin-inside .po-text {display:grid;text-align:left;padding-top:16px;padding-right:16px;}';
-			$disp .= '   .perfopsone-admin-inside .po-title {font-size:1.8em;font-weight: 600;}';
-			$disp .= '   .perfopsone-admin-inside .po-description {font-size:1em;padding-top:10px;}';
+			$disp .= '   .perfopsone-admin-inside .poo-container {flex:none;padding:10px;}';
+			$disp .= '   .perfopsone-admin-inside .poo-actionable:hover {border-radius:6px;cursor:pointer; -moz-transition: all .2s ease-in; -o-transition: all .2s ease-in; -webkit-transition: all .2s ease-in; transition: all .2s ease-in; background: #f5f5f5;border:1px solid #e0e0e0;filter: grayscale(0%) opacity(100%);}';
+			$disp .= '   .perfopsone-admin-inside .poo-actionable {overflow:hidden;width:400px;height:120px;border-radius:6px;cursor:pointer; -moz-transition: all .4s ease-in; -o-transition: all .4s ease-in; -webkit-transition: all .4s ease-in; transition: all .4s ease-in; background: transparent;border:1px solid transparent;filter: grayscale(80%) opacity(66%);}';
+			$disp .= '   .perfopsone-admin-inside .poo-actionable a {font-style:normal;text-decoration:none;color:#73879C;}';
+			$disp .= '   .perfopsone-admin-inside .poo-icon {display:block;width:120px;float:left;padding-top:10px;}';
+			$disp .= '   .perfopsone-admin-inside .poo-text {display:grid;text-align:left;padding-top:16px;padding-right:16px;}';
+			$disp .= '   .perfopsone-admin-inside .poo-title {font-size:1.8em;font-weight: 600;}';
+			$disp .= '   .perfopsone-admin-inside .poo-description {font-size:1em;padding-top:10px;}';
 			$disp .= '   .perfopsone-admin-inside a:focus {box-shadow:none;outline:none;}';
 			$disp .= '  </style>';
 			foreach ( $items as $item ) {
-				$disp .= '<div class="po-container">';
-				$disp .= ' <div class="po-actionable">';
+				$disp .= '<div class="poo-container">';
+				$disp .= ' <div class="poo-actionable">';
 				$disp .= '  <a href="' . $item['url'] . '"/>';
 				$disp .= '   <div id="' . $item['id'] . '">';
-				$disp .= '    <span class="po-icon"><img style="width:100px" src="' . $item['icon'] . '"/></span>';
-				$disp .= '    <span class="po-text">';
-				$disp .= '     <span class="po-title">' . $item['title'] . '</span>';
-				$disp .= '     <span class="po-description">' . $item['text'] . '</span>';
+				$disp .= '    <span class="poo-icon"><img style="width:100px;margin-top:-10px;" src="' . $item['icon'] . '"/></span>';
+				$disp .= '    <span class="poo-text">';
+				$disp .= '     <span class="poo-title">' . $item['title'] . '</span>';
+				$disp .= '     <span class="poo-description">' . $item['text'] . '</span>';
 				$disp .= '    </span>';
 				$disp .= '   </div>';
 				$disp .= '  </a>';
 				$disp .= ' </div>';
 				$disp .= '</div>';
-			}
-			$disp .= ' </div>';
-			$disp .= '</div>';
-			echo $disp;
-		}
-
-		/**
-		 * Displays items as lines.
-		 *
-		 * @param array $items  The items to display.
-		 * @since 1.0.0
-		 */
-		private static function display_as_lines( $items ) {
-			uasort(
-				$items,
-				function ( $a, $b ) {
-					if ( $a['title'] === $b['title'] ) {
-						return 0;
-					} return ( strtoupper( $a['title'] ) < strtoupper( $b['title'] ) ) ? -1 : 1;
-				}
-			);
-			$disp  = '';
-			$disp .= '<div style="width:100%;text-align:center;padding:0px;margin-top:0;" class="perfopsone-admin-inside">';
-			$disp .= ' <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;padding-top:10px;padding-right:20px;">';
-			$disp .= '  <style>';
-			$disp .= '   .perfopsone-admin-inside .po-container {width:100%;flex:none;padding:10px;}';
-			$disp .= '   .perfopsone-admin-inside .po-actionable:hover {border-radius:6px;-moz-transition: all .2s ease-in; -o-transition: all .2s ease-in; -webkit-transition: all .2s ease-in; transition: all .2s ease-in; background: #f5f5f5;border:1px solid #e0e0e0;filter: grayscale(0%) opacity(100%);}';
-			$disp .= '   .perfopsone-admin-inside .po-actionable {overflow:hidden;width:100%;height:120px;border-radius:6px;-moz-transition: all .4s ease-in; -o-transition: all .4s ease-in; -webkit-transition: all .4s ease-in; transition: all .4s ease-in; background: transparent;border:1px solid transparent;filter: grayscale(80%) opacity(66%);}';
-			$disp .= '   .perfopsone-admin-inside .po-actionable {color:#73879C;}';
-			$disp .= '   .perfopsone-admin-inside .po-actionable a {font-style:normal;text-decoration:none;}';
-			$disp .= '   .perfopsone-admin-inside .po-icon {display:block;width:120px;float:left;padding-top:10px;}';
-			$disp .= '   .perfopsone-admin-inside .po-text {width:70%;display: grid;text-align:left;padding-top:20px;padding-right:16px;}';
-			$disp .= '   .perfopsone-admin-inside .po-title {height: 0;font-size:1.8em;font-weight: 600;margin-bottom: 10px;}';
-			$disp .= '   .perfopsone-admin-inside .po-stars {height:0;font-size:1.8em;font-weight: 600;}';
-			$disp .= '   .perfopsone-admin-inside .po-version {font-size:0.6em;font-weight: 500;padding-left: 10px;vertical-align: middle;}';
-			$disp .= '   .perfopsone-admin-inside .po-update {font-size:1.1em;font-weight: 400;color:#9B59B6;margin-top: 20px;}';
-			$disp .= '   .perfopsone-admin-inside .po-description {line-height: 1em;font-size:1em;padding-top:0px;margin-bottom: -10px;}';
-			$disp .= '   .perfopsone-admin-inside .po-requires {font-size:1em;}';
-			$disp .= '   .perfopsone-admin-inside .po-link {padding-left:14px;font-size:0.6em;vertical-align: middle;color:#73879C;}';
-			$disp .= '   .perfopsone-admin-inside .po-link a:hover {text-decoration:underline;}';
-			$disp .= '   .perfopsone-admin-inside .po-needupdate {vertical-align:super;font-size:0.6em;color:#9B59B6;padding-left:2px;}';
-			$disp .= '   .perfopsone-admin-inside .po-okupdate {vertical-align:super;font-size:0.6em;color:#3398DB;}';
-			$disp .= '   .perfopsone-admin-inside .po-summary {width:140px;display:grid;text-align:left;margin-left:20px;padding-left:30px;top:20px;position:relative;padding-right:16px;}';
-			$disp .= '   .perfopsone-admin-inside a:focus {box-shadow:none;outline:none;}';
-			$disp .= '   @media (max-width: 960px) {';
-			$disp .= '   .perfopsone-admin-inside .po-summary { display:none;}';
-			$disp .= '   }';
-			$disp .= '  </style>';
-			foreach ( $items as $item ) {
-				$links   = [];
-				$links[] = '<a href="' . $item['url'] . '"/>' . __( 'settings', 'apcu-manager' ) . '</a>';
-				$links[] = '<a href="' . $item['url'] . '&tab=about"/>' . __( 'about', 'apcu-manager' ) . '</a>';
-				$links[] = '<a href="https://wordpress.org/support/plugin/' . $item['slug'] . '" target="_blank">' . __( 'support', 'apcu-manager' ) . '</a>';
-				$links[] = '<a href="https://github.com/Pierre-Lannoy/wp-' . $item['slug'] . '" target="_blank">' . __( 'contribution', 'apcu-manager' ) . '</a>';
-				$disp   .= '<div class="po-container">';
-				$disp   .= ' <div class="po-actionable">';
-				$disp   .= '   <div id="' . $item['id'] . '" style="display:flex;justify-content: flex-start;">';
-				$disp   .= '    <div class="po-icon"><img style="width:100px" src="' . $item['icon'] . '"/></div>';
-				$disp   .= '    <div class="po-text">';
-				$disp   .= '     <span class="po-title">' . $item['title'] . '<span class="po-version">' . $item['version'] . '</span><span class="po-link">' . implode(' | ',  $links) . '</span></span>';
-				$disp   .= '     <span class="po-update">' . $item['need_update'] . '</span>';
-				$disp   .= '     <span class="po-description">' . $item['text'] . '</span>';
-				$disp   .= '     <span class="po-requires">' . sprintf( esc_html__( 'Requires at least PHP %1$s%2$s and WordPress %3$s%4$s.', 'apcu-manager' ), $item['php_version'], '<span class="po-needupdate">' . $item['need_php_update'] . '</span><span class="po-okupdate">' . $item['ok_php_update'] . '</span>', $item['wp_version'], '<span class="po-needupdate">' . $item['need_wp_update'] . '</span><span class="po-okupdate">' . $item['ok_wp_update'] . '</span>' ) . '</span>';
-				$disp   .= '    </div>';
-				$disp   .= '    <div class="po-summary">';
-				$disp   .= '     <span class="po-stars"><a href="https://wordpress.org/support/plugin/' . $item['slug'] . '/reviews" target="_blank">' . $item['stars'] . '</a></span>';
-				$disp   .= '     <span class="po-requires">' . $item['reviews'] . '<br/>' . $item['installs'] . '<br/>' . $item['downloads'] . '</span>';
-				$disp   .= '    </div>';
-				$disp   .= '   </div>';
-				$disp   .= ' </div>';
-				$disp   .= '</div>';
 			}
 			$disp .= ' </div>';
 			$disp .= '</div>';

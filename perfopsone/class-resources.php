@@ -1,6 +1,6 @@
 <?php
 /**
- * Standard PerfOpsOne resources handling.
+ * Standard PerfOps One resources handling.
  *
  * @package PerfOpsOne
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
@@ -9,10 +9,12 @@
 
 namespace PerfOpsOne;
 
+use Feather\Icons;
+
 /**
- * Standard PerfOpsOne resources handling.
+ * Standard PerfOps One resources handling.
  *
- * This class defines all code necessary to initialize and handle PerfOpsOne admin menus.
+ * This class defines all code necessary to initialize and handle PerfOps One admin menus.
  *
  * @package Plugin
  * @author  Pierre Lannoy <https://pierre.lannoy.fr/>.
@@ -23,51 +25,52 @@ if ( ! class_exists( 'PerfOpsOne\Resources' ) ) {
 	class Resources {
 
 		/**
-		 * The PerfOpsOne admin menus.
+		 * The PerfOps One admin menus.
 		 *
 		 * @since  2.0.0
-		 * @var    array $menus Maintains the PerfOpsOne admin menus.
+		 * @var    array $menus Maintains the PerfOps One admin menus.
 		 */
 		private static $menus = [];
 
 		/**
-		 * Returns a base64 svg resource for the PerfOpsOne logo.
+		 * Returns a base64 svg resource for the PerfOps One logo.
 		 *
 		 * @return string The svg resource as a base64.
 		 * @since 2.0.0
 		 */
 		public static function get_base64_logo() {
-			$source  = '<svg width="100%" height="100%" viewBox="0 0 1001 1001" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-miterlimit:10;">';
-			$source .= '<g id="apcu-manager" serif:id="APCu Manager" transform="matrix(10.0067,0,0,10.0067,0,0)">';
-			$source .= '<rect x="0" y="0" width="100" height="100" style="fill:none;"/>';
-			$source .= '<g id="Icons" transform="matrix(0.416389,0,0,0.416389,28.481,2.3984)">';
-			$source .= '<g transform="matrix(0,-119.484,-119.484,0,50.731,119.595)"><path d="M0.95,0.611C0.95,0.632 0.933,0.649 0.911,0.649L0.174,0.649C0.153,0.649 0.136,0.632 0.136,0.611L0.136,-0.611C0.136,-0.632 0.153,-0.649 0.174,-0.649L0.911,-0.649C0.933,-0.649 0.95,-0.632 0.95,-0.611L0.95,0.611Z" style="fill:url(#_Linear1);fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(2.31646,0,0,2.31646,-5.58445,47.5101)"><path d="M0,15.324L15.325,3.648L29.189,15.324L46.163,0" style="fill:none;fill-rule:nonzero;stroke:rgb(65,172,255);stroke-width:0.63px;"/></g>';
-			$source .= '<g transform="matrix(0,-2.31646,-2.31646,0,-6.02226,77.8983)"><path d="M-2,-2C-3.104,-2 -4,-1.104 -4,0C-4,1.104 -3.104,2 -2,2C-0.896,2 0,1.104 0,0C0,-1.104 -0.896,-2 -2,-2" style="fill:white;fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(0,-2.31646,-2.31646,0,31.0411,52.4172)"><path d="M-2,-2C-3.104,-2 -4,-1.104 -4,0C-4,1.104 -3.104,2 -2,2C-0.896,2 0,1.104 0,0C0,-1.104 -0.896,-2 -2,-2" style="fill:white;fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(0,-2.31646,-2.31646,0,61.1551,77.8983)"><path d="M-2,-2C-3.104,-2 -4,-1.104 -4,0C-4,1.104 -3.104,2 -2,2C-0.896,2 0,1.104 0,0C0,-1.104 -0.896,-2 -2,-2" style="fill:white;fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(0,-2.31646,-2.31646,0,100.535,43.1514)"><path d="M-2,-2C-3.104,-2 -4,-1.104 -4,0C-4,1.104 -3.104,2 -2,2C-0.896,2 0,1.104 0,0C0,-1.104 -0.896,-2 -2,-2" style="fill:white;fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(-2.20436e-17,-6.27646,-5.91646,-2.20436e-17,117.335,83.7114)"><path d="M-2,-2C-3.104,-2 -4,-1.104 -4,0C-4,1.104 -3.104,2 -2,2C-0.896,2 0,1.104 0,0C0,-1.104 -0.896,-2 -2,-2" style="fill:white;fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(-2.31646,0,0,2.31646,265.004,3.77157)"><rect x="65" y="34" width="12" height="4" style="fill:white;"/></g>';
-			$source .= '<g transform="matrix(-2.31646,0,0,2.31646,70.421,-88.8869)"><rect x="23" y="54" width="12" height="4" style="fill:white;"/></g>';
-			$source .= '<g transform="matrix(2.31646,0,0,2.31646,-63.9338,-61.0893)"><g opacity="0.3"><g transform="matrix(1,0,0,1,83,29)"><path d="M0,6L-67,6L-67,2C-67,0.896 -66.104,0 -65,0L-2,0C-0.896,0 0,0.896 0,2L0,6Z" style="fill:white;fill-rule:nonzero;"/></g></g></g>';
-			$source .= '<g transform="matrix(2.31646,0,0,2.31646,-63.9338,-61.0893)"><g opacity="0.3"><g transform="matrix(1,0,0,1,0,6)"><rect x="20" y="33" width="59" height="28" style="fill:white;"/></g></g></g>';
-			$source .= '<g transform="matrix(0,-88.9995,-93.1112,0,54.5887,204.54)"><path d="M0.629,0.034L0.629,0.633C0.629,0.68 0.366,0.964 0.366,0.964L0.129,0.682C0.124,0.67 0.129,0.586 0.129,0.571L0.24,0.016L0.24,-0.018L0.24,-0.649C0.185,-0.666 0.185,-0.695 0.185,-0.695L0.351,-0.964C0.351,-0.964 0.629,-0.699 0.629,-0.647L0.629,0.034Z" style="fill:url(#_Linear2);fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(0,-72.1772,-75.5118,0,53.0533,251.205)"><path d="M1.148,1.095C1.148,1.17 1.087,1.232 1.011,1.232L0.532,1.232C0.457,1.232 0.396,1.17 0.396,1.095L0.396,-1.095C0.396,-1.17 0.457,-1.232 0.532,-1.232L1.011,-1.232C1.087,-1.232 1.148,-1.17 1.148,-1.095L1.148,1.095Z" style="fill:url(#_Linear3);fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(0,18.7374,19.6031,0,-14.1133,189.472)"><circle cx="0.453" cy="0" r="0.264" style="fill:url(#_Linear4);"/></g>';
-			$source .= '<g transform="matrix(5.16667,0,0,4.93851,-50.28,39.9276)"><g opacity="0.3"><g transform="matrix(1,0,0,-1,0,40)"><rect x="21" y="7" width="14" height="2" style="fill:white;"/></g></g></g>';
-			$source .= '<g transform="matrix(0,-4.93851,-5.16667,0,11.72,193.021)"><path d="M-1,-1C-1.552,-1 -2,-0.552 -2,0C-2,0.552 -1.552,1 -1,1C-0.448,1 0,0.552 0,0C0,-0.552 -0.448,-1 -1,-1" style="fill:rgb(255,216,111);fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(1.06581e-16,-4.93851,-5.16667,0,37.5533,193.021)"><path d="M-1,-1C-1.552,-1 -2,-0.552 -2,0C-2,0.552 -1.552,1 -1,1C-0.448,1 0,0.552 0,0C0,-0.552 -0.448,-1 -1,-1" style="fill:rgb(255,216,111);fill-rule:nonzero;"/></g>';
-			$source .= '<g transform="matrix(-9.20683,68.032,68.0292,9.19682,119.123,75.567)"><path d="M-0.179,-0.132L-0.085,-0.126C-0.082,-0.128 -0.079,-0.13 -0.076,-0.132C-0.065,-0.162 -0.051,-0.19 -0.035,-0.216C-0.035,-0.22 -0.035,-0.223 -0.035,-0.228L-0.098,-0.298C-0.11,-0.312 -0.109,-0.334 -0.095,-0.347L-0.044,-0.392L0.007,-0.437C0.021,-0.449 0.043,-0.448 0.056,-0.434L0.118,-0.363C0.123,-0.362 0.128,-0.361 0.134,-0.36C0.158,-0.371 0.185,-0.38 0.212,-0.385C0.216,-0.39 0.22,-0.395 0.224,-0.4L0.23,-0.494C0.231,-0.513 0.248,-0.527 0.267,-0.526L0.335,-0.522L0.402,-0.518C0.421,-0.517 0.436,-0.5 0.435,-0.481L0.429,-0.387C0.433,-0.38 0.438,-0.373 0.442,-0.366C0.463,-0.358 0.483,-0.348 0.502,-0.336C0.512,-0.337 0.52,-0.337 0.53,-0.338L0.601,-0.4C0.615,-0.413 0.637,-0.412 0.649,-0.397L0.739,-0.296C0.752,-0.281 0.751,-0.26 0.736,-0.247L0.661,-0.18C0.657,-0.177 0.654,-0.174 0.651,-0.17C0.665,-0.142 0.675,-0.112 0.681,-0.081C0.686,-0.08 0.691,-0.079 0.696,-0.079L0.805,-0.072C0.808,-0.072 0.812,-0.071 0.815,-0.069C0.818,-0.068 0.821,-0.066 0.823,-0.063C0.827,-0.058 0.83,-0.052 0.829,-0.044L0.825,0.032L0.82,0.108C0.819,0.115 0.816,0.122 0.811,0.126C0.809,0.128 0.806,0.13 0.803,0.131C0.799,0.132 0.796,0.133 0.792,0.133L0.684,0.126C0.683,0.126 0.682,0.126 0.682,0.126C0.677,0.126 0.673,0.126 0.668,0.126C0.658,0.157 0.645,0.185 0.628,0.211C0.63,0.215 0.633,0.219 0.636,0.223L0.703,0.298C0.715,0.312 0.714,0.334 0.7,0.347L0.649,0.392L0.598,0.437C0.584,0.449 0.562,0.448 0.549,0.434L0.487,0.363C0.478,0.361 0.469,0.36 0.46,0.358C0.439,0.367 0.418,0.375 0.397,0.38C0.391,0.387 0.386,0.393 0.381,0.4L0.375,0.494C0.374,0.513 0.357,0.527 0.338,0.526L0.271,0.522L0.203,0.518C0.184,0.517 0.169,0.5 0.171,0.481L0.176,0.387C0.173,0.382 0.169,0.377 0.165,0.371C0.139,0.362 0.114,0.351 0.091,0.336C0.086,0.337 0.081,0.337 0.075,0.338L0.005,0.4C-0.01,0.413 -0.032,0.412 -0.044,0.397L-0.089,0.346L-0.134,0.296C-0.147,0.281 -0.145,0.259 -0.131,0.247L-0.061,0.184C-0.06,0.18 -0.059,0.177 -0.058,0.173C-0.072,0.145 -0.082,0.116 -0.089,0.085C-0.092,0.083 -0.094,0.08 -0.097,0.078L-0.191,0.072C-0.21,0.071 -0.225,0.055 -0.223,0.036L-0.219,-0.032L-0.215,-0.1C-0.215,-0.101 -0.215,-0.102 -0.215,-0.102C-0.213,-0.12 -0.197,-0.133 -0.179,-0.132ZM0.443,0.009C0.448,-0.073 0.386,-0.143 0.305,-0.148C0.223,-0.153 0.153,-0.091 0.148,-0.01C0.143,0.072 0.205,0.142 0.286,0.147C0.364,0.152 0.432,0.096 0.442,0.019C0.443,0.016 0.443,0.012 0.443,0.009Z" style="fill:url(#_Linear5);fill-rule:nonzero;"/></g>';
+			$source  = '<svg width="100%" height="100%" viewBox="0 0 3000 3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-miterlimit:10;">';
+			$source .= '<g id="PerfOps-One" transform="matrix(27.8636,0,0,27.8636,467.713,-452.787)">';
+			$source .= '<g transform="matrix(-3.04913,22.8685,22.8685,3.04913,37.8651,84.512)">';
+			$source .= '<path d="M0.086,-0.481L0.61,-0.481L0.473,0.55L-0.034,0.412L0.086,-0.481Z" style="fill:url(#_Linear1);fill-rule:nonzero;"/>';
 			$source .= '</g>';
-			$source .= '<g transform="matrix(-1.20714e-16,2.3878,0.416389,-1.20714e-16,53.6143,56.429)"><path d="M-5.5,-5.5L5.5,-5.5" style="fill:none;fill-rule:nonzero;stroke:url(#_Linear6);stroke-width:0.24px;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:0.49,0.49;"/></g></g>';
+			$source .= '<g transform="matrix(0,-65.5897,-65.5897,0,37,97.8667)">';
+			$source .= '<path d="M0.821,0.471C0.821,0.497 0.8,0.518 0.774,0.518L0.198,0.518C0.172,0.518 0.15,0.497 0.15,0.471L0.15,-0.471C0.15,-0.497 0.172,-0.518 0.198,-0.518L0.774,-0.518C0.8,-0.518 0.821,-0.497 0.821,-0.471L0.821,0.471Z" style="fill:url(#_Linear2);fill-rule:nonzero;"/>';
+			$source .= '</g>';
+			$source .= '<g transform="matrix(0,-19.9701,-19.9701,0,37,96.9333)">';
+			$source .= '<path d="M0.748,1.703L0.573,1.703C0.476,1.703 0.397,1.633 0.397,1.548L0.397,-1.548C0.397,-1.633 0.476,-1.703 0.573,-1.703L0.748,-1.703L0.748,1.703Z" style="fill:url(#_Linear3);fill-rule:nonzero;"/>';
+			$source .= '</g>';
+			$source .= '<g opacity="0.4">';
+			$source .= '<g transform="matrix(1,0,0,1,0,26)">';
+			$source .= '<rect x="7" y="21" width="61" height="32" style="fill:white;"/>';
+			$source .= '</g>';
+			$source .= '</g>';
+			$source .= '<g transform="matrix(27,0,0,-27,23.5,65.5)">';
+			$source .= '<rect x="-0.537" y="-0.5" width="2.074" height="1" style="fill:url(#_Linear4);"/>';
+			$source .= '</g>';
+			$source .= '<g transform="matrix(6.26387,0,0,-6.26387,33.1667,97)">';
+			$source .= '<rect x="-2.102" y="-0.16" width="5.428" height="0.319" style="fill:url(#_Linear5);"/>';
+			$source .= '</g>';
+			$source .= '<g transform="matrix(1,0,0,1,9,66.144)">';
+			$source .= '<path d="M0,-0.644L14.974,-0.644L21.342,-11.048L28,10.404L35.397,-2.911L36.877,0.356L56,0.356" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:0.21px;"/>';
+			$source .= '</g>';
+			$source .= '</g>';
 			$source .= '<defs>';
-			$source .= '<linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,-1,0,0)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
-			$source .= '<linearGradient id="_Linear2" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,-1,0,-3.75329e-05)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
-			$source .= '<linearGradient id="_Linear3" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,-1,0,0)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
-			$source .= '<linearGradient id="_Linear4" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-1,0,0,1,0.906002,4.44089e-16)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
-			$source .= '<linearGradient id="_Linear5" x1="0" y1="0" x2="1" y2="-0.000139067" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,-2.77556e-17,-2.77556e-17,-1,0,-5.95027e-05)"><stop offset="0" style="stop-color:rgb(209,231,253);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
-			$source .= '<linearGradient id="_Linear6" x1="0" y1="0" x2="1" y2="-0.940977" gradientUnits="userSpaceOnUse" gradientTransform="matrix(6.20711,6.20711,6.20711,-6.20711,-3.1036,-8.6036)"><stop offset="0" style="stop-color:rgb(255,216,111);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(255,147,8);stop-opacity:1"/></linearGradient>';
+			$source .= '<linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0.991228,0.132164,0.132164,-0.991228,0.00248874,-0.0374963)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
+			$source .= '<linearGradient id="_Linear2" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,-1,0,-2.22045e-16)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
+			$source .= '<linearGradient id="_Linear3" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,-1,0,4.44089e-16)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
+			$source .= '<linearGradient id="_Linear4" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0,1,1,0,0.5,-0.5)"><stop offset="0" style="stop-color:rgb(65,172,255);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(202,238,252);stop-opacity:1"/></linearGradient>';
+			$source .= '<linearGradient id="_Linear5" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0,1,1,0,0.611975,-0.611975)"><stop offset="0" style="stop-color:rgb(25,39,131);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(65,172,255);stop-opacity:1"/></linearGradient>';
 			$source .= '</defs>';
 			$source .= '</svg>';
 
@@ -76,7 +79,7 @@ if ( ! class_exists( 'PerfOpsOne\Resources' ) ) {
 		}
 
 		/**
-		 * Returns a base64 svg resource for the PerfOpsOne menu item.
+		 * Returns a base64 svg resource for the PerfOps One menu item.
 		 *
 		 * @return string The svg resource as a base64.
 		 * @since 2.0.0
