@@ -1,31 +1,6 @@
 jQuery(document).ready( function($) {
 	$('.apcm-about-logo').css({opacity:1});
-
-	$( ".poo-switch" ).on(
-		"click",
-		function() {
-			const toggle = $(this).find('.poo-switch-toggle');
-			var data = {
-				action: 'poo_switch_autoupdate',
-				plugin: $( this ).data( "value" ),
-				poo_nonce : 'dfcgsdf'
-			};
-			jQuery.post( ajaxurl, data, function ( response ) {
-				if ( response ) {
-					var cold = 'poo-switch-on';
-					var cnew = 'poo-switch-off';
-					if ( $(toggle).hasClass( 'poo-switch-off' ) ) {
-						cold = 'poo-switch-off';
-						cnew = 'poo-switch-on';
-					}
-					$(toggle).removeClass( cold );
-					$(toggle).addClass( cnew );
-				}
-			});
-		}
-	);
-
-
+	
 	$( "#apcm-chart-button-ratio" ).on(
 		"click",
 		function() {
