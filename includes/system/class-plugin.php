@@ -47,6 +47,21 @@ class Plugin {
 	}
 
 	/**
+	 * Get a value.
+	 *
+	 * @param string    $key   The value to retrieve.
+	 * @return string   The value.
+	 * @since 1.0.0
+	 */
+	public function get( $key ) {
+		if ( is_array( $this->details ) && array_key_exists( $key, $this->details ) ) {
+			return $this->details[ $key ];
+		} else {
+			return '';
+		}
+	}
+
+	/**
 	 * Verify if the plugin was correctly detected.
 	 *
 	 * @return  boolean True if the plugin was detected, false otherwise.
@@ -84,22 +99,40 @@ class Plugin {
 		if ( ! $this->is_detected() ) {
 			return false;
 		}
-		return array_key_exists( $this->slug, (array) get_site_option( 'auto_update_plugins', [] ) );
+		return in_array( $this->slug, (array) get_site_option( 'auto_update_plugins', [] ), true );
 	}
 
 	/**
-	 * Get a value.
+	 * Set the auto-update status.
 	 *
-	 * @param string    $key   The value to retrieve.
-	 * @return string   The value.
-	 * @since 1.0.0
+	 * @param   boolean $status Optional. The status to set.
+	 * @return  boolean True if it is successful, false otherwise.
+	 * @since 2.0.0
 	 */
-	public function get( $key ) {
-		if ( is_array( $this->details ) && array_key_exists( $key, $this->details ) ) {
-			return $this->details[ $key ];
-		} else {
-			return '';
+	public function set_auto_update( $status = true ) {
+		if ( ! $this->is_detected() ) {
+			return false;
 		}
+		$auto_updates = (array) get_site_option( 'auto_update_plugins', [] );
+		if ( $status ) {
+			$auto_updates[] = $this->slug;
+			$auto_updates   = array_unique( $auto_updates );
+		} else {
+			$auto_updates = array_diff( $auto_updates, [ $this->slug ] );
+		}
+		$all_items    = apply_filters( 'all_plugins', get_plugins() );
+		$auto_updates = array_intersect( $auto_updates, array_keys( $all_items ) );
+		return update_site_option( 'auto_update_plugins', $auto_updates );
+	}
+
+	/**
+	 * Switch the auto-update status.
+	 *
+	 * @return  boolean True if it is successful, false otherwise.
+	 * @since 2.0.0
+	 */
+	public function switch_auto_update() {
+		return $this->set_auto_update( ! $this->auto_update() );
 	}
 
 	/**

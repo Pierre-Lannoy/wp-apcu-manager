@@ -412,7 +412,7 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 			$disp       .= '         var data = {';
 			$disp       .= '           action: "poo_switch_autoupdate",';
 			$disp       .= '           plugin: $( this ).data( "value" ),';
-			$disp       .= '           poo_nonce : "dfcgsdf"';
+			$disp       .= '           nonce : "' . wp_create_nonce( 'poo-auto-update' ) . '"';
 			$disp       .= '         };';
 			$disp       .= '         $(toggle).addClass( "poo-blink" );';
 			$disp       .= '         jQuery.post( ajaxurl, data, function ( response ) {';
@@ -424,8 +424,10 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 			$disp       .= '               cnew = "poo-switch-on";';
 			$disp       .= '             }';
 			$disp       .= '             $(toggle).removeClass( "poo-blink" );';
-			$disp       .= '             $(toggle).removeClass( cold );';
-			$disp       .= '             $(toggle).addClass( cnew );';
+			$disp       .= '             if ( 200 == response) {';
+			$disp       .= '               $(toggle).removeClass( cold );';
+			$disp       .= '               $(toggle).addClass( cnew );';
+			$disp       .= '             }';
 			$disp       .= '           }';
 			$disp       .= '         });';
 			$disp       .= '       }';
