@@ -497,7 +497,7 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		 * Displays items as bubbles.
 		 *
 		 * @param array $items  The items to display.
-		 * @since 2.0.0
+		 * @since 1.0.0
 		 */
 		private static function display_as_bubbles( $items ) {
 			uasort(
@@ -509,16 +509,19 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 				}
 			);
 			$disp  = '';
-			$disp .= '<div style="width:100%;text-align:center;padding:0px;margin-top:10px;margin-left:-10px;" class="perfopsone-admin-inside">';
-			$disp .= ' <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;">';
+			$disp .= '<div class="perfopsone-admin-wrap">';
+			$disp .= ' <div class="perfopsone-admin-inside">';
 			$disp .= '  <style>';
-			$disp .= '   .perfopsone-admin-inside .poo-container {flex:none;padding:10px;}';
-			$disp .= '   .perfopsone-admin-inside .poo-actionable:hover {border-radius:6px;cursor:pointer; -moz-transition: all .2s ease-in; -o-transition: all .2s ease-in; -webkit-transition: all .2s ease-in; transition: all .2s ease-in; background: #f5f5f5;border:1px solid #e0e0e0;filter: grayscale(0%) opacity(100%);}';
-			$disp .= '   .perfopsone-admin-inside .poo-actionable {overflow:hidden;width:400px;height:120px;border-radius:6px;cursor:pointer; -moz-transition: all .4s ease-in; -o-transition: all .4s ease-in; -webkit-transition: all .4s ease-in; transition: all .4s ease-in; background: transparent;border:1px solid transparent;filter: grayscale(80%) opacity(66%);}';
-			$disp .= '   .perfopsone-admin-inside .poo-actionable a {font-style:normal;text-decoration:none;color:#73879C;}';
+			$disp .= '   .perfopsone-admin-wrap {width:100%;text-align:center;padding:0px;margin-top:0;}';
+			$disp .= '   .perfopsone-admin-inside {display:grid;grid-template-columns: repeat(auto-fill, 470px);justify-content: center;padding-top:10px;padding-right:20px;}';
+			$disp .= '   .perfopsone-admin-inside .poo-container {flex:none;padding:10px;cursor:default;}';
+			$disp .= '   .perfopsone-admin-inside .poo-actionable:hover {border-radius:6px;background: #f5f5f5;border:1px solid #e0e0e0;filter: grayscale(0%) opacity(100%);}';
+			$disp .= '   .perfopsone-admin-inside .poo-actionable {overflow:hidden;width:100%;height:100px;border-radius:6px;background: #f5f5f5;border:1px solid #e7e7e7;filter: grayscale(12%) opacity(88%);}';
+			$disp .= '   .perfopsone-admin-inside .poo-actionable {color:#73879C;width: 450px;}';
+			$disp .= '   .perfopsone-admin-inside .poo-actionable a {font-style:normal;text-decoration:none;color:inherit;}';
 			$disp .= '   .perfopsone-admin-inside .poo-icon {display:block;width:120px;float:left;padding-top:10px;}';
-			$disp .= '   .perfopsone-admin-inside .poo-text {display:grid;text-align:left;padding-top:16px;padding-right:16px;}';
-			$disp .= '   .perfopsone-admin-inside .poo-title {font-size:1.8em;font-weight: 600;}';
+			$disp .= '   .perfopsone-admin-inside .poo-title {height: 0;font-size:1.8em;font-weight: 600;margin-bottom: 10px;}';
+			$disp .= '   .perfopsone-admin-inside .poo-text {display:grid;text-align:left;padding-top:16px;padding-right:16px;width: 100%;}';
 			$disp .= '   .perfopsone-admin-inside .poo-description {font-size:1em;padding-top:10px;}';
 			$disp .= '   .perfopsone-admin-inside a:focus {box-shadow:none;outline:none;}';
 			$disp .= '  </style>';
@@ -526,8 +529,8 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 				$disp .= '<div class="poo-container">';
 				$disp .= ' <div class="poo-actionable">';
 				$disp .= '  <a href="' . $item['url'] . '"/>';
-				$disp .= '   <div id="' . $item['id'] . '">';
-				$disp .= '    <span class="poo-icon"><img style="width:100px;margin-top:-10px;" src="' . $item['icon'] . '"/></span>';
+				$disp .= '   <div id="' . $item['id'] . '" style="display:flex;justify-content: center;">';
+				$disp .= '    <div class="poo-icon"><img style="width:80px" src="' . $item['icon'] . '"/></div>';
 				$disp .= '    <span class="poo-text">';
 				$disp .= '     <span class="poo-title">' . $item['title'] . '</span>';
 				$disp .= '     <span class="poo-description">' . $item['text'] . '</span>';
