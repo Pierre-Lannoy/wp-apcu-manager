@@ -52,13 +52,36 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 		private static $slugs = [];
 
 		/**
+		 * Are the menus already initialized.
+		 *
+		 * @since  2.0.0
+		 * @var    boolean    $initialized    Maintains the menus initialization status.
+		 */
+		private static $initialized = false;
+
+		/**
+		 * Currently selected item.
+		 *
+		 * @since  2.0.0
+		 * @var    array    $current_item    Maintains the currently selected item.
+		 */
+		private static $current_item = null;
+
+		/**
+		 * Currently selected menu.
+		 *
+		 * @since  2.0.0
+		 * @var    string    $current_menu    Maintains the currently selected menu.
+		 */
+		private static $current_menu = null;
+
+		
+		/**
 		 * Initialize the admin menus.
 		 *
 		 * @since 2.0.0
 		 */
 		public static function initialize() {
-			$current = null;
-			$cmenu   = null;
 			if ( ! ( $page = filter_input( INPUT_GET, 'page' ) ) ) {
 				$page = filter_input( INPUT_POST, 'page' );
 			}
@@ -74,25 +97,36 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 									call_user_func( $item['post_callback'], $hook_suffix );
 								}
 							} else {
-								$current = $item;
-								$cmenu   = $menu;
+								self::$current_item = $item;
+								self::$current_menu = $menu;
 							}
 						}
 					}
 				}
 			}
-			add_menu_page( PERFOO_PRODUCT_NAME, PERFOO_PRODUCT_NAME, 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_dashboard_page' ], Resources::get_menu_base64_logo(), 79 );
-			add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Control Center', 'apcu-manager' ), __( 'Control Center', 'apcu-manager' ), 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_settings_page' ] );
-			if ( isset( $current ) && 'settings' === $cmenu ) {
-				if ( $current['activated'] ) {
-					$hook_suffix = add_submenu_page( 'perfopsone-dashboard', $current['page_title'], '&nbsp;&nbsp;' . $current['menu_title'] . '&emsp;➜', $current['capability'], $current['slug'], $current['callback'] );
-					if ( isset( $current['post_callback'] ) && is_callable( $current['post_callback'] ) && $hook_suffix ) {
-						call_user_func( $current['post_callback'], $hook_suffix );
+		}
+
+		/**
+		 * Dispatch the admin menus.
+		 *
+		 * @since 2.0.0
+		 */
+		public static function finalize() {
+			if ( ! self::$initialized ) {
+				add_menu_page( PERFOO_PRODUCT_NAME, PERFOO_PRODUCT_NAME, 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_dashboard_page' ], Resources::get_menu_base64_logo(), 79 );
+				add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Control Center', 'apcu-manager' ), __( 'Control Center', 'apcu-manager' ), 'manage_options', 'perfopsone-dashboard', [ self::class, 'get_settings_page' ] );
+			}
+			if ( isset( self::$current_item ) && 'settings' === self::$current_menu ) {
+				if ( self::$current_item['activated'] ) {
+					$hook_suffix = add_submenu_page( 'perfopsone-dashboard', self::$current_item['page_title'], '&nbsp;&nbsp;' . self::$current_item['menu_title'] . '&nbsp;&nbsp;&nbsp;➜', self::$current_item['capability'], self::$current_item['slug'], self::$current_item['callback'] );
+					if ( isset( self::$current_item['post_callback'] ) && is_callable( self::$current_item['post_callback'] ) && $hook_suffix ) {
+						call_user_func( self::$current_item['post_callback'], $hook_suffix );
 					}
 				}
+				self::$current_item = null;
 			}
 			foreach ( self::$menus_positions as $menu ) {
-				if ( array_key_exists( $menu, self::$menus ) ) {
+				if ( ! self::$initialized ) {
 					switch ( $menu ) {
 						case 'analytics':
 							add_submenu_page( 'perfopsone-dashboard', esc_html__( 'Analytics', 'apcu-manager' ), __( 'Analytics', 'apcu-manager' ), 'manage_options', 'perfopsone-' . $menu, [ self::class, 'get_analytics_page' ] );
@@ -111,15 +145,17 @@ if ( ! class_exists( 'PerfOpsOne\Menus' ) ) {
 							break;
 					}
 				}
-				if ( isset( $current ) && $menu === $cmenu ) {
-					if ( $current['activated'] ) {
-						$hook_suffix = add_submenu_page( 'perfopsone-dashboard', $current['page_title'], '&nbsp;&nbsp;' . $current['menu_title'] . '&emsp;➜', $current['capability'], $current['slug'], $current['callback'] );
-						if ( isset( $current['post_callback'] ) && is_callable( $current['post_callback'] ) && $hook_suffix ) {
-							call_user_func( $current['post_callback'], $hook_suffix );
+				if ( isset( self::$current_item ) && $menu === self::$current_menu ) {
+					if ( self::$current_item['activated'] ) {
+						$hook_suffix = add_submenu_page( 'perfopsone-dashboard', self::$current_item['page_title'], '&nbsp;&nbsp;' . self::$current_item['menu_title'] . '&nbsp;&nbsp;&nbsp;➜', self::$current_item['capability'], self::$current_item['slug'], self::$current_item['callback'] );
+						if ( isset( self::$current_item['post_callback'] ) && is_callable( self::$current_item['post_callback'] ) && $hook_suffix ) {
+							call_user_func( self::$current_item['post_callback'], $hook_suffix );
 						}
 					}
+					self::$current_item = null;
 				}
 			}
+			self::$initialized = true;
 		}
 
 		/**

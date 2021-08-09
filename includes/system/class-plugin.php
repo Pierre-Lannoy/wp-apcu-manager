@@ -32,17 +32,22 @@ class Plugin {
 	/**
 	 * Initializes the class and set its properties.
 	 *
-	 * @param string    $slug   The slug of the plugin.
+	 * @param string    $slug           The slug of the plugin.
+	 * @param boolean   $skip_detection Optional. Skip header parsing.
 	 * @since 1.0.0
 	 */
-	public function __construct( $slug ) {
-		if ( ! function_exists( 'get_plugin_data' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
+	public function __construct( $slug, $skip_detection = true ) {
 		$this->slug = $slug . '/' . $slug . '.php';
 		$plugin     = WP_PLUGIN_DIR . '/' . $this->slug;
-		if ( file_exists( $plugin ) ) {
-			$this->details = \get_plugin_data( $plugin, false );
+		if ( $skip_detection ) {
+			$this->details = [ 'detection' => 'skipped'];
+		} else {
+			if ( ! function_exists( 'get_plugin_data' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+			if ( file_exists( $plugin ) ) {
+				$this->details = \get_plugin_data( $plugin, false );
+			}
 		}
 	}
 

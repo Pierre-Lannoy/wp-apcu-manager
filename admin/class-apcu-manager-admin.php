@@ -135,6 +135,15 @@ class Apcu_Manager_Admin {
 	}
 
 	/**
+	 * Dispatch the items in the settings menu.
+	 *
+	 * @since 2.0.0
+	 */
+	public function finalize_admin_menus() {
+		Menus::finalize();
+	}
+
+	/**
 	 * Set the items in the settings menu.
 	 *
 	 * @since 1.0.0
