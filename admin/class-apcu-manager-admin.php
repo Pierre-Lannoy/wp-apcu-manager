@@ -13,7 +13,6 @@ use APCuManager\Plugin\Feature\Analytics;
 use APCuManager\Plugin\Feature\AnalyticsFactory;
 use APCuManager\System\Assets;
 use APCuManager\System\Environment;
-
 use APCuManager\System\Role;
 use APCuManager\System\Option;
 use APCuManager\System\Form;
@@ -21,6 +20,7 @@ use APCuManager\System\Blog;
 use APCuManager\System\Date;
 use APCuManager\System\Timezone;
 use PerfOpsOne\Menus;
+use PerfOpsOne\AdminBar;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -135,6 +135,37 @@ class Apcu_Manager_Admin {
 	}
 
 	/**
+	 * Init PerfOps admin bar.
+	 *
+	 * @param array $perfops    The already declared items.
+	 * @return array    The completed items array.
+	 * @since 3.2.0
+	 */
+	public function init_perfopsone_admin_bar( $perfops ) {
+		if ( ! ( $action = filter_input( INPUT_GET, 'action' ) ) ) {
+			$action = filter_input( INPUT_POST, 'action' );
+		}
+		if ( ! ( $tab = filter_input( INPUT_GET, 'tab' ) ) ) {
+			$tab = filter_input( INPUT_POST, 'tab' );
+		}
+		$early_signal  = ( 'misc' === $tab && 'do-save' === $action ) && ( Role::SUPER_ADMIN === Role::admin_type() || Role::SINGLE_ADMIN === Role::admin_type() );
+		$early_signal &= ( ! empty( $_POST ) && array_key_exists( 'submit', $_POST ) );
+		$early_signal &= ( array_key_exists( '_wpnonce', $_POST ) && wp_verify_nonce( $_POST['_wpnonce'], 'apcm-plugin-options' ) );
+		if ( $early_signal ) {
+			Option::network_set( 'adminbar', array_key_exists( 'apcm_plugin_options_adminbar', $_POST ) );
+		}
+		if ( Option::network_get( 'adminbar' ) && ( Role::SUPER_ADMIN === Role::admin_type() || Role::SINGLE_ADMIN === Role::admin_type() ) ) {
+			$perfops[] = [
+				'id'    => 'apcm-tools-reset',
+				'title' => '<strong>APCu</strong>&nbsp;&nbsp;➜&nbsp;&nbsp;' . __( 'Delete All', 'apcu-manager' ),
+				'href'  => add_query_arg( '_wpnonce', wp_create_nonce( 'quick-action-apcm-tools' ), admin_url( 'admin.php?page=apcm-tools&quick-action=reset' ) ),
+				'meta'  => false,
+			];
+		}
+		return $perfops;
+	}
+
+	/**
 	 * Dispatch the items in the settings menu.
 	 *
 	 * @since 2.0.0
@@ -159,7 +190,9 @@ class Apcu_Manager_Admin {
 	 */
 	public function init_admin_menus() {
 		add_filter( 'init_perfopsone_admin_menus', [ $this, 'init_perfopsone_admin_menus' ] );
+		add_filter( 'init_perfopsone_admin_bar', [ $this, 'init_perfopsone_admin_bar' ] );
 		Menus::initialize();
+		AdminBar::initialize();
 	}
 
 	/**
@@ -273,6 +306,7 @@ class Apcu_Manager_Admin {
 				Option::network_set( 'analytics', array_key_exists( 'apcm_plugin_features_analytics', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_analytics' ) : false );
 				Option::network_set( 'metrics', array_key_exists( 'apcm_plugin_features_metrics', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_metrics' ) : false );
 				Option::network_set( 'gc', array_key_exists( 'apcm_plugin_features_gc', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_gc' ) : false );
+				Option::network_set( 'adminbar', array_key_exists( 'apcm_plugin_options_adminbar', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_options_adminbar' ) : false );
 				Option::network_set( 'history', array_key_exists( 'apcm_plugin_features_history', $_POST ) ? (string) filter_input( INPUT_POST, 'apcm_plugin_features_history', FILTER_SANITIZE_NUMBER_INT ) : Option::network_get( 'history' ) );
 				if ( ! Option::network_get( 'analytics' ) ) {
 					wp_clear_scheduled_hook( APCM_CRON_STATS_NAME );
@@ -340,6 +374,22 @@ class Apcu_Manager_Admin {
 			]
 		);
 		register_setting( 'apcm_plugin_options_section', 'apcm_plugin_options_logger' );
+		add_settings_field(
+			'apcm_plugin_options_adminbar',
+			__( 'Quick actions', 'apcu-manager' ),
+			[ $form, 'echo_field_checkbox' ],
+			'apcm_plugin_options_section',
+			'apcm_plugin_options_section',
+			[
+				'text'        => esc_html__( 'Display in admin bar', 'apcu-manager' ),
+				'id'          => 'apcm_plugin_options_adminbar',
+				'checked'     => Option::network_get( 'adminbar' ),
+				'description' => esc_html__( 'If checked, APCu Manager will display in admin bar the most important actions, if any.', 'apcu-manager' ),
+				'full_width'  => false,
+				'enabled'     => true,
+			]
+		);
+		register_setting( 'apcm_plugin_options_section', 'apcm_plugin_options_adminbar' );
 		add_settings_field(
 			'apcm_plugin_options_usecdn',
 			esc_html__( 'Resources', 'apcu-manager' ),
