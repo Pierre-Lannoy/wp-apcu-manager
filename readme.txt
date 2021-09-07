@@ -4,7 +4,7 @@ Tags: analytics, APCu, cache, monitor, w3tc
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 5.8
-Stable tag: 2.4.1
+Stable tag: 2.5.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -111,3 +111,4 @@ Please, see [full changelog](https://perfops.one/apcu-manager-changelog).
 
 1. Daily Statistics
 2. Management Tools
+3. Quick Action in Admin Bar
