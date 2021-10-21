@@ -28,12 +28,11 @@ __APCu Manager__ is a free and open source plugin for WordPress. It integrates m
 
 ## WP-CLI
 
-__APCu Manager__ supports a set of WP-CLI commands to:
+__APCu Manager__ implements a set of WP-CLI commands. For a full help on these commands, please read [this guide](WP-CLI.md).
 
-* toggle on/off main settings - see `wp help apcu settings` for details;
-* obtain operational statistics - see `wp help apcu analytics` for details.
+## Hooks
 
-For a full help on WP-CLI commands in APCu Manager, please [read this guide](WP-CLI.md).
+__APCu Manager__ introduces some filters and actions to allow plugin customization. Please, read the [hooks reference](HOOKS.md) to learn more about them.
 
 ## Installation
 
