@@ -164,7 +164,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.1.0] - 2020-03-01
 
 ### Added
-- Full integration with PerfOps.One suite.
+- Full integration with PerfOps One suite.
 - Compatibility with WordPress 5.4.
 
 ### Changed

@@ -16,10 +16,12 @@ APCu statistics and management right in the WordPress admin dashboard.
 
 **APCu Manager** is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network.
 
-**APCu Manager** works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps.One suite or W3 Total Cache. Its main management features are:
+**APCu Manager** works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps One suite or W3 Total Cache. Its main management features are:
 
 * individual object deletion;
 * full cache clearing.
+
+> ⚠️ **APCu Manager** doesn't work on PHP clustered environments!
 
 **APCu Manager** is also a full featured analytics reporting tool that analyzes all APCu operations on your site. It can report:
 
