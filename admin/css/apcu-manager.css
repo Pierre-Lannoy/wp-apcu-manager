@@ -476,8 +476,9 @@
 }
 
 .ct-labels .ct-horizontal {
-    transform: translateX(-18px);
+    transform: translateX(-32px);
 }
+
 
 .ct-labels .ct-vertical {
     transform: translateX(-6px) translateY(6px);
