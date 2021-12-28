@@ -66,6 +66,7 @@ class Option {
 	 * @since 1.0.0
 	 */
 	public static function init() {
+		self::$defaults['use_apcu']         = true;
 		self::$defaults['use_cdn']          = false;
 		self::$defaults['script_in_footer'] = false;
 		self::$defaults['display_nag']      = false;
@@ -77,7 +78,7 @@ class Option {
 		self::$defaults['metrics']          = true;
 		self::$defaults['gc']               = false;
 		self::$defaults['adminbar']         = true;
-		self::$network                      = [ 'version', 'use_cdn', 'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
+		self::$network                      = [ 'version', 'use_cdn', 'use_apcu',  'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
 	}
 	/**
 	 * Get the options infos for Site Health "info" tab.
