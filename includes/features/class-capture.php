@@ -66,12 +66,13 @@ class Capture {
 		$result  = [];
 		$details = [];
 		if ( function_exists( 'apcu_cache_info' ) ) {
-			$infos = apcu_cache_info( false );
+			$infos  = apcu_cache_info( false );
+			$prefix = md5( ABSPATH ) . '_';
 			if ( array_key_exists( 'cache_list', $infos ) ) {
 				foreach ( $infos['cache_list'] as $item ) {
 					$name = '-';
 					foreach ( $ids as $k => $id ) {
-						if ( 0 === strpos( $item['info'], $k ) ) {
+						if ( 0 === strpos( $prefix . $item['info'], $k ) ) {
 							$name = $k;
 							break;
 						}
