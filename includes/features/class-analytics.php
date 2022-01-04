@@ -547,9 +547,9 @@ class Analytics {
 					],
 				]
 			);
-			$json_hit        = str_replace( '"x":"new', '"x":new', $json_hit );
-			$json_hit        = str_replace( ')","y"', '),"y"', $json_hit );
-			$json_hit        = str_replace( '"null"', 'null', $json_hit );
+			$json_hit = str_replace( '"x":"new', '"x":new', $json_hit );
+			$json_hit = str_replace( ')","y"', '),"y"', $json_hit );
+			$json_hit = str_replace( '"null"', 'null', $json_hit );
 
 			// Memory distribution.
 			array_unshift( $series['mem'][0], $before );
@@ -558,7 +558,6 @@ class Analytics {
 			$series['mem'][1][] = $after;
 			$json_memory = wp_json_encode(
 				[
-					//'labels' => $labels,
 					'series' => [
 						[
 							'name' => esc_html__( 'Used Memory', 'apcu-manager' ),
