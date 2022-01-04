@@ -347,7 +347,6 @@ class Analytics {
 		$query      = Schema::get_time_series( $this->filter, ! $this->is_today, '', [], false );
 		$data       = [];
 		$series     = [];
-		$labels     = [];
 		$items      = [ 'status', 'mem_total', 'mem_used', 'slot_total', 'slot_used', 'hit', 'miss', 'ins', 'frag_small', 'frag_big' ];
 		$maxhit     = 0;
 		$maxstrings = 0;
