@@ -796,8 +796,6 @@ class Analytics {
 			$result .= '});';
 			$result .= '</script>';
 			$result .= '<div class="' . $style . '" id="apcm-chart-memory">';
-			$result .= '<style>';
-			$result .= '</style>';
 			$result .= '</div>';
 			$result .= '<script>';
 			$result .= 'jQuery(function ($) {';
@@ -820,8 +818,6 @@ class Analytics {
 			$result .= '});';
 			$result .= '</script>';
 			$result .= '<div class="' . $style . '" id="apcm-chart-key">';
-			$result .= '<style>';
-			$result .= '</style>';
 			$result .= '</div>';
 			$result .= '<script>';
 			$result .= 'jQuery(function ($) {';
