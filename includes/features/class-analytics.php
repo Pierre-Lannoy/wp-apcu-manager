@@ -389,6 +389,20 @@ class Analytics {
 					$data[ $ts ] = $record;
 					$timestamp   = $timestamp + 300;
 				}
+				$datetime = new \DateTime( $this->start . ' 00:00:00', $this->timezone );
+				$offset   = $this->timezone->getOffset( $datetime );
+				$datetime = $datetime->getTimestamp() + $offset;
+				$before   = [
+					'x' => 'new Date(' . (string) ( $datetime ) . '000)',
+					'y' => 'null',
+				];
+				$datetime = new \DateTime( $this->end . ' 23:59:59', $this->timezone );
+				$offset   = $this->timezone->getOffset( $datetime );
+				$datetime = $datetime->getTimestamp() + $offset;
+				$after    = [
+					'x' => 'new Date(' . (string) ( $datetime ) . '000)',
+					'y' => 'null',
+				];
 			} else {
 				$buffer = [];
 				foreach ( $query as $timestamp => $row ) {
@@ -416,8 +430,16 @@ class Analytics {
 							$record[ $item ] = (int) round( $record[ $item ] / $cpt, 0 );
 						}
 					}
-					$data[ strtotime( $timestamp . ' 12:00:00' ) ] = $record;
+					$data[ strtotime( $timestamp ) ] = $record;
 				}
+				$before   = [
+					'x' => 'new Date(' . (string) ( strtotime( $this->start ) - 86400 ) . '000)',
+					'y' => 'null',
+				];
+				$after    = [
+					'x' => 'new Date(' . (string) ( strtotime( $this->end ) + 86400 ) . '000)',
+					'y' => 'null',
+				];
 			}
 			// Series computation.
 			foreach ( $data as $timestamp => $datum ) {
@@ -474,49 +496,16 @@ class Analytics {
 					} else {
 						$factor = 1024 * 1024;
 					}
-					$series[ $item ][0][] = round( $datum[ $item . '_used' ] / $factor, 2 );
-					$series[ $item ][1][] = round( ( $datum[ $item . '_total' ] - $datum[ $item . '_used' ] ) / $factor, 2 );
-				}
-				// Labels.
-				if ( 1 < $this->duration ) {
-					$labels[] = 'moment(' . $timestamp . '000).format("ll")';
-				} else {
-					$control = ( $timestamp % 86400 ) % ( 3 * HOUR_IN_SECONDS );
-					if ( 300 > $control ) {
-						if ( 0 !== (int) floor( ( $timestamp % 86400 ) / ( HOUR_IN_SECONDS ) ) ) {
-							$hour = (string) (int) floor( ( $timestamp % 86400 ) / ( HOUR_IN_SECONDS ) );
-							if ( 1 === strlen( $hour ) ) {
-								$hour = '0' . $hour;
-							}
-							$labels[] = $hour . ':00';
-						} else {
-							$labels[] = 'null';
-						}
-					} else {
-						$labels[] = 'null';
-					}
+					$series[ $item ][0][] = [
+						'x' => $ts,
+						'y' => round( $datum[ $item . '_used' ] / $factor, 2 ),
+					];
+					$series[ $item ][1][] = [
+						'x' => $ts,
+						'y' => round( ( $datum[ $item . '_total' ] - $datum[ $item . '_used' ] ) / $factor, 2 ),
+					];
 				}
 			}
-			// Result encoding.
-			if ( 1 < $this->duration ) {
-				$shift = 86400;
-			} else {
-				$shift = 0;
-			}
-			$datetime = new \DateTime( $this->start . ' 00:00:00', $this->timezone );
-			$offset   = $this->timezone->getOffset( $datetime );
-			$datetime = $datetime->getTimestamp() + $offset;
-			$before   = [
-				'x' => 'new Date(' . (string) ( $datetime - $shift ) . '000)',
-				'y' => 'null',
-			];
-			$datetime = new \DateTime( $this->end . ' 23:59:59', $this->timezone );
-			$offset   = $this->timezone->getOffset( $datetime );
-			$datetime = $datetime->getTimestamp() + $offset;
-			$after    = [
-				'x' => 'new Date(' . (string) ( $datetime + $shift ) . '000)',
-				'y' => 'null',
-			];
 			// Hit ratio.
 			array_unshift( $series['ratio'], $before );
 			$series['ratio'][] = $after;
@@ -564,9 +553,13 @@ class Analytics {
 			$json_hit        = str_replace( '"null"', 'null', $json_hit );
 
 			// Memory distribution.
+			array_unshift( $series['mem'][0], $before );
+			$series['mem'][0][] = $after;
+			array_unshift( $series['mem'][1], $before );
+			$series['mem'][1][] = $after;
 			$json_memory = wp_json_encode(
 				[
-					'labels' => $labels,
+					//'labels' => $labels,
 					'series' => [
 						[
 							'name' => esc_html__( 'Used Memory', 'apcu-manager' ),
@@ -579,11 +572,9 @@ class Analytics {
 					],
 				]
 			);
+			$json_memory = str_replace( '"x":"new', '"x":new', $json_memory );
+			$json_memory = str_replace( ')","y"', '),"y"', $json_memory );
 			$json_memory = str_replace( '"null"', 'null', $json_memory );
-			$json_memory = str_replace( '"labels":["moment', '"labels":[moment', $json_memory );
-			$json_memory = str_replace( '","moment', ',moment', $json_memory );
-			$json_memory = str_replace( '"],"series":', '],"series":', $json_memory );
-			$json_memory = str_replace( '\\"', '"', $json_memory );
 
 			// Objects variation.
 			array_unshift( $series['slot_used'], $before );
@@ -603,9 +594,12 @@ class Analytics {
 			$json_scripts          = str_replace( '"null"', 'null', $json_scripts );
 
 			// Key.
+			array_unshift( $series['slot'][0], $before );
+			$series['slot'][0][] = $after;
+			array_unshift( $series['slot'][1], $before );
+			$series['slot'][1][] = $after;
 			$json_key = wp_json_encode(
 				[
-					'labels' => $labels,
 					'series' => [
 						[
 							'name' => esc_html__( 'Used Key Slots', 'apcu-manager' ),
@@ -618,11 +612,9 @@ class Analytics {
 					],
 				]
 			);
+			$json_key = str_replace( '"x":"new', '"x":new', $json_key );
+			$json_key = str_replace( ')","y"', '),"y"', $json_key );
 			$json_key = str_replace( '"null"', 'null', $json_key );
-			$json_key = str_replace( '"labels":["moment', '"labels":[moment', $json_key );
-			$json_key = str_replace( '","moment', ',moment', $json_key );
-			$json_key = str_replace( '"],"series":', '],"series":', $json_key );
-			$json_key = str_replace( '\\"', '"', $json_key );
 
 			// Fragmentation variation.
 			array_unshift( $series['fragmentation'], $before );
@@ -659,14 +651,23 @@ class Analytics {
 			$json_availability        = str_replace( '"null"', 'null', $json_availability );
 
 			// Rendering.
-			$divisor = $this->duration + 1;
-			while ( 11 < $divisor ) {
-				foreach ( [ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397 ] as $divider ) {
-					if ( 0 === $divisor % $divider ) {
-						$divisor = $divisor / $divider;
-						break;
-					}
+			$ticks  = (int) ( 1 + ( $this->duration / 15 ) );
+			if ( 1 < $this->duration ) {
+				$style = 'apcm-multichart-xlarge-item';
+				if ( 20 < $this->duration ) {
+					$style = 'apcm-multichart-large-item';
 				}
+				if ( 40 < $this->duration ) {
+					$style = 'apcm-multichart-medium-item';
+				}
+				if ( 60 < $this->duration ) {
+					$style = 'apcm-multichart-small-item';
+				}
+				if ( 80 < $this->duration ) {
+					$style = 'apcm-multichart-xsmall-item';
+				}
+			} else {
+				$style = 'apcm-multichart-xxsmall-item';
 			}
 			$result  = '<div class="apcm-multichart-handler">';
 			$result .= '<div class="apcm-multichart-item active" id="apcm-chart-ratio">';
@@ -683,9 +684,9 @@ class Analytics {
 			$result .= '  showPoint: false,';
 			$result .= '  plugins: [ratio_tooltip' . $uuid . '],';
 			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("YYYY-MM-DD");}},';
+				$result .= '  axisX: {showGrid: true, scaleMinSpace: 10, type: Chartist.FixedScaleAxis, divisor:' . ( $this->duration + 1 ) . ', labelInterpolationFnc: function skipLabels(value, index, labels) {return 0 === index % ' . $ticks . ' ? moment(value).format("DD") : null;}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
+				$result .= '  axisX: {showGrid: true,labelOffset: {x: -8,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
@@ -706,9 +707,9 @@ class Analytics {
 			$result .= '  showPoint: false,';
 			$result .= '  plugins: [uptime_tooltip' . $uuid . '],';
 			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
+				$result .= '  axisX: {showGrid: true, scaleMinSpace: 10, type: Chartist.FixedScaleAxis, divisor:' . ( $this->duration + 1 ) . ', labelInterpolationFnc: function skipLabels(value, index, labels) {return 0 === index % ' . $ticks . ' ? moment(value).format("DD") : null;}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
+				$result .= '  axisX: {showGrid: true,labelOffset: {x: -8,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
@@ -729,9 +730,9 @@ class Analytics {
 			$result .= '  showPoint: false,';
 			$result .= '  plugins: [hit_tooltip' . $uuid . '],';
 			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
+				$result .= '  axisX: {showGrid: true, scaleMinSpace: 10, type: Chartist.FixedScaleAxis, divisor:' . ( $this->duration + 1 ) . ', labelInterpolationFnc: function skipLabels(value, index, labels) {return 0 === index % ' . $ticks . ' ? moment(value).format("DD") : null;}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
+				$result .= '  axisX: {showGrid: true,labelOffset: {x: -8,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			if ( $maxhit < 1000 ) {
 				$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString();}},';
@@ -758,9 +759,9 @@ class Analytics {
 			$result .= '  showPoint: false,';
 			$result .= '  plugins: [string_tooltip' . $uuid . '],';
 			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
+				$result .= '  axisX: {showGrid: true, scaleMinSpace: 10, type: Chartist.FixedScaleAxis, divisor:' . ( $this->duration + 1 ) . ', labelInterpolationFnc: function skipLabels(value, index, labels) {return 0 === index % ' . $ticks . ' ? moment(value).format("DD") : null;}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
+				$result .= '  axisX: {showGrid: true,labelOffset: {x: -8,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
@@ -781,9 +782,9 @@ class Analytics {
 			$result .= '  showPoint: false,';
 			$result .= '  plugins: [file_tooltip' . $uuid . '],';
 			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:' . $divisor . ', labelInterpolationFnc: function (value) {return moment(value).format("ll");}},';
+				$result .= '  axisX: {showGrid: true, scaleMinSpace: 10, type: Chartist.FixedScaleAxis, divisor:' . ( $this->duration + 1 ) . ', labelInterpolationFnc: function skipLabels(value, index, labels) {return 0 === index % ' . $ticks . ' ? moment(value).format("DD") : null;}},';
 			} else {
-				$result .= '  axisX: {labelOffset: {x: 3,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
+				$result .= '  axisX: {showGrid: true,labelOffset: {x: -8,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			if ( $maxscripts < 1000 ) {
 				$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString();}},';
@@ -796,19 +797,14 @@ class Analytics {
 			$result .= ' new Chartist.Line("#apcm-chart-file", file_data' . $uuid . ', file_option' . $uuid . ');';
 			$result .= '});';
 			$result .= '</script>';
-			$result .= '<div class="apcm-multichart-item" id="apcm-chart-memory">';
+			$result .= '<div class="' . $style . '" id="apcm-chart-memory">';
 			$result .= '<style>';
-			if ( 1 < $this->duration ) {
-				$result .= '.apcm-multichart-item .ct-bar {stroke-width: 20px !important;stroke-opacity: 0.8 !important;}';
-			} else {
-				$result .= '.apcm-multichart-item .ct-bar {stroke-width: 3px !important;stroke-opacity: 0.8 !important;}';
-			}
 			$result .= '</style>';
 			$result .= '</div>';
 			$result .= '<script>';
 			$result .= 'jQuery(function ($) {';
 			$result .= ' var memory_data' . $uuid . ' = ' . $json_memory . ';';
-			$result .= ' var memory_tooltip' . $uuid . ' = Chartist.plugins.tooltip({percentage: false, appendToBody: true});';
+			$result .= ' var memory_tooltip' . $uuid . ' = Chartist.plugins.tooltip({justvalue: true, appendToBody: true});';
 			$result .= ' var memory_option' . $uuid . ' = {';
 			$result .= '  height: 300,';
 			$result .= '  stackBars: true,';
@@ -816,38 +812,33 @@ class Analytics {
 			$result .= '  seriesBarDistance: 1,';
 			$result .= '  plugins: [memory_tooltip' . $uuid . '],';
 			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {showGrid: false, labelOffset: {x: 18,y: 0}},';
+				$result .= '  axisX: {showGrid: false, scaleMinSpace: 10, type: Chartist.FixedScaleAxis, divisor:' . ( $this->duration + 1 ) . ', labelInterpolationFnc: function skipLabels(value, index, labels) {return 0 === index % ' . $ticks . ' ? moment(value).format("DD") : null;}},';
 			} else {
-				$result .= '  axisX: {showGrid: true, labelOffset: {x: 18,y: 0}},';
+				$result .= '  axisX: {showGrid: false,labelOffset: {x: -8,y: 0},type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {showGrid: true, labelInterpolationFnc: function (value) {return value.toString() + " ' . esc_html_x( 'MB', 'Abbreviation - Stands for "megabytes".', 'apcu-manager' ) . '";}},';
 			$result .= ' };';
 			$result .= ' new Chartist.Bar("#apcm-chart-memory", memory_data' . $uuid . ', memory_option' . $uuid . ');';
 			$result .= '});';
 			$result .= '</script>';
-			$result .= '<div class="apcm-multichart-item" id="apcm-chart-key">';
+			$result .= '<div class="' . $style . '" id="apcm-chart-key">';
 			$result .= '<style>';
-			if ( 1 < $this->duration ) {
-				$result .= '.apcm-multichart-item .ct-bar {stroke-width: 20px !important;stroke-opacity: 0.8 !important;}';
-			} else {
-				$result .= '.apcm-multichart-item .ct-bar {stroke-width: 3px !important;stroke-opacity: 0.8 !important;}';
-			}
 			$result .= '</style>';
 			$result .= '</div>';
 			$result .= '<script>';
 			$result .= 'jQuery(function ($) {';
 			$result .= ' var key_data' . $uuid . ' = ' . $json_key . ';';
-			$result .= ' var key_tooltip' . $uuid . ' = Chartist.plugins.tooltip({percentage: false, appendToBody: true});';
+			$result .= ' var key_tooltip' . $uuid . ' = Chartist.plugins.tooltip({justvalue: true, appendToBody: true});';
 			$result .= ' var key_option' . $uuid . ' = {';
 			$result .= '  height: 300,';
 			$result .= '  stackBars: true,';
 			$result .= '  stackMode: "accumulate",';
-			$result .= '  seriesBarDistance: 1,';
+			$result .= '  seriesBarDistance: 0,';
 			$result .= '  plugins: [key_tooltip' . $uuid . '],';
 			if ( 1 < $this->duration ) {
-				$result .= '  axisX: {showGrid: false, labelOffset: {x: 18,y: 0}},';
+				$result .= '  axisX: {showGrid: false, scaleMinSpace: 10, type: Chartist.FixedScaleAxis, divisor:' . ( $this->duration + 1 ) . ', labelInterpolationFnc: function skipLabels(value, index, labels) {return 0 === index % ' . $ticks . ' ? moment(value).format("DD") : null;}},';
 			} else {
-				$result .= '  axisX: {showGrid: true, labelOffset: {x: 18,y: 0}},';
+				$result .= '  axisX: {showGrid: false,labelOffset: {x: -8,y: 0},type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
 			$result .= '  axisY: {showGrid: true, labelInterpolationFnc: function (value) {return value.toString() + " ' . esc_html_x( 'K', 'Abbreviation - Stands for "thousand".', 'apcu-manager' ) . '";}},';
 			$result .= ' };';
