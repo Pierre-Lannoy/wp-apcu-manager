@@ -72,7 +72,7 @@ class Capture {
 				foreach ( $infos['cache_list'] as $item ) {
 					$name = '-';
 					foreach ( $ids as $k => $id ) {
-						if ( 0 === strpos( $prefix . $item['info'], $k ) ) {
+						if ( 0 === strpos( $item['info'], $prefix . $k ) ) {
 							$name = $k;
 							break;
 						}
