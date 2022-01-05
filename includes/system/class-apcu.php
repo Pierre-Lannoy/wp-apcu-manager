@@ -97,9 +97,8 @@ class APCu {
 	public static function delete( $objects ) {
 		$cpt = 0;
 		if ( function_exists( 'apcu_delete' ) ) {
-			$prefix = md5( ABSPATH ) . '_';
 			foreach ( $objects as $object ) {
-				if ( false !== apcu_delete( $prefix . $object ) ) {
+				if ( false !== apcu_delete( $object ) ) {
 					$cpt++;
 				}
 			}
@@ -115,18 +114,103 @@ class APCu {
 	 */
 	public static function reset() {
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_delete' ) ) {
-			$prefix = md5( ABSPATH ) . '_';
-			$infos = apcu_cache_info( false );
+			$infos    = apcu_cache_info( false );
+			$prefixes = self::get_prefixes();
 			if ( array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
-				foreach ( $infos['cache_list'] as $script ) {
-					if ( 0 === strpos( $script['info'], $prefix ) ) {
-						apcu_delete( $script['info'] );
-						$result++;
+				foreach ( $infos['cache_list'] as $object ) {
+					$oid = $object['info'];
+					if ( 1 < strpos( $oid, '_' ) ) {
+						$oid = substr( $oid, strpos( $oid, '_' ) );
+						foreach ( $prefixes as $prefix ) {
+							if ( 0 === strpos( $oid, $prefix ) ) {
+								apcu_delete( $object['info'] );
+								break;
+							}
+						}
 					}
 				}
 			}
 			\DecaLog\Engine::eventsLogger( APCM_SLUG )->notice( 'Cache cleared.' );
 		}
+	}
+
+	/**
+	 * Get the list of potential prefixes.
+	 *
+	 * @return array    The prefixes list.
+	 * @since   3.0.0
+	 */
+	public static function get_prefixes() {
+		$result = [ APCU_CACHE_PREFIX ];
+		if ( class_exists( '\W3TC\Util_Environment' ) && method_exists( \W3TC\Util_Environment::class, 'instance_id' ) ) {
+			$result[] = '_' . \W3TC\Util_Environment::instance_id() . '_';
+		}
+		return $result;
+	}
+
+	/**
+	 * Get the detailed list of all objects.
+	 *
+	 * @param boolean   $self_only  Optional. Restrict the list to self objects.
+	 * @return array    The detailed list.
+	 * @since   3.0.0
+	 */
+	public static function get_all_objects( $self_only = true ) {
+		$result = [];
+		if ( function_exists( 'apcu_cache_info' ) ) {
+			try {
+				$raw      = apcu_cache_info( false );
+				$prefixes = self::get_prefixes();
+				if ( array_key_exists( 'cache_list', $raw ) ) {
+					foreach ( $raw['cache_list'] as $object ) {
+						$oid               = $object['info'];
+						$item              = [];
+						$item['oid']       = $oid;
+						$item['hit']       = $object['num_hits'];
+						$item['memory']    = $object['mem_size'];
+						$item['timestamp'] = $object['mtime'];
+						$item['used']      = $object['access_time'];
+						$item['ttl']       = $object['ttl'];
+						$is_self           = false;
+						$item['source']    = '';
+						$item['path']      = '';
+						if ( 1 < strpos( $oid, '_' ) ) {
+							$item['source'] = substr( $oid, 0, strpos( $oid, '_' ) );
+							$oid            = substr( $oid, strlen( $item['source'] ) );
+							foreach ( $prefixes as $prefix ) {
+								if ( 0 === strpos( $oid, $prefix ) ) {
+									$oid     = substr( $oid, strlen( $prefix ) );
+									$is_self = true;
+									break;
+								}
+							}
+						}
+						$oid = str_replace( '_', '/', $oid );
+						while ( 0 < strpos( $oid, '//' ) ) {
+							$oid = str_replace( '//', '/', $oid );
+						}
+						while ( 0 === strpos( $oid, '/' ) ) {
+							$oid = substr( $oid, 1 );
+						}
+						while ( 0 < strpos( $oid, '/' ) ) {
+							$segment       = substr( $oid, 0, strpos( $oid, '/' ) );
+							$oid           = substr( $oid, strlen( $segment ) );
+							$item['path'] .= '/' . $segment;
+							while ( 0 === strpos( $oid, '/' ) ) {
+								$oid = substr( $oid, 1 );
+							}
+						}
+						$item['object'] = $oid;
+						if ( ! $self_only || ( $is_self && $self_only ) ) {
+							$result[] = $item;
+						}
+					}
+				}
+			} catch ( \Throwable $e ) {
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->error( sprintf( 'Unable to query APCu status: %s.', $e->getMessage() ), [ 'code' => $e->getCode() ] );
+			}
+		}
+		return $result;
 	}
 
 }
