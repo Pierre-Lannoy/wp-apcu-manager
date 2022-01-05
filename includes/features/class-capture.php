@@ -13,6 +13,7 @@ namespace APCuManager\Plugin\Feature;
 
 use APCuManager\System\Cache;
 use APCuManager\Plugin\Feature\Schema;
+use APCuManager\System\APCu;
 
 /**
  * Define the captures functionality.
@@ -61,20 +62,22 @@ class Capture {
 	 * @since 1.0.0
 	 */
 	private static function get_details() {
-		$ids     = apply_filters( 'perfopsone_apcu_info', [ 'w3tc' => 'W3 Total Cache' ] );
-		$schema  = new Schema();
-		$result  = [];
-		$details = [];
+		$ids      = apply_filters( 'perfopsone_apcu_info', [ 'w3tc' => 'W3 Total Cache' ] );
+		$schema   = new Schema();
+		$result   = [];
+		$details  = [];
+		$prefixes = APCu::get_prefixes();
 		if ( function_exists( 'apcu_cache_info' ) ) {
 			$infos  = apcu_cache_info( false );
-			$prefix = md5( ABSPATH ) . '_';
 			if ( array_key_exists( 'cache_list', $infos ) ) {
 				foreach ( $infos['cache_list'] as $item ) {
 					$name = '-';
 					foreach ( $ids as $k => $id ) {
-						if ( 0 === strpos( $item['info'], $prefix . $k ) ) {
-							$name = $k;
-							break;
+						foreach ( $prefixes as $prefix ) {
+							if ( 0 === strpos( $item['info'], $k . $prefix ) ) {
+								$name = $k;
+								break 2;
+							}
 						}
 					}
 					if ( array_key_exists( $name, $details ) ) {
