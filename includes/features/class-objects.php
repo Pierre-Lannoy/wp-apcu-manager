@@ -261,9 +261,7 @@ class Objects extends \WP_List_Table {
 	public function get_columns() {
 		$columns = [
 			'cb'        => '<input type="checkbox" />',
-			'oid'       => 'Object ID',
 			'source'    => esc_html__( 'Container', 'apcu-manager' ),
-			'path'      => 'Path',
 			'object'    => esc_html__( 'Object', 'apcu-manager' ),
 			'timestamp' => esc_html__( 'Timestamp', 'apcu-manager' ),
 			'ttl'       => esc_html__( 'TTL', 'apcu-manager' ),
@@ -281,7 +279,7 @@ class Objects extends \WP_List_Table {
 	 * @since    1.0.0
 	 */
 	protected function get_hidden_columns() {
-		return [ 'oid', 'path' ];
+		return [];
 	}
 
 	/**
