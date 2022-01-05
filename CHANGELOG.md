@@ -7,9 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 - Compatibility with PHP 8.1.
+- Added containers, paths and icons to APCu Management tool.
 
 ### Changed
 - [BC] The "Delete All" now flush cache for site or network only.
+- [BC] The APCu Management tool now display only objects belonging to the site or network.
 - Charts allow now to display more than 2 months of data.
 - Improved timescale computation and date display for all charts.
 - Bar charts have now a resizable width.

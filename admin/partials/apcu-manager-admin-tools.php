@@ -9,10 +9,10 @@
  * @since   1.0.0
  */
 
-use APCuManager\Plugin\Feature\Scripts;
+use APCuManager\Plugin\Feature\Objects;
 
-$scripts = new Scripts();
-$scripts->prepare_items();
+$objects = new Objects();
+$objects->prepare_items();
 
 wp_enqueue_script( APCM_ASSETS_ID );
 wp_enqueue_style( APCM_ASSETS_ID );
@@ -22,10 +22,10 @@ wp_enqueue_style( APCM_ASSETS_ID );
 <div class="wrap">
 	<h2><?php echo esc_html__( 'APCu Management', 'apcu-manager' ); ?></h2>
 	<?php settings_errors(); ?>
-	<?php $scripts->warning(); ?>
-	<?php $scripts->views(); ?>
-    <form id="apcm-tools" method="post" action="<?php echo $scripts->get_url(); ?>">
+	<?php $objects->warning(); ?>
+	<?php $objects->views(); ?>
+    <form id="apcm-tools" method="post" action="<?php echo $objects->get_url(); ?>">
         <input type="hidden" name="page" value="apcm-tools" />
-	    <?php $scripts->display(); ?>
+	    <?php $objects->display(); ?>
     </form>
 </div>

@@ -12,11 +12,10 @@ define( 'APCM_PRODUCT_URL', 'https://github.com/Pierre-Lannoy/wp-apcu-manager' )
 define( 'APCM_PRODUCT_SHORTNAME', 'APCu' );
 define( 'APCM_PRODUCT_ABBREVIATION', 'apcm' );
 define( 'APCM_SLUG', 'apcu-manager' );
-define( 'APCM_VERSION', '3.0.0-dev1' );
+define( 'APCM_VERSION', '3.0.0-dev2' );
 define( 'APCM_CODENAME', '"-"' );
 
 define( 'APCM_CDN_AVAILABLE', true );
 
 define( 'APCM_CRON_STATS_NAME', 'apcm_apcu_stats' );
 define( 'APCM_CRON_GC_NAME', 'apcm_apcu_gc' );
-define( 'APCM_PREFIX', md5( ABSPATH ) . '_' );
