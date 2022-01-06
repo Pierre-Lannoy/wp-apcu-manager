@@ -11,8 +11,8 @@
 
 namespace APCuManager\Plugin\Feature;
 
+use APCuManager\System\APCu;
 use APCuManager\System\Cache;
-
 use APCuManager\Plugin\Feature\Schema;
 
 /**
@@ -56,13 +56,23 @@ class GC {
 		$span = \DecaLog\Engine::tracesLogger( APCM_SLUG )->startSpan( 'Garbage collection', DECALOG_SPAN_MAIN_RUN );
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_delete' ) ) {
 			try {
-				$infos = apcu_cache_info( false );
-				$cpt   = 0;
+				$infos    = apcu_cache_info( false );
+				$cpt      = 0;
+				$prefixes = APCu::get_prefixes();
 				if ( array_key_exists( 'cache_list', $infos ) ) {
-					foreach ( $infos['cache_list'] as $script ) {
-						if ( time() > $script['mtime'] + $script['ttl'] ) {
-							apcu_delete( $script['info'] );
-							$cpt++;
+					foreach ( $infos['cache_list'] as $object ) {
+						$oid = $object['info'];
+						if ( 1 < strpos( $oid, '_' ) ) {
+							$oid = substr( $oid, strlen( substr( $oid, 0, strpos( $oid, '_' ) ) ) );
+							foreach ( $prefixes as $prefix ) {
+								if ( 0 === strpos( $oid, $prefix ) ) {
+									if ( time() > $object['mtime'] + $object['ttl'] ) {
+										apcu_delete( $object['info'] );
+										$cpt++;
+										break 2;
+									}
+								}
+							}
 						}
 					}
 				}
