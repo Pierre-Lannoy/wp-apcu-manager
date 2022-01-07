@@ -62,7 +62,7 @@ class Capture {
 	 * @since 1.0.0
 	 */
 	private static function get_details() {
-		$ids      = apply_filters( 'perfopsone_apcu_info', [ 'w3tc' => 'W3 Total Cache' ] );
+		$ids      = apply_filters( 'perfopsone_apcu_info', [ 'w3tc' => 'W3 Total Cache', 'wordpress' => 'WordPress' ] );
 		$schema   = new Schema();
 		$result   = [];
 		$details  = [];
