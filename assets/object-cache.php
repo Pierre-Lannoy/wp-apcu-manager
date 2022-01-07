@@ -14,11 +14,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! file_exists( __DIR__ . '/plugins/apcu-manager/includes/api/object-class.php' ) ) {
+if ( ! defined( 'WP_PLUGIN_DIR' ) ) {
+	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
+}
+$handler_file = WP_PLUGIN_DIR . '/apcu-manager/includes/api/object-class.php';
+if ( ! file_exists( $handler_file ) ) {
+	$handler_file = __DIR__ . '/plugins/apcu-manager/includes/api/object-class.php';
+}
+if ( ! file_exists( $handler_file ) ) {
 	exit;
 }
-
-require_once __DIR__ . '/plugins/apcu-manager/includes/api/object-class.php';
+require_once $handler_file;
 
 /**
  * Adds data to the cache, if the cache key does not already exist.
