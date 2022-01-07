@@ -174,6 +174,8 @@ class APCu {
 						$is_self           = false;
 						$item['source']    = '';
 						$item['path']      = '';
+						$oid               = str_replace( '::is_active', '/is-active', $oid );
+						$oid               = str_replace( [ ':', '::' ], '/', $oid );
 						if ( 1 < strpos( $oid, '_' ) ) {
 							$item['source'] = substr( $oid, 0, strpos( $oid, '_' ) );
 							$oid            = substr( $oid, strlen( $item['source'] ) );
