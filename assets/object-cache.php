@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! file_exists( __DIR__ . '/apcu-manager/includes/api/object-class.php' ) ) {
+if ( ! file_exists( __DIR__ . '/plugins/apcu-manager/includes/api/object-class.php' ) ) {
 	exit;
 }
 
-require_once __DIR__ . '/apcu-manager/includes/api/object-class.php';
+require_once __DIR__ . '/plugins/apcu-manager/includes/api/object-class.php';
 
 /**
  * Adds data to the cache, if the cache key does not already exist.
