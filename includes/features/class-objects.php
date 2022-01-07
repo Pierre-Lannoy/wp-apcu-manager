@@ -212,7 +212,11 @@ class Objects extends \WP_List_Table {
 	 * @since    1.0.0
 	 */
 	protected function column_ttl( $item ) {
-		return implode( ', ', Date::get_age_array_from_seconds( $item['ttl'], true, true ) );
+		if ( 0 < $item['ttl'] ) {
+			return implode( ', ', Date::get_age_array_from_seconds( $item['ttl'], true, true ) );
+		} else {
+			return esc_html__( '(no expiration)', 'apcu-manager' );
+		}
 	}
 
 	/**
