@@ -77,8 +77,9 @@ class Option {
 		self::$defaults['analytics']        = true;
 		self::$defaults['metrics']          = true;
 		self::$defaults['gc']               = false;
+		self::$defaults['earlyloading']     = false;
 		self::$defaults['adminbar']         = true;
-		self::$network                      = [ 'version', 'use_cdn', 'use_apcu',  'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
+		self::$network                      = [ 'earlyloading', 'version', 'use_cdn', 'use_apcu',  'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
 	}
 	/**
 	 * Get the options infos for Site Health "info" tab.
