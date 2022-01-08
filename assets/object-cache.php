@@ -26,6 +26,10 @@ if ( ! file_exists( $handler_file ) ) {
 }
 require_once $handler_file;
 
+if ( ! defined( 'APCM_BOOTSTRAPPED' ) ) {
+	define( 'APCM_BOOTSTRAPPED', true );
+}
+
 /**
  * Adds data to the cache, if the cache key does not already exist.
  *
