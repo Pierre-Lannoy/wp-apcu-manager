@@ -9,6 +9,7 @@
  */
 
 use APCuManager\System\Option;
+use APCuManager\System\Cache;
 
 /**
  * Object cache class definition
@@ -37,7 +38,7 @@ class WP_Object_Cache {
 	 * @var     array
 	 * @since   3.0.0
 	 */
-	public $available_metrics = [ 'add', 'dec', 'inc', 'set', 'replace', 'fetch', 'delete' ];
+	private $available_metrics = [ 'add', 'dec', 'inc', 'set', 'replace', 'fetch', 'delete' ];
 
 	/**
 	 * List of global groups.
@@ -103,7 +104,7 @@ class WP_Object_Cache {
 	 * @var     bool
 	 * @since   3.0.0
 	 */
-	private $apcu_available = false;
+	public $apcu_available = false;
 
 	/**
 	 * Is it a multisite?
@@ -144,6 +145,21 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	private static $events_prefix = '[WPObjectCache] ';
+
+	/**
+	 * Available metrics.
+	 *
+	 * @var     array
+	 * @since   3.0.0
+	 */
+	private static $metrics_definition = [
+		'add'     => 'added',
+		'dec'     => 'decremented',
+		'inc'     => 'incremented',
+		'set'     => 'set',
+		'replace' => 'replaced',
+		'fetch'   => 'fetched',
+		'delete'  => 'deleted', ];
 
 	/**
 	 * The traces logger instance.
@@ -218,19 +234,26 @@ class WP_Object_Cache {
 			}
 		}
 		if ( Option::network_get( 'metrics' ) && isset( self::$metrics_logger ) ) {
-			add_action( 'shutdown', [ self::instance(), 'collate_metrics' ], DECALOG_MAX_SHUTDOWN_PRIORITY, 0 );
-			self::$metrics_logger->createProdGauge( 'object_cache_all_hit_ratio', 0, 'Object cache hit ratio per request - [percent]' );
-			self::$metrics_logger->createProdCounter( 'object_cache_all_time', 'Object cache time per request - [second]' );
+			add_action( 'shutdown', [ self::instance(), 'compute_metrics' ], DECALOG_MAX_SHUTDOWN_PRIORITY - 1, 0 );
+			self::$metrics_logger->createProdGauge( 'object_cache_all_hit_ratio', 0, 'Object cache hit ratio per request, 5 min average - [percent]' );
+			self::$metrics_logger->createProdGauge( 'object_cache_all_success_ratio', 0, 'Object cache success ratio per request, 5 min average - [percent]' );
+			self::$metrics_logger->createProdGauge( 'object_cache_all_time', 0, 'Object cache time per request, 5 min average - [second]' );
 			if ( self::$debug ) {
-				self::$metrics_logger->createDevCounter( 'object_cache_all_size', 'Object cache size per request - [byte]' );
+				self::$metrics_logger->createDevGauge( 'object_cache_all_size', 0, 'Object cache size per request, 5 min average - [byte]' );
 			}
-			foreach ( self::instance()->available_metrics as $metric ) {
-				self::$metrics_logger->createProdCounter( 'object_cache_' . $metric . '_success', sprintf( 'Number of successfully %s objects per request - [count]', 'aaa' ) );
-				self::$metrics_logger->createProdCounter( 'object_cache_' . $metric . '_fail', sprintf( 'Number of unsuccessfully %s objects per request - [count]', 'aaa' ) );
-				self::$metrics_logger->createProdCounter( 'object_cache_' . $metric . '_time', sprintf( 'Cache time for successfully %s objects per request - [second]', 'aaa' ) );
+			foreach ( self::$metrics_definition as $metric => $desc ) {
+				self::$metrics_logger->createProdGauge( 'object_cache_' . $metric . '_success', 0, sprintf( 'Number of successfully %s keys per request, 5 min average - [count]', $desc ) );
+				self::$metrics_logger->createProdGauge( 'object_cache_' . $metric . '_fail', 0, sprintf( 'Number of unsuccessfully %s keys per request, 5 min average - [count]', $desc ) );
+				self::$metrics_logger->createProdGauge( 'object_cache_' . $metric . '_time', 0, sprintf( 'Cache time for successfully %s keys per request, 5 min average - [second]', $desc ) );
 				if ( self::$debug ) {
-					self::$metrics_logger->createDevCounter( 'object_cache_' . $metric . '_size', sprintf( 'Size of successfully %s objects per request - [byte]', 'aaa' ) );
+					self::$metrics_logger->createDevGauge( 'object_cache_' . $metric . '_size', 0, sprintf( 'Size of successfully %s keys per request, 5 min average - [byte]', $desc ) );
 				}
+			}
+			if ( self::$instance->apcu_available ) {
+				Cache::init();
+				self::instance()->collate_metrics();
+			} else {
+				add_action( 'shutdown', [ self::instance(), 'collate_metrics' ], DECALOG_MAX_SHUTDOWN_PRIORITY, 0 );
 			}
 		}
 	}
@@ -271,14 +294,99 @@ class WP_Object_Cache {
 	}
 
 	/**
+	 * Computes metrics.
+	 *
+	 * @since   3.0.0
+	 */
+	public function compute_metrics() {
+		if ( isset( self::$traces_logger ) ) {
+			$span = self::$traces_logger->startSpan( 'Object caching metrics computation', DECALOG_SPAN_SHUTDOWN );
+		}
+		$metrics = Cache::get_global( 'metrics/data' );
+		$new     = [];
+		if ( isset( $metrics ) && is_array( $metrics ) ) {
+			foreach ( $metrics as $ts => $metric ) {
+				if ( 300 >= time() - (int) $ts ) {
+					$new[ $ts ] = $metric;
+				}
+			}
+		}
+		$new[ time() ] = $this->metrics;
+		Cache::set_global( 'metrics/data', $new, 'infinite' );
+		if ( isset( self::$traces_logger ) ) {
+			self::$traces_logger->endSpan( $span );
+		}
+	}
+
+	/**
 	 * Collates metrics.
 	 *
 	 * @since   3.0.0
 	 */
 	public function collate_metrics() {
-		//$span     = \DecaLog\Engine::tracesLogger( APCM_SLUG )->startSpan( 'Object caching metrics collation', DECALOG_SPAN_PLUGINS_LOAD );
-		if ( isset( self::$events_logger ) ) {
-			//self::$events_logger->critical( print_r($this->metrics,true) );
+		if ( isset( self::$traces_logger ) ) {
+			$span = self::$traces_logger->startSpan( 'Object caching metrics collation', $this->apcu_available ? DECALOG_SPAN_PLUGINS_LOAD : DECALOG_SPAN_SHUTDOWN );
+		}
+		$metrics = Cache::get_global( 'metrics/data' );
+		if ( isset( $metrics ) && is_array( $metrics ) && 0 < count( $metrics ) ) {
+			$m = [];
+			foreach ( $this->available_metrics as $metric ) {
+				foreach ( [ 'success', 'fail', 'time', 'size' ] as $kpi ) {
+					$m[ $metric . '_' . $kpi ] = [];
+				}
+			}
+			foreach ( $metrics as $bucket ) {
+				foreach ( $this->available_metrics as $metric ) {
+					if ( array_key_exists( $metric, $bucket ) ) {
+						foreach ( [ 'success', 'fail', 'time', 'size' ] as $kpi ) {
+							if ( array_key_exists( $kpi, $bucket[ $metric ] ) ) {
+								$m[ $metric . '_' . $kpi ][] = $bucket[ $metric ][ $kpi ];
+							}
+						}
+					}
+				}
+			}
+			$total = [];
+			foreach ( [ 'success', 'fail', 'time', 'size', 'hit', 'miss' ] as $kpi ) {
+				$total[ $kpi ] = 0;
+			}
+			foreach ( $this->available_metrics as $metric ) {
+				foreach ( [ 'success', 'fail', 'time' ] as $kpi ) {
+					if ( 0 < $m[ $metric . '_' . $kpi ] ) {
+						$val = array_sum( $m[ $metric . '_' . $kpi ] ) / count( $m[ $metric . '_' . $kpi ] );
+						self::$metrics_logger->setProdGauge( 'object_cache_' . $metric . '_' . $kpi, $val );
+						if ( 'fetch' === $metric ) {
+							if ( 'success' === $kpi ) {
+								$total['hit'] += $val;
+							} elseif ( 'fail' === $kpi ) {
+								$total['miss'] += $val;
+							} else {
+								$total[ $kpi ] += $val;
+							}
+						} else {
+							$total[ $kpi ] += $val;
+						}
+					}
+				}
+				if ( self::$debug && 0 < count( $m[ $metric . '_size' ] ) ) {
+					$val = array_sum( $m[ $metric . '_size' ] ) / count( $m[ $metric . '_size' ] );
+					self::$metrics_logger->setDevGauge( 'object_cache_' . $metric . '_size', $val );
+					$total['size'] += $val;
+				}
+			}
+			if ( 0 < $total['hit'] + $total['miss'] ) {
+				self::$metrics_logger->setProdGauge( 'object_cache_all_hit_ratio', $total['hit'] / ( $total['hit'] + $total['miss'] ) );
+			}
+			if ( 0 < $total['success'] + $total['fail'] ) {
+				self::$metrics_logger->setProdGauge( 'object_cache_all_success_ratio', $total['success'] / ( $total['success'] + $total['fail'] ) );
+			}
+			self::$metrics_logger->setProdGauge( 'object_cache_all_time', $total['time'] );
+			if ( self::$debug ) {
+				self::$metrics_logger->setDevGauge( 'object_cache_all_size', $total['size'] );
+			}
+		}
+		if ( isset( self::$traces_logger ) ) {
+			self::$traces_logger->endSpan( $span );
 		}
 	}
 
