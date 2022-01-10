@@ -66,20 +66,21 @@ class Option {
 	 * @since 1.0.0
 	 */
 	public static function init() {
-		self::$defaults['use_apcu']         = true;
-		self::$defaults['use_cdn']          = false;
-		self::$defaults['script_in_footer'] = false;
-		self::$defaults['display_nag']      = false;
-		self::$defaults['nags']             = [];
-		self::$defaults['version']          = '0.0.0';
-		self::$defaults['last_check']       = [];
-		self::$defaults['history']          = 21;
-		self::$defaults['analytics']        = true;
-		self::$defaults['metrics']          = true;
-		self::$defaults['gc']               = false;
-		self::$defaults['earlyloading']     = false;
-		self::$defaults['adminbar']         = true;
-		self::$network                      = [ 'earlyloading', 'version', 'use_cdn', 'use_apcu',  'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
+		self::$defaults['use_apcu']          = true;
+		self::$defaults['use_cdn']           = false;
+		self::$defaults['script_in_footer']  = false;
+		self::$defaults['display_nag']       = false;
+		self::$defaults['nags']              = [];
+		self::$defaults['version']           = '0.0.0';
+		self::$defaults['last_check']        = [];
+		self::$defaults['history']           = 21;
+		self::$defaults['analytics']         = true;
+		self::$defaults['metrics']           = true;
+		self::$defaults['gc']                = false;
+		self::$defaults['earlyloading']      = false;
+		self::$defaults['forceearlyloading'] = true;
+		self::$defaults['adminbar']          = true;
+		self::$network                       = [ 'earlyloading', 'version', 'use_cdn', 'use_apcu',  'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
 	}
 	/**
 	 * Get the options infos for Site Health "info" tab.

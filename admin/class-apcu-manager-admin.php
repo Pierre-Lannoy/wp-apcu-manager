@@ -21,6 +21,7 @@ use APCuManager\System\Date;
 use APCuManager\System\Timezone;
 use PerfOpsOne\Menus;
 use PerfOpsOne\AdminBar;
+use APCuManager\System\APCu;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -317,6 +318,31 @@ class Apcu_Manager_Admin {
 				Option::network_set( 'gc', array_key_exists( 'apcm_plugin_features_gc', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_gc' ) : false );
 				Option::network_set( 'adminbar', array_key_exists( 'apcm_plugin_options_adminbar', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_options_adminbar' ) : false );
 				Option::network_set( 'history', array_key_exists( 'apcm_plugin_features_history', $_POST ) ? (string) filter_input( INPUT_POST, 'apcm_plugin_features_history', FILTER_SANITIZE_NUMBER_INT ) : Option::network_get( 'history' ) );
+				$old_earlyloading = Option::network_get( 'earlyloading' );
+				$new_earlyloading = array_key_exists( 'apcm_plugin_features_earlyloading', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_earlyloading' ) : false;
+				Option::network_set( 'earlyloading', $new_earlyloading );
+				$ecode = 0;
+				if ( $old_earlyloading !== $new_earlyloading ) {
+					apcm_check_earlyloading();
+					if ( $new_earlyloading ) {
+						$emessage = esc_html__( 'APCu Manager is now the WordPress object cache handler.', 'apcu-manager' );
+						$ecode    = 1;
+						if ( defined ( 'APCM_BOOTSTRAP_ALREADY_EXISTS_REMOVED' ) && APCM_BOOTSTRAP_ALREADY_EXISTS_REMOVED ) {
+							$emessage = '<br/>' . esc_html__( 'The previous handler has been removed.', 'apcu-manager' );
+						}
+						if ( defined ( 'APCM_BOOTSTRAP_COPY_ERROR' ) && APCM_BOOTSTRAP_COPY_ERROR ) {
+							$emessage = esc_html__( 'Unable to activate the APCu Manager handler.', 'apcu-manager' );
+							$ecode    = 10;
+						}
+						if ( defined ( 'APCM_BOOTSTRAP_ALREADY_EXISTS_ERROR' ) && APCM_BOOTSTRAP_ALREADY_EXISTS_ERROR ) {
+							$emessage = esc_html__( 'Unable to activate the APCu Manager handler.', 'apcu-manager' );
+							$ecode    = 20;
+						}
+					} else {
+						$emessage = esc_html__( 'APCu Manager is no longer the WordPress object cache handler.', 'apcu-manager' );
+						$ecode    = 1;
+					}
+				}
 				if ( ! Option::network_get( 'analytics' ) ) {
 					wp_clear_scheduled_hook( APCM_CRON_STATS_NAME );
 				}
@@ -326,6 +352,9 @@ class Apcu_Manager_Admin {
 				$message = esc_html__( 'Plugin settings have been saved.', 'apcu-manager' );
 				$code    = 0;
 				add_settings_error( 'apcm_no_error', $code, $message, 'updated' );
+				if ( 0 !== $ecode ) {
+					add_settings_error( 'apcm_object_cache', $ecode - 1, $emessage, 1 === $ecode ? 'info' : 'error' );
+				}
 				\DecaLog\Engine::eventsLogger( APCM_SLUG )->info( 'Plugin settings updated.', [ 'code' => $code ] );
 			} else {
 				$message = esc_html__( 'Plugin settings have not been saved. Please try again.', 'apcu-manager' );
@@ -476,7 +505,34 @@ class Apcu_Manager_Admin {
 	 * @since 1.0.0
 	 */
 	public function plugin_features_section_callback() {
-		$form = new Form();
+		$apcu_available = function_exists( 'apcu_delete' ) && function_exists( 'apcu_fetch' ) && function_exists( 'apcu_store' ) && function_exists( 'apcu_add' ) && function_exists( 'apcu_dec' ) && function_exists( 'apcu_inc' );
+		if ( $apcu_available ) {
+			$note = sprintf( __( 'Note: %s is currently enabled on you %s.', 'apcu-manager' ), APCu::name(), Environment::is_wordpress_multisite() ? esc_html__( 'network', 'apcu-manager' ) : esc_html__( 'website', 'apcu-manager' ) );
+		} else {
+			$note = esc_html__( 'Note: to activate it, your must have APCu enabled in PHP. It is not currently the case.', 'apcu-manager' );
+		}
+		$form           = new Form();
+		add_settings_field(
+			'apcm_plugin_features_earlyloading',
+			esc_html__( 'Object cache', 'apcu-manager' ),
+			[ $form, 'echo_field_checkbox' ],
+			'apcm_plugin_features_section',
+			'apcm_plugin_features_section',
+			[
+				'text'        => esc_html__( 'Activated', 'apcu-manager' ),
+				'id'          => 'apcm_plugin_features_earlyloading',
+				'checked'     => $apcu_available ? Option::network_get( 'earlyloading' ) : false,
+				'description' => sprintf( __( 'If checked, APCu Manager will use APCu as object cache to speed up your %s.', 'apcu-manager' ), Environment::is_wordpress_multisite() ? esc_html__( 'network', 'apcu-manager' ) : esc_html__( 'website', 'apcu-manager' ) ) . '<br/>' . $note,
+				'full_width'  => false,
+				'enabled'     => $apcu_available,
+			]
+		);
+		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_earlyloading' );
+		if ( $apcu_available ) {
+			$note = esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' );
+		} else {
+			$note = esc_html__( 'Note: to activate it, your must have APCu enabled in PHP. It is not currently the case.', 'apcu-manager' );
+		}
 		add_settings_field(
 			'apcm_plugin_features_gc',
 			esc_html__( 'Garbage collector', 'apcu-manager' ),
@@ -486,13 +542,18 @@ class Apcu_Manager_Admin {
 			[
 				'text'        => esc_html__( 'Activated', 'apcu-manager' ),
 				'id'          => 'apcm_plugin_features_gc',
-				'checked'     => Option::network_get( 'gc' ),
-				'description' => esc_html__( 'If checked, APCu Manager will delete cached objects as soon as they\'re out of date.', 'apcu-manager' ) . '<br/>' . esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' ),
+				'checked'     => $apcu_available ? Option::network_get( 'gc' ) : false,
+				'description' => esc_html__( 'If checked, APCu Manager will delete cached objects as soon as they\'re out of date.', 'apcu-manager' ) . '<br/>' . $note,
 				'full_width'  => false,
-				'enabled'     => true,
+				'enabled'     => $apcu_available,
 			]
 		);
 		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_gc' );
+		if ( $apcu_available ) {
+			$note = esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' );
+		} else {
+			$note = esc_html__( 'Note: to activate it, your must have APCu enabled in PHP. It is not currently the case.', 'apcu-manager' );
+		}
 		add_settings_field(
 			'apcm_plugin_features_analytics',
 			esc_html__( 'Analytics', 'apcu-manager' ),
@@ -502,10 +563,10 @@ class Apcu_Manager_Admin {
 			[
 				'text'        => esc_html__( 'Activated', 'apcu-manager' ),
 				'id'          => 'apcm_plugin_features_analytics',
-				'checked'     => Option::network_get( 'analytics' ),
-				'description' => esc_html__( 'If checked, APCu Manager will analyze APCu operations and store statistics every five minutes.', 'apcu-manager' ) . '<br/>' . esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' ),
+				'checked'     => $apcu_available ? Option::network_get( 'analytics' ) : false,
+				'description' => esc_html__( 'If checked, APCu Manager will analyze APCu operations and store statistics every five minutes.', 'apcu-manager' ) . '<br/>' . $note,
 				'full_width'  => false,
-				'enabled'     => true,
+				'enabled'     => $apcu_available,
 			]
 		);
 		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_analytics' );
@@ -521,7 +582,7 @@ class Apcu_Manager_Admin {
 				'value'       => Option::network_get( 'history' ),
 				'description' => esc_html__( 'Maximum age of data to keep for statistics.', 'apcu-manager' ),
 				'full_width'  => false,
-				'enabled'     => true,
+				'enabled'     => $apcu_available,
 			]
 		);
 		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_history' );
@@ -534,10 +595,10 @@ class Apcu_Manager_Admin {
 			[
 				'text'        => esc_html__( 'Activated', 'apcu-manager' ),
 				'id'          => 'apcm_plugin_features_metrics',
-				'checked'     => \DecaLog\Engine::isDecalogActivated() ? Option::network_get( 'metrics' ) : false,
-				'description' => esc_html__( 'If checked, APCu Manager will collate and publish APCu metrics.', 'apcu-manager' ) . ( \DecaLog\Engine::isDecalogActivated() ? '' : '<br/>' . esc_html__( 'Note: for this to work, you must install DecaLog.', 'apcu-manager' ) ),
+				'checked'     => \DecaLog\Engine::isDecalogActivated() && $apcu_available ? Option::network_get( 'metrics' ) : false,
+				'description' => esc_html__( 'If checked, APCu Manager will collate and publish APCu metrics.', 'apcu-manager' ) . ( \DecaLog\Engine::isDecalogActivated() ? '' : '<br/>' . esc_html__( 'Note: for this to work, you must install DecaLog. It is not currently the case.', 'apcu-manager' ) ),
 				'full_width'  => false,
-				'enabled'     => \DecaLog\Engine::isDecalogActivated(),
+				'enabled'     => \DecaLog\Engine::isDecalogActivated() && $apcu_available,
 			]
 		);
 		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_metrics' );

@@ -8,6 +8,7 @@
  * @since   3.0.0
  */
 
+use APCuManager\System\Option;
 
 /**
  * Object cache class definition
@@ -15,44 +16,28 @@
 class WP_Object_Cache {
 
 	/**
-	 * Track how many requests were found in cache.
+	 * Tracked metrics.
 	 *
-	 * @var     int
+	 * @var     array
 	 * @since   3.0.0
 	 */
-	private $cache_hits = 0;
+	private $metrics = [];
 
 	/**
-	 * Track how may requests were not cached.
+	 * Local cache.
 	 *
-	 * @var     int
+	 * @var     array
 	 * @since   3.0.0
 	 */
-	private $cache_misses = 0;
+	private $local_cache = [];
 
 	/**
-	 * Track how long request took.
+	 * Available metrics.
 	 *
-	 * @var     float
+	 * @var     array
 	 * @since   3.0.0
 	 */
-	private $cache_time = 0;
-
-	/**
-	 * Track how many read calls were made.
-	 *
-	 * @var     int
-	 * @since   3.0.0
-	 */
-	private $cache_read = 0;
-
-	/**
-	 * Track how many read calls were made.
-	 *
-	 * @var     int
-	 * @since   3.0.0
-	 */
-	private $cache_store = 0;
+	public $available_metrics = [ 'add', 'dec', 'inc', 'set', 'replace', 'fetch', 'delete' ];
 
 	/**
 	 * List of global groups.
@@ -113,7 +98,7 @@ class WP_Object_Cache {
 	private $blog_prefix = 1;
 
 	/**
-	 * Is APCu really available.
+	 * Is APCu really available?
 	 *
 	 * @var     bool
 	 * @since   3.0.0
@@ -121,7 +106,7 @@ class WP_Object_Cache {
 	private $apcu_available = false;
 
 	/**
-	 * Is it a multisite.
+	 * Is it a multisite?
 	 *
 	 * @var     bool
 	 * @since   3.0.0
@@ -137,7 +122,47 @@ class WP_Object_Cache {
 	private static $instance;
 
 	/**
-	 * Instance of WP_Object_Cache.
+	 * The events logger instance.
+	 *
+	 * @var     \DecaLog\EventsLogger
+	 * @since   3.0.0
+	 */
+	private static $events_logger = null;
+
+	/**
+	 * Are we in debug mode?
+	 *
+	 * @var     bool
+	 * @since   3.0.0
+	 */
+	private static $debug = false;
+
+	/**
+	 * The events prefix.
+	 *
+	 * @var     string
+	 * @since   3.0.0
+	 */
+	private static $events_prefix = '[WPObjectCache] ';
+
+	/**
+	 * The traces logger instance.
+	 *
+	 * @var     \DecaLog\TracesLogger
+	 * @since   3.0.0
+	 */
+	private static $traces_logger = null;
+
+	/**
+	 * The metrics logger instance.
+	 *
+	 * @var     \DecaLog\MetricsLogger
+	 * @since   3.0.0
+	 */
+	private static $metrics_logger = null;
+
+	/**
+	 * Get instance of WP_Object_Cache.
 	 *
 	 * @return  \WP_Object_Cache
 	 * @since   3.0.0
@@ -147,6 +172,67 @@ class WP_Object_Cache {
 			self::$instance = new WP_Object_Cache();
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * Set instance of \DecaLog\TracesLogger.
+	 *
+	 * @param   \DecaLog\EventsLogger   $logger     The logger to attach.
+	 * @since   3.0.0
+	 */
+	public static function set_events_logger( $logger ) {
+		if ( $logger instanceof \DecaLog\EventsLogger ) {
+			self::$events_logger = $logger;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . 'Events logger attached.' );
+			}
+		}
+	}
+
+	/**
+	 * Set instance of \DecaLog\TracesLogger.
+	 *
+	 * @param   \DecaLog\TracesLogger   $logger     The logger to attach.
+	 * @since   3.0.0
+	 */
+	public static function set_traces_logger( $logger ) {
+		if ( $logger instanceof \DecaLog\TracesLogger ) {
+			self::$traces_logger = $logger;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . 'Traces logger attached.' );
+			}
+		}
+	}
+
+	/**
+	 * Set instance of \DecaLog\TracesLogger.
+	 *
+	 * @param   \DecaLog\MetricsLogger   $logger     The logger to attach.
+	 * @since   3.0.0
+	 */
+	public static function set_metrics_logger( $logger ) {
+		if ( $logger instanceof \DecaLog\MetricsLogger ) {
+			self::$metrics_logger = $logger;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . 'Metrics logger attached.' );
+			}
+		}
+		if ( Option::network_get( 'metrics' ) && isset( self::$metrics_logger ) ) {
+			add_action( 'shutdown', [ self::instance(), 'collate_metrics' ], DECALOG_MAX_SHUTDOWN_PRIORITY, 0 );
+			self::$metrics_logger->createProdGauge( 'object_cache_all_hit_ratio', 0, 'Object cache hit ratio per request - [percent]' );
+			self::$metrics_logger->createProdCounter( 'object_cache_all_time', 'Object cache time per request - [second]' );
+			if ( self::$debug ) {
+				self::$metrics_logger->createDevCounter( 'object_cache_all_size', 'Object cache size per request - [byte]' );
+			}
+			foreach ( self::instance()->available_metrics as $metric ) {
+				self::$metrics_logger->createProdCounter( 'object_cache_' . $metric . '_success', sprintf( 'Number of successfully %s objects per request - [count]', 'aaa' ) );
+				self::$metrics_logger->createProdCounter( 'object_cache_' . $metric . '_fail', sprintf( 'Number of unsuccessfully %s objects per request - [count]', 'aaa' ) );
+				self::$metrics_logger->createProdCounter( 'object_cache_' . $metric . '_time', sprintf( 'Cache time for successfully %s objects per request - [second]', 'aaa' ) );
+				if ( self::$debug ) {
+					self::$metrics_logger->createDevCounter( 'object_cache_' . $metric . '_size', sprintf( 'Size of successfully %s objects per request - [byte]', 'aaa' ) );
+				}
+			}
+		}
 	}
 
 	/**
@@ -160,6 +246,12 @@ class WP_Object_Cache {
 		$this->apcu_available = function_exists( 'apcu_delete' ) && function_exists( 'apcu_fetch' ) && function_exists( 'apcu_store' ) && function_exists( 'apcu_add' ) && function_exists( 'apcu_dec' ) && function_exists( 'apcu_inc' );
 		$this->multi_site     = is_multisite();
 		$this->blog_prefix    = $this->multi_site ? $blog_id : 1;
+		foreach ( $this->available_metrics as $metric ) {
+			$this->metrics[ $metric ] = [];
+			foreach ( [ 'success', 'fail', 'time', 'size' ] as $kpi ) {
+				$this->metrics[ $metric ][ $kpi ] = 0;
+			}
+		}
 	}
 
 	/**
@@ -176,6 +268,18 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	public function stats() {
+	}
+
+	/**
+	 * Collates metrics.
+	 *
+	 * @since   3.0.0
+	 */
+	public function collate_metrics() {
+		//$span     = \DecaLog\Engine::tracesLogger( APCM_SLUG )->startSpan( 'Object caching metrics collation', DECALOG_SPAN_PLUGINS_LOAD );
+		if ( isset( self::$events_logger ) ) {
+			//self::$events_logger->critical( print_r($this->metrics,true) );
+		}
 	}
 
 	/**
@@ -198,13 +302,33 @@ class WP_Object_Cache {
 	}
 
 	/**
+	 * Compute the size of variable in APCu (so a serialized var).
+	 *
+	 * @param   mixed   $var    The variable.
+	 * @return  integer  The size in octets.
+	 * @since   3.0.0
+	 */
+	private function size_of( $var ) {
+		try {
+			$result = strlen( serialize( $var ) );
+		} catch ( \Throwable $t ) {
+			$result = 0;
+		}
+		return $result;
+	}
+
+	/**
 	 * Switch the internal blog id.
 	 *
 	 * @param   int     $blog_id    The blog ID.
 	 * @since   3.0.0
 	 */
 	public function switch_to_blog( $blog_id ) {
+		$old               = $this->blog_prefix;
 		$this->blog_prefix = $this->multi_site ? $blog_id : 1;
+		if ( isset( self::$events_logger ) && self::$debug ) {
+			self::$events_logger->debug( self::$events_prefix . sprintf( 'Switching from site %d to site %d.', $old, $this->blog_prefix ) );
+		}
 	}
 
 	/**
@@ -224,8 +348,12 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	public function add_global_groups( $groups ) {
-		foreach ( (array) $groups as $group ) {
+		$groups = (array) $groups;
+		foreach ( $groups as $group ) {
 			$this->global_groups[] = $group;
+		}
+		if ( isset( self::$events_logger ) && self::$debug ) {
+			self::$events_logger->debug( self::$events_prefix . sprintf( '%d global group(s) added.', count( $groups ) ) );
 		}
 	}
 
@@ -246,8 +374,12 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	public function add_non_persistent_groups( $groups ) {
-		foreach ( (array) $groups as $group ) {
+		$groups = (array) $groups;
+		foreach ( $groups as $group ) {
 			$this->non_persistent_groups[] = $group;
+		}
+		if ( isset( self::$events_logger ) && self::$debug ) {
+			self::$events_logger->debug( self::$events_prefix . sprintf( '%d non-persistent group(s) added.', count( $groups ) ) );
 		}
 	}
 
@@ -355,7 +487,25 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	private function add_persistent( $key, $var, $ttl ) {
-		return true === apcu_add( $key, $var, max( (int) $ttl, 0 ) );
+		$chrono                        = microtime( true );
+		$result                        = true === apcu_add( $key, $var, max( (int) $ttl, 0 ) );
+		$this->metrics['add']['time'] += microtime( true ) - $chrono;
+		if ( $result ) {
+			$this->local_cache[ $key ]        = is_object( $var ) ? clone $var : $var;
+			if ( $this::$debug ) {
+				$this->metrics['add']['size'] += $this->size_of( $var );
+			}
+			$this->metrics['add']['success'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully added.', $key ) );
+			}
+		} else {
+			$this->metrics['add']['fail'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully added.', $key ) );
+			}
+		}
+		return $result;
 	}
 
 	/**
@@ -401,9 +551,28 @@ class WP_Object_Cache {
 	private function decr_persistent( $key, $offset ) {
 		$this->get_persistent( $key, $success );
 		if ( ! $success ) {
+			$this->metrics['dec']['fail'] += 1;
 			return false;
 		}
-		return apcu_dec( $key, max( (int) $offset, 0 ) );
+		$chrono                        = microtime( true );
+		$result                        = false !== apcu_dec( $key, max( (int) $offset, 0 ) );
+		$this->metrics['dec']['time'] += microtime( true ) - $chrono;
+		if ( $result ) {
+			$this->local_cache[ $key ]        = $result;
+			if ( $this::$debug ) {
+				$this->metrics['dec']['size'] += $this->size_of( $offset );
+			}
+			$this->metrics['dec']['success'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully decremented.', $key ) );
+			}
+		} else {
+			$this->metrics['dec']['fail'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully decremented.', $key ) );
+			}
+		}
+		return $result;
 	}
 
 	/**
@@ -453,9 +622,28 @@ class WP_Object_Cache {
 	private function incr_persistent( $key, $offset ) {
 		$this->get_persistent( $key, $success );
 		if ( ! $success ) {
+			$this->metrics['inc']['fail'] += 1;
 			return false;
 		}
-		return apcu_inc( $key, max( (int) $offset, 0 ) );
+		$chrono                        = microtime( true );
+		$result                        = false !== apcu_inc( $key, max( (int) $offset, 0 ) );
+		$this->metrics['inc']['time'] += microtime( true ) - $chrono;
+		if ( $result ) {
+			$this->local_cache[ $key ]        = $result;
+			if ( $this::$debug ) {
+				$this->metrics['inc']['size'] += $this->size_of( $offset );
+			}
+			$this->metrics['inc']['success'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully decremented.', $key ) );
+			}
+		} else {
+			$this->metrics['inc']['fail'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully decremented.', $key ) );
+			}
+		}
+		return $result;
 	}
 
 	/**
@@ -502,7 +690,22 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	private function delete_persistent( $key ) {
-		return apcu_delete( $key );
+		$chrono                        = microtime( true );
+		$result                        = true === apcu_delete( $key );
+		$this->metrics['delete']['time'] += microtime( true ) - $chrono;
+		unset( $this->local_cache[ $key ] );
+		if ( $result ) {
+			$this->metrics['delete']['success'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully deleted.', $key ) );
+			}
+		} else {
+			$this->metrics['delete']['fail'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully deleted.', $key ) );
+			}
+		}
+		return $result;
 	}
 
 	/**
@@ -537,11 +740,6 @@ class WP_Object_Cache {
 		} else {
 			$var = $this->get_persistent( $key, $success );
 		}
-		if ( $success ) {
-			$this->cache_hits++;
-		} else {
-			$this->cache_misses++;
-		}
 		return $var;
 	}
 
@@ -554,7 +752,29 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	private function get_persistent( $key, &$success = null ) {
-		$var = apcu_fetch( $key, $success );
+		if ( array_key_exists( $key, $this->local_cache ) ) {
+			$success = true;
+			$var     = $this->local_cache[ $key ];
+		} else {
+			$chrono                          = microtime( true );
+			$var                             = apcu_fetch( $key, $success );
+			$this->metrics['fetch']['time'] += microtime( true ) - $chrono;
+			if ( $success ) {
+				$this->local_cache[ $key ]          = $var;
+				if ( $this::$debug ) {
+					$this->metrics['fetch']['size'] += $this->size_of( $var );
+				}
+				$this->metrics['fetch']['success'] += 1;
+				if ( isset( self::$events_logger ) && self::$debug ) {
+					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully fetched.', $key ) );
+				}
+			} else {
+				$this->metrics['fetch']['fail'] += 1;
+				if ( isset( self::$events_logger ) && self::$debug ) {
+					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully fetched.', $key ) );
+				}
+			}
+		}
 		if ( is_object( $var ) ) {
 			$var = clone $var;
 		}
@@ -637,10 +857,11 @@ class WP_Object_Cache {
 	 */
 	private function replace_persistent( $key, $var, $ttl ) {
 		$this->get_persistent( $key, $success );
-		if ( $success ) {
+		if ( ! $success ) {
+			$this->metrics['replace']['fail'] += 1;
 			return false;
 		}
-		return $this->set_persistent( $key, $var, $ttl );
+		return $this->set_persistent( $key, $var, $ttl, true );
 	}
 
 	/**
@@ -664,7 +885,7 @@ class WP_Object_Cache {
 	 * @param   int|string  $key    What to call the contents in the cache.
 	 * @param   mixed       $var    The contents to store in the cache.
 	 * @param   int         $ttl    When to expire the cache contents.
-	 * @return  bool    True if contents were replaced, false otherwise.
+	 * @return  bool    True if contents were set, false otherwise.
 	 * @since   3.0.0
 	 */
 	public function set( $key, $var, $group = 'default', $ttl = 0 ) {
@@ -678,17 +899,38 @@ class WP_Object_Cache {
 	/**
 	 * Sets the data contents into the APCu cache.
 	 *
-	 * @param   int|string  $key    What to call the contents in the cache.
-	 * @param   mixed       $var    The contents to store in the cache.
-	 * @param   int         $ttl    When to expire the cache contents.
-	 * @return  bool    True if contents were replaced, false otherwise.
+	 * @param   int|string  $key        What to call the contents in the cache.
+	 * @param   mixed       $var        The contents to store in the cache.
+	 * @param   int         $ttl        When to expire the cache contents.
+	 * @param   bool        $replace    Optional. It is a replace operation.
+	 * @return  bool    True if contents were set, false otherwise.
 	 * @since   3.0.0
 	 */
-	private function set_persistent( $key, $var, $ttl ) {
+	private function set_persistent( $key, $var, $ttl, $replace = false ) {
 		if ( is_object( $var ) ) {
 			$var = clone $var;
 		}
-		return apcu_store( $key, $var, max( (int) $ttl, 0 ) );
+		$op                            = $replace ? 'replace' : 'set';
+		$op_name                       = $replace ? 'replaced' : 'set';
+		$chrono                        = microtime( true );
+		$success                       = apcu_store( $key, $var, max( (int) $ttl, 0 ) );
+		$this->metrics[ $op ]['time'] += microtime( true ) - $chrono;
+		if ( $success ) {
+			$this->local_cache[ $key ]        = $var;
+			if ( $this::$debug ) {
+				$this->metrics[ $op ]['size'] += $this->size_of( $var );
+			}
+			$this->metrics[ $op ]['success'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully %s.', $key, $op_name ) );
+			}
+		} else {
+			$this->metrics[ $op ]['fail'] += 1;
+			if ( isset( self::$events_logger ) && self::$debug ) {
+				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully %s.', $key, $op_name ) );
+			}
+		}
+		return $success;
 	}
 
 	/**

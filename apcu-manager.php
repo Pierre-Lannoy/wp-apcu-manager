@@ -36,6 +36,50 @@ require_once __DIR__ . '/includes/libraries/autoload.php';
 require_once __DIR__ . '/includes/features/class-wpcli.php';
 
 /**
+ * Copy the file responsible to early initialization in drop-ins dir.
+ *
+ * @since 3.0.0
+ */
+function apcm_check_earlyloading() {
+	if ( (bool) get_site_option( 'apcm_earlyloading', false ) ) {
+		if ( defined( 'APCM_BOOTSTRAPPED' ) && APCM_BOOTSTRAPPED ) {
+			return;
+		}
+		if ( ! defined( 'APCM_BOOTSTRAPPED' ) ) {
+			$target = WP_CONTENT_DIR . '/object-cache.php';
+			$source = __DIR__ . '/assets/object-cache.php';
+			if ( file_exists( $target ) && (bool) get_site_option( 'apcm_forceearlyloading', true ) ) {
+				// phpcs:ignore
+				@unlink( $target );
+				define( 'APCM_BOOTSTRAP_ALREADY_EXISTS_REMOVED', true );
+			}
+			if ( ! file_exists( $target ) ) {
+				if ( file_exists( $source ) ) {
+					// phpcs:ignore
+					@copy( $source, $target );
+					// phpcs:ignore
+					@chmod( $target, 0644 );
+				}
+				if ( ! file_exists( $target ) ) {
+					define( 'APCM_BOOTSTRAP_COPY_ERROR', true );
+				}
+			} else {
+				define( 'APCM_BOOTSTRAP_ALREADY_EXISTS_ERROR', true );
+			}
+		}
+	} else {
+		if ( defined( 'APCM_BOOTSTRAPPED' ) ) {
+			$file = WP_CONTENT_DIR . '/object-cache.php';
+			if ( file_exists( $file ) ) {
+				// phpcs:ignore
+				@unlink( $file );
+				define( 'APCM_BOOTSTRAP_COPY_REMOVED', true );
+			}
+		}
+	}
+}
+
+/**
  * The code that runs during plugin activation.
  *
  * @since 1.0.0
@@ -68,6 +112,7 @@ function apcm_uninstall() {
  * @since 1.0.0
  */
 function apcm_run() {
+	apcm_check_earlyloading();
 	\DecaLog\Engine::initPlugin( APCM_SLUG, APCM_PRODUCT_NAME, APCM_VERSION, \APCuManager\Plugin\Core::get_base64_logo() );
 	if ( wp_using_ext_object_cache() ) {
 		if ( class_exists( '\WP_Object_Cache' ) ) {
