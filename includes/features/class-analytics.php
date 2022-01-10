@@ -595,12 +595,12 @@ class Analytics {
 							'data' => $series['hit'],
 						],
 						[
-							'name' => esc_html__( 'Miss Count', 'apcu-manager' ),
-							'data' => $series['miss'],
-						],
-						[
 							'name' => esc_html__( 'Insert Count', 'apcu-manager' ),
 							'data' => $series['ins'],
+						],
+						[
+							'name' => esc_html__( 'Miss Count', 'apcu-manager' ),
+							'data' => $series['miss'],
 						],
 					],
 				]
