@@ -1040,7 +1040,7 @@ class Analytics {
 					$result['data']['block'] = [
 						'name'        => esc_html_x( 'Small blocks', 'Noun - Small blocks.', 'apcu-manager' ),
 						'short'       => esc_html_x( 'Blk.', 'Noun - Short (max 4 char) - Small blocks.', 'apcu-manager' ),
-						'description' => esc_html__( 'Used memory small blocks (size < 5M).', 'apcu-manager' ),
+						'description' => esc_html__( 'Used memory small blocks (size < 5K).', 'apcu-manager' ),
 						'dimension'   => 'none',
 						'ratio'       => [
 							'raw'      => round( $data['kpi-main-fragmentation'] / 100, 6 ),
