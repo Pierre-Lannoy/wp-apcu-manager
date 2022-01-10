@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [BC] The "Delete All" command now flush cache for site or network only.
 - [BC] The garbage collector now works only on objects belonging to the site or network.
 - [BC] The APCu Management tool now displays only objects belonging to the site or network.
+- [BC] The memory fragmentation is now computed from a WordPress point of view: expect a drastic reduction.
 - Analytics reports are now able to display WordPress object caching KPIs.
 - APCu Manager now supports non expiring TTL (including garbage collecting operations)
 - Charts allow now to display more than 2 months of data.

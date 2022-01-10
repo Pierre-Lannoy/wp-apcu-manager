@@ -155,8 +155,7 @@ class Capture {
 							if ( is_array( $chunk ) ) {
 								foreach ( $chunk as $block ) {
 									if ( array_key_exists( 'size', $block ) ) {
-										/* Like apc.php, only consider blocks <5M for the fragmentation % */
-										if ( $block['size'] < ( 5 * 1024 * 1024 ) ) {
+										if ( $block['size'] < ( 5 * 1024 ) ) {
 											$frag_small = ( (int) $block['size'] ) + $frag_small;
 										} else {
 											$frag_big = ( (int) $block['size'] ) + $frag_big;
@@ -258,8 +257,7 @@ class Capture {
 								foreach ( $chunk as $block ) {
 									if ( array_key_exists( 'size', $block ) ) {
 										$record['frag_count'] = $record['frag_count'] + 1;
-										/* Like apc.php, only consider blocks <5M for the fragmentation % */
-										if ( $block['size'] < ( 5 * 1024 * 1024 ) ) {
+										if ( $block['size'] < ( 5 * 1024 ) ) {
 											$record['frag_small'] = ( (int) $block['size'] ) + $record['frag_small'];
 										} else {
 											$record['frag_big'] = ( (int) $block['size'] ) + $record['frag_big'];
