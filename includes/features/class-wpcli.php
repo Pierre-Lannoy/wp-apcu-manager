@@ -189,6 +189,11 @@ class Wpcli {
 		} else {
 			\WP_CLI::line( sprintf( '%s is activated for command-line.', $name ) );
 		}
+		if ( Option::network_get( 'earlyloading' ) ) {
+			\WP_CLI::line( 'WordPress object caching: enabled.' );
+		} else {
+			\WP_CLI::line( 'WordPress object caching: disabled.' );
+		}
 		if ( Option::network_get( 'gc' ) ) {
 			\WP_CLI::line( 'Garbage collector: enabled.' );
 		} else {
@@ -219,7 +224,7 @@ class Wpcli {
 	 * <enable|disable>
 	 * : The action to take.
 	 *
-	 * <gc|analytics|metrics>
+	 * <object-caching|gc|analytics|metrics>
 	 * : The setting to change.
 	 *
 	 * [--yes]
@@ -256,6 +261,10 @@ class Wpcli {
 						Option::network_set( 'metrics', true );
 						$this->success( 'metrics collation is now activated.', '', $stdout );
 						break;
+					case 'object-caching':
+						Option::network_set( 'earlyloading', true );
+						$this->success( 'WordPress object caching is now activated.', '', $stdout );
+						break;
 					default:
 						$this->error( 1, $stdout );
 				}
@@ -276,6 +285,11 @@ class Wpcli {
 						\WP_CLI::confirm( 'Are you sure you want to deactivate metrics collation?', $assoc_args );
 						Option::network_set( 'metrics', false );
 						$this->success( 'metrics collation is now deactivated.', '', $stdout );
+						break;
+					case 'object-caching':
+						\WP_CLI::confirm( 'Are you sure you want to deactivate WordPress object caching?', $assoc_args );
+						Option::network_set( 'earlyloading', false );
+						$this->success( 'WordPress object caching is now deactivated.', '', $stdout );
 						break;
 					default:
 						$this->error( 1, $stdout );

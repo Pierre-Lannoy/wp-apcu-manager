@@ -38,12 +38,13 @@ To get detailed status and operation mode, use the `wp apcu status` command.
 
 ## Managing main settings
 
-To toggle on/off main settings, use `wp apcu settings <enable|disable> <gc|analytics|metrics>`.
+To toggle on/off main settings, use `wp apcu settings <enable|disable> <object-caching|gc|analytics|metrics>`.
 
 If you try to disable a setting, wp-cli will ask you to confirm. To force answer to yes without prompting, just use `--yes`.
 
 ### Available settings
 
+- `object caching`: WordPress object caching feature
 - `gc`: garbage collection feature
 - `analytics`: analytics feature
 - `metrics`: metrics collation
