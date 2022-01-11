@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [3.0.0] - Not Yet Released
 
 ### Added
+- APCu manager may be used as a full object cache handler replacement for WordPress caching.
 - Compatibility with PHP 8.1.
 - Added containers, paths and icons to APCu Management tool.
 - Added WordPress and W3TC icons in analytics reports.
