@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [3.0.0] - Not Yet Released
 
 ### Added
-- APCu manager may be used as a full object cache handler replacement for WordPress caching.
+- APCu manager may be used as a full object cache drop-in replacement for WordPress caching.
 - Compatibility with PHP 8.1.
 - Added containers, paths and icons to APCu Management tool.
 - Added WordPress and W3TC icons in analytics reports.
@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Refactored cache mechanisms to fully support Redis and Memcached.
 - Improved bubbles display when width is less than 500px (thanks to [Pat Ol](https://profiles.wordpress.org/pasglop/)).
 - The tables headers have now a better contrast (thanks to [Paul Bonaldi](https://profiles.wordpress.org/bonaldi/)).
+- Updated documentation and readme files.
 
 ### Fixed
 - The console menu may display an empty screen (thanks to [Renaud Pacouil](https://www.laboiteare.fr)).
