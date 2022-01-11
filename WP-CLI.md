@@ -44,7 +44,7 @@ If you try to disable a setting, wp-cli will ask you to confirm. To force answer
 
 ### Available settings
 
-- `object caching`: WordPress object caching feature
+- `object-caching`: WordPress object caching feature
 - `gc`: garbage collection feature
 - `analytics`: analytics feature
 - `metrics`: metrics collation
