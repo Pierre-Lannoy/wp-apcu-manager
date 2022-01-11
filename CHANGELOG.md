@@ -3,10 +3,10 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0] - Not Yet Released
+## [3.0.0] - 2022-01-17
 
 ### Added
-- APCu manager may be used as a full object cache drop-in replacement for WordPress caching.
+- NEW: APCu manager may be used as a full object cache drop-in replacement for WordPress caching.
 - Compatibility with PHP 8.1.
 - Added containers, paths and icons to APCu Management tool.
 - Added WordPress and W3TC icons in analytics reports.
