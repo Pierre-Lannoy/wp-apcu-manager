@@ -10,6 +10,7 @@
 
 use APCuManager\System\Option;
 use APCuManager\System\Cache;
+use APCuManager\System\Environment;
 
 /**
  * Object cache class definition
@@ -234,7 +235,7 @@ class WP_Object_Cache {
 				self::$events_logger->debug( self::$events_prefix . 'Metrics logger attached.' );
 			}
 		}
-		if ( Option::network_get( 'metrics' ) && isset( self::$metrics_logger ) ) {
+		if ( Option::network_get( 'metrics' ) && isset( self::$metrics_logger ) && ! in_array( Environment::exec_mode(), [ 1, 3, 4 ], true ) ) {
 			add_action( 'shutdown', [ self::instance(), 'compute_metrics' ], DECALOG_MAX_SHUTDOWN_PRIORITY - 1, 0 );
 			self::$metrics_logger->createProdGauge( 'object_cache_all_hit_ratio', 0, 'Object cache hit ratio per request, 5 min average - [percent]' );
 			self::$metrics_logger->createProdGauge( 'object_cache_all_success_ratio', 0, 'Object cache success ratio per request, 5 min average - [percent]' );
