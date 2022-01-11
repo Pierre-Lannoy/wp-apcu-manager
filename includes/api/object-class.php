@@ -38,7 +38,7 @@ class WP_Object_Cache {
 	 * @var     array
 	 * @since   3.0.0
 	 */
-	private $available_metrics = [ 'add', 'dec', 'inc', 'set', 'replace', 'fetch', 'delete' ];
+	private $available_metrics = [ 'add', 'dec', 'inc', 'set', 'replace', 'fetch', 'delete', 'flush' ];
 
 	/**
 	 * List of global groups.
@@ -159,6 +159,7 @@ class WP_Object_Cache {
 		'set'     => 'set',
 		'replace' => 'replaced',
 		'fetch'   => 'fetched',
+		'flush'   => 'flushed',
 		'delete'  => 'deleted', ];
 
 	/**
@@ -393,18 +394,23 @@ class WP_Object_Cache {
 	/**
 	 * Compute a full cache key name.
 	 *
-	 * @param   int|string  $key    The key.
-	 * @param   string      $group  The group.
+	 * @param   int|string  $key            The key.
+	 * @param   string      $group          The group.
+	 * @param   integer     $forced_site    Optional. Forces te site.
 	 * @return  string  The full cache key name.
 	 * @since   3.0.0
 	 */
-	private function full_item_name( $key, $group ) {
+	private function full_item_name( $key, $group, $forced_site = 0 ) {
 		if ( empty( $group ) ) {
 			$group = 'default';
 		}
 		$prefix = '';
 		if ( ! in_array( (string) $group, $this->global_groups, true ) ) {
-			$prefix = $this->blog_prefix . '_';
+			if ( 0 === $forced_site ) {
+				$prefix = $this->blog_prefix . '_';
+			} else {
+				$prefix = $forced_site . '_';
+			}
 		}
 		return 'wordpress' . $this->cache_prefix . $prefix . $group . '_' . $key;
 	}
@@ -510,12 +516,8 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	public function flush_groups( $groups ) {
-		$groups = (array) $groups;
-		if ( empty( $groups ) ) {
-			return false;
-		}
-		if ( $this->apcu_available ) {
-			// Iterate in objects list
+		if ( isset( self::$events_logger ) && self::$debug ) {
+			self::$events_logger->warning( self::$events_prefix . 'Group flushing is not implemented.', [ 'code' => 501 ] );
 		}
 		return false;
 	}
@@ -527,8 +529,9 @@ class WP_Object_Cache {
 	 */
 	public function flush() {
 		$this->non_persistent_cache = [];
-		if ( $this->apcu_available ) {
-			// Iterate in objects list
+		$this->partial_flush_persistent( [ 'wordpress' . $this->cache_prefix ] );
+		if ( isset( self::$events_logger ) ) {
+			self::$events_logger->info( self::$events_prefix . 'Full cache successfully flushed.' );
 		}
 		return true;
 	}
@@ -537,7 +540,6 @@ class WP_Object_Cache {
 	 * Invalidate sites' object cache.
 	 *
 	 * @param string|array $sites Sites ID's that want flushing.
-	 *                     Don't pass a site to flush current site
 	 *
 	 * @return bool
 	 */
@@ -547,11 +549,76 @@ class WP_Object_Cache {
 			if ( ! in_array(0, $sites, true ) ) {
 				$sites[] = 0;
 			}
-			if ( $this->apcu_available ) {
-				// Iterate in objects list
+			$seeds = [];
+			$group = '$$$$$';
+			$key   = '%%%%%';
+			$id    = $group . '_' . $key;
+			foreach ( $sites as $site ) {
+				$seeds[] = str_replace( $id, '', $this->full_item_name( $key, $group, $site ) );
+			}
+			$this->partial_flush_non_persistent( $seeds );
+			$cpt = $this->partial_flush_persistent( $seeds );
+			if ( isset( self::$events_logger ) ) {
+				self::$events_logger->info( self::$events_prefix . 'Sites cache successfully flushed.' );
+			}
+			return 0 !== $cpt;
+		}
+		return false;
+	}
+
+	/**
+	 * Remove specific data from persistent cache.
+	 *
+	 * @param   array   $seeds  The seeds to remove.
+	 * @return  integer     Number of removed keys.
+	 */
+	private function partial_flush_persistent( $seeds ) {
+		$cpt = 0;
+		if ( $this->apcu_available && function_exists( 'apcu_cache_info' ) ) {
+			$chrono = microtime( true );
+			$infos  = apcu_cache_info( false );
+			if ( array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
+				foreach ( $infos['cache_list'] as $object ) {
+					$oid = $object['info'];
+					foreach ( $seeds as $prefix ) {
+						if ( 0 === strpos( $oid, $prefix ) ) {
+							if ( $this->delete_persistent( $object['info'], false ) ) {
+								$this->metrics['flush']['success'] += 1;
+								$cpt++;
+							} else {
+								$this->metrics['flush']['fail'] += 1;
+							}
+							break;
+						}
+					}
+				}
+			}
+			$this->metrics['flush']['time'] += microtime( true ) - $chrono;
+		}
+		if ( self::$debug ) {
+			self::$events_logger->debug( self::$events_prefix . sprintf( '%d keys removed in a flush operation.', $cpt ) );
+		}
+		return $cpt;
+	}
+
+	/**
+	 * Remove specific data from non-persistent cache.
+	 *
+	 * @param   array   $seeds  The seeds to remove.
+	 * @return  integer     Number of removed keys.
+	 */
+	private function partial_flush_non_persistent( $seeds ) {
+		$cpt = 0;
+		foreach ( $this->non_persistent_cache as $key => $object ) {
+			foreach ( $seeds as $prefix ) {
+				if ( 0 === strpos( $key, $prefix ) ) {
+					unset( $this->non_persistent_cache[ $key ] );
+					$cpt++;
+					break;
+				}
 			}
 		}
-		return true;
+		return $cpt;
 	}
 
 	/**
@@ -794,23 +861,32 @@ class WP_Object_Cache {
 	 * Remove the contents of the APCu cache key in the group.
 	 *
 	 * @param   int|string  $key        What the contents in the cache are called.
+	 * @param   bool        $single     Optional. If false, it is a flush.
 	 * @return  bool    True on success, false otherwise.
 	 * @since   3.0.0
 	 */
-	private function delete_persistent( $key ) {
-		$chrono                        = microtime( true );
-		$result                        = true === apcu_delete( $key );
-		$this->metrics['delete']['time'] += microtime( true ) - $chrono;
+	private function delete_persistent( $key, $single = true ) {
+		if ( $single ) {
+			$chrono = microtime( true );
+		}
+		$result = true === apcu_delete( $key );
+		if ( $single ) {
+			$this->metrics['delete']['time'] += microtime( true ) - $chrono;
+		}
 		unset( $this->local_cache[ $key ] );
 		if ( $result ) {
-			$this->metrics['delete']['success'] += 1;
-			if ( isset( self::$events_logger ) && self::$debug ) {
-				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully deleted.', $key ) );
+			if ( $single ) {
+				$this->metrics['delete']['success'] += 1;
+				if ( isset( self::$events_logger ) && self::$debug ) {
+					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully deleted.', $key ) );
+				}
 			}
 		} else {
-			$this->metrics['delete']['fail'] += 1;
-			if ( isset( self::$events_logger ) && self::$debug ) {
-				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully deleted.', $key ) );
+			if ( $single ) {
+				$this->metrics['delete']['fail'] += 1;
+				if ( isset( self::$events_logger ) && self::$debug ) {
+					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully deleted.', $key ) );
+				}
 			}
 		}
 		return $result;

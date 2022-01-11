@@ -216,7 +216,6 @@ function wp_cache_reset() {
  * Invalidate a site's object cache
  *
  * @param mixed $sites Sites ID's that want flushing.
- *                     Don't pass a site to flush current site
  *
  * @return bool
  */
