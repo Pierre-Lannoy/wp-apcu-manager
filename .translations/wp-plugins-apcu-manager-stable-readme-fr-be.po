@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - APCu Manager - Stable Readme (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-06-24 13:55+0200\n"
+"PO-Revision-Date: 2022-01-26 09:15+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,6 +21,34 @@ msgstr "Statistiques et gestion APCu directement dans le Tableau de bord WordPre
 #. Plugin name.
 msgid "APCu Manager"
 msgstr "APCu Manager"
+
+#. Found in installation list item.
+msgid "Visit 'PerfOps One &gt; Control Center &gt; APCu Manager' in the left-hand menu of your WP Admin to adjust settings."
+msgstr "Visitez « PerfOps One > Centre de contrôle > APCu Manager » dans le menu gauche de votre panneau d’administration pour ajuster les réglages."
+
+#. Found in description paragraph.
+msgid "<strong>APCu Manager</strong> offers a persistent object cache backend to WordPress: just activate the option in the settings and you will experience a real speed up of your site or network."
+msgstr "<strong>APCu Manager</strong> apporte à WordPress un dispositif de cache d’objets persistants : il suffit d’activer l’option dans les réglages et vous constaterez une réelle accélération de votre site ou de votre réseau."
+
+#. Found in description list item.
+msgid "smart garbage collection;"
+msgstr "ramasse miettes intelligent ;"
+
+#. Found in description list item.
+msgid "bulk object deletion;"
+msgstr "suppression en masse d’objets ;"
+
+#. Found in description list item.
+msgid "drop-in replacement for WordPress object caching;"
+msgstr "remplacement de l‘extension avancée de cache objet WordPress ;"
+
+#. Found in description paragraph.
+msgid "⚠️ <strong>APCu Manager</strong> doesn't work on PHP clustered environments!"
+msgstr "⚠️ <strong>APCu Manager</strong> ne fonctionne pas dans des environnements PHP en grappe !"
+
+#. Screenshot description.
+msgid "Quick Action in Admin Bar"
+msgstr "Action rapide dans la barre d’administration"
 
 #. Found in description paragraph.
 msgid "<strong>APCu Manager</strong> is part of <a href=\"https://perfops.one/\">PerfOps One</a>, a suite of free and open source WordPress plugins dedicated to observability and operations performance."
@@ -103,10 +131,6 @@ msgid "Enjoy!"
 msgstr "Profitez !"
 
 #. Found in installation list item.
-msgid "Visit 'Settings &gt; APCu Manager' in the left-hand menu of your WP Admin to adjust settings."
-msgstr "Visitez « Réglages &gt; APCu Manager » dans le menu gauche de votre panneau d’administration pour ajuster les paramètres."
-
-#. Found in installation list item.
 msgid "Activate APCu Manager from your Plugins page."
 msgstr "Activez APCu Manager depuis votre page Extensions."
 
@@ -171,8 +195,8 @@ msgid "<strong>APCu Manager</strong> is also a full featured analytics reporting
 msgstr "<strong>APCu Manager</strong> est également un outil complet de rapport analytique qui détaille toutes les mesures de fonctionnement d’APCu sur votre site. Il peut signaler :"
 
 #. Found in description paragraph.
-msgid "<strong>APCu Manager</strong> works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps.One suite or W3 Total Cache. Its main management features are:"
-msgstr "<strong>APCu Manager</strong> fonctionne aussi bien sur des serveurs dédiés que mutualisés. Il est compatible avec des extensions telles que le suite PerfOps.One ou W3 Total Cache. Ses principales caractéristiques de gestion sont :"
+msgid "<strong>APCu Manager</strong> works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps One suite or W3 Total Cache. Its main management features are:"
+msgstr "<strong>APCu Manager</strong> fonctionne aussi bien sur des serveurs dédiés que mutualisés. Il est compatible avec des extensions telles que la suite PerfOps One ou W3 Total Cache. Ses principales caractéristiques de gestion sont :"
 
 #. Found in description paragraph.
 msgid "<strong>APCu Manager</strong> is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network."
