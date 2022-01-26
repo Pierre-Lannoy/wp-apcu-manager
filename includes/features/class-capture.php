@@ -233,8 +233,8 @@ class Capture {
 					if ( array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) ) {
 						$record['mem_total'] = (int) ( $memory['num_seg'] * $memory['seg_size'] );
 					}
-					if ( array_key_exists( 'avail_mem', $memory ) ) {
-						$record['mem_used'] = (int) ( $record['mem_total'] - $memory['avail_mem'] );
+					if ( array_key_exists( 'mem_size', $memory ) ) {
+						$record['mem_used'] = (int) ( $record['mem_size'] );
 					}
 					if ( array_key_exists( 'num_slots', $value['raw'] ) ) {
 						$record['slot_total'] = (int) $value['raw']['num_slots'];
