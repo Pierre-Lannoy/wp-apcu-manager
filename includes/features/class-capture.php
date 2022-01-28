@@ -115,9 +115,9 @@ class Capture {
 					$memory  = apcu_sma_info( false );
 					$value   = apcu_cache_info( true );
 					$metrics = [];
-					if ( array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) && array_key_exists( 'avail_mem', $memory ) ) {
+					if ( array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) && array_key_exists( 'mem_size', $memory ) ) {
 						$mem_total = (int) ( $memory['num_seg'] * $memory['seg_size'] );
-						$mem_used  = (int) ( $mem_total - $memory['avail_mem'] );
+						$mem_used  = (int) $memory['mem_size'];
 						if ( 0 < $mem_total ) {
 							$metrics['mem'] = $mem_used / $mem_total;
 						} else {
@@ -233,8 +233,8 @@ class Capture {
 					if ( array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) ) {
 						$record['mem_total'] = (int) ( $memory['num_seg'] * $memory['seg_size'] );
 					}
-					if ( array_key_exists( 'mem_size', $memory ) ) {
-						$record['mem_used'] = (int) ( $record['mem_size'] );
+					if ( array_key_exists( 'mem_size', $value['raw'] ) ) {
+						$record['mem_used'] = (int) ( $value['raw']['mem_size'] );
 					}
 					if ( array_key_exists( 'num_slots', $value['raw'] ) ) {
 						$record['slot_total'] = (int) $value['raw']['num_slots'];
