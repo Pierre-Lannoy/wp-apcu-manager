@@ -69,6 +69,17 @@ class Libraries {
 			'license' => 'mit',
 			'langs'   => 'en',
 		];
+		self::$psr4_libraries['kint']  = [
+			'name'    => 'Kint',
+			'prefix'  => 'Kint',
+			'base'    => APCM_VENDOR_DIR . 'kint/src/',
+			'version' => '4.1.1',
+			// phpcs:ignore
+			'author'  => sprintf( esc_html__( '%s, %s & contributors', 'apcu-manager' ), 'Jonathan Vollebregt', 'Rokas Šleinius' ),
+			'url'     => 'https://kint-php.github.io/',
+			'license' => 'mit',
+			'langs'   => 'en',
+		];
 		self::$psr4_libraries['markdown'] = [
 			'name'    => 'Markdown Parser',
 			'prefix'  => 'cebe\markdownparser',
