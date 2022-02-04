@@ -17,6 +17,8 @@ $objects->prepare_items();
 wp_enqueue_script( APCM_ASSETS_ID );
 wp_enqueue_style( APCM_ASSETS_ID );
 
+add_thickbox();
+
 ?>
 
 <div class="wrap">

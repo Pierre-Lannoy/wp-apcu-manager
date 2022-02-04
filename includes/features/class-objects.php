@@ -11,11 +11,15 @@
 
 namespace APCuManager\Plugin\Feature;
 
+use APCuManager\System\Cache;
 use APCuManager\System\Conversion;
 
 use APCuManager\System\Date;
 use APCuManager\System\Timezone;
 use APCuManager\System\APCu;
+use Feather\Icons;
+use Kint\Kint;
+use APCuManager\System\Option;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
@@ -118,6 +122,7 @@ class Objects extends \WP_List_Table {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+		require_once APCM_VENDOR_DIR . 'kint/apcm_init.php';
 		parent::__construct(
 			[
 				'singular' => 'object',
@@ -213,10 +218,22 @@ class Objects extends \WP_List_Table {
 	 */
 	protected function column_ttl( $item ) {
 		if ( 0 < $item['ttl'] ) {
-			return implode( ', ', Date::get_age_array_from_seconds( $item['ttl'], true, true ) );
+			$ttl = implode( ', ', Date::get_age_array_from_seconds( $item['ttl'], true, true ) );
 		} else {
-			return esc_html__( '(no expiration)', 'apcu-manager' );
+			$ttl = esc_html__( '(no expiration)', 'apcu-manager' );
 		}
+		return $ttl . $this->get_actions( 'ttl', $item );
+	}
+
+	/**
+	 * "object" column formatter.
+	 *
+	 * @param   array $item   The current item.
+	 * @return  string  The cell formatted, ready to print.
+	 * @since    1.0.0
+	 */
+	protected function column_object( $item ) {
+		return $item['object'] . $this->get_viewer( $item ) . $this->get_actions( 'object', $item );
 	}
 
 	/**
@@ -601,12 +618,89 @@ class Objects extends \WP_List_Table {
 	 * @since 1.0.0
 	 */
 	public function get_url( $url = false, $limit = false ) {
-		global $wp;
 		$url = remove_query_arg( 'limit', $url );
 		if ( $limit ) {
 			$url .= ( false === strpos( $url, '?' ) ? '?' : '&' ) . 'limit=' . $this->limit;
 		}
 		return esc_url( $url );
+	}
+
+	/**
+	 * Get the item value.
+	 *
+	 * @param   array   $item       The row item, an object.
+	 * @return  string  The value, ready to print.
+	 * @since   3.1.0
+	 */
+	private function get_value( $item ) {
+		$result = '<p>' . esc_html__( 'Unable to fetch value…', 'apcu-manager' ) . '</p>';
+		if ( function_exists( 'apcu_fetch' ) ) {
+			$result = '<p>' . esc_html__( 'Object too large to be displayed…', 'apcu-manager' ) . '</p>';
+			if ( 1024 * Option::network_get( 'maxsize' ) > (int) $item['memory'] ) {
+				$found   = false;
+				$result  = '<p>' . esc_html__( 'Unable to fetch value…', 'apcu-manager' ) . '</p>';
+				$content = apcu_fetch( $item['oid'], $found );
+				if ( $found ) {
+					$result = Kint::dump( $content );
+				}
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * Get the viewer content & image.
+	 *
+	 * @param   array   $item       The row item, an object.
+	 * @param   boolean $soft       Optional. The image must be softened.
+	 * @return  string  The viewer content & image, ready to print.
+	 * @since   3.1.0
+	 */
+	protected function get_viewer( $item, $soft = false ) {
+		$id = md5( (string) $item['oid'] );
+		return '<div id="apcm-oviewer-' . $id . '" style="display:none;">' . $this->get_value( $item) . '</div>&nbsp;<a title="' . esc_html__( 'Object: ', 'apcu-manager' ) . $item['oid'] . '" href="#TB_inline?&width=600&height=800&inlineId=apcm-oviewer-' . $id . '" class="thickbox"><img title="' . esc_html__( 'Display current value', 'apcu-manager' ) . '" style="width:11px;vertical-align:baseline;" src="' . Icons::get_base64( 'eye', 'none', $soft ? '#C0C0FF' : '#3333AA' ) . '" /></a>';
+	}
+
+	/**
+	 * Get the action image.
+	 *
+	 * @param   string  $url        The url to call.
+	 * @param   string  $hint       The hint to display.
+	 * @param   string  $icon       The icon to display.
+	 * @param   boolean $soft       Optional. The image must be softened.
+	 * @return  string  The action image, ready to print.
+	 * @since   3.1.0
+	 */
+	protected function get_action( $url, $hint, $icon, $soft = false ) {
+		return '&nbsp;<a href="' . $url . '" target="_blank"><img title="' . esc_html( $hint ) . '" style="width:11px;vertical-align:baseline;" src="' . Icons::get_base64( $icon, 'none', $soft ? '#C0C0FF' : '#3333AA' ) . '" /></a>';
+	}
+
+	/**
+	 * Get the action image.
+	 *
+	 * @param   string  $column     The column where to display actions.
+	 * @param   array   $item       The row item, an object.
+	 * @return  string  The actions images, ready to print.
+	 * @since   3.1.0
+	 */
+	protected function get_actions( $column, $item ) {
+
+		/**
+		 * Filters the available actions for the current item and column.
+		 *
+		 * @See https://github.com/Pierre-Lannoy/wp-apcu-manager/blob/master/HOOKS.md
+		 * @since 3.1.0
+		 * @param   array   $item       The full object with metadata.
+		 */
+		$actions = apply_filters( 'apcm_objects_list_actions_for_' . $column, [], $item );
+
+		$result = '';
+		foreach ( $actions as $action ) {
+			if ( isset( $action['url'] ) ) {
+				$result .= $this->get_action( $action['url'], isset( $action['hint'] ) ? $action['hint'] : __( 'Unknown action', 'apcu-manager' ), isset( $action['icon'] ) ? $action['icon'] : '' );
+			}
+		}
+		return $result;
 	}
 
 	/**

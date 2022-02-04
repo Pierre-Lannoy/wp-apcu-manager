@@ -62,6 +62,3 @@ if ((!\defined('KINT_SKIP_FACADE') || !KINT_SKIP_FACADE) && !\class_exists('Kint
 if (!\defined('KINT_SKIP_HELPERS') || !KINT_SKIP_HELPERS) {
     require_once __DIR__.'/init_helpers.php';
 }
-
-//*********
-Kint::$return = true;
