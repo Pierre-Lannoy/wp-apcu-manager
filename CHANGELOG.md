@@ -7,11 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 - New objects viewer in APCu management tools.
+- There's now `apcm_objects_list_actions_for_object` and `apcm_objects_list_actions_for_ttl` filters to add custom actions to objects list view.
 
 ### Changed
 - Site Health page now presents a much more realistic test about object caching.
 
 ### Fixed
+- Some options may not be reset when clicking "Reset To Default" button.
 
 ### Removed
 
