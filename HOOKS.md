@@ -20,7 +20,7 @@ To add a "clock" icon near the TTL to perform something related to this TTL:
     function( $actions, $item ) {
       $actions[] = [
         'url'  => 'something to do with TTL',
-        'hint' => 'Get information about this IP',
+        'hint' => 'Do something with this TTL',
         'icon' => 'clock',
       ];
       return $actions;
