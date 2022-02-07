@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 - Site Health page now presents a much more realistic test about object caching.
+- Improves coexistence behaviour with other cache management plugins.
 
 ### Fixed
 - Objects at APCu root have no path in tool list view.
