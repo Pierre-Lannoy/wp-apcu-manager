@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Site Health page now presents a much more realistic test about object caching.
 
 ### Fixed
+- Objects at APCu root have no path in tool list view.
 - Some options may not be reset when clicking "Reset To Default" button.
 
 ### Removed

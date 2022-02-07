@@ -202,6 +202,9 @@ class APCu {
 								$oid = substr( $oid, 1 );
 							}
 						}
+						if ( '' === $item['path'] ) {
+							$item['path'] = '/';
+						}
 						$item['object'] = $oid;
 						if ( ! $self_only || ( $is_self && $self_only ) ) {
 							$result[] = $item;
