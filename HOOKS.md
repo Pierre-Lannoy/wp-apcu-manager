@@ -38,7 +38,7 @@ Each item passed to the filter as second parameter is an array containing detail
 * `memory` _integer_: the size of the object (in bytes);
 * `timestamp` _integer_: the unix timestamp at which the object was created;
 * `used` _integer_: the unix timestamp at which the object was last accessed;
-* `ttl` _integer_: the TTL of the cached object (in seconds);
+* `ttl` _integer_: the TTL of the cached object (in seconds) - note: "0" means no expiration;
 * `source` _string_: the source id, as detected by APCu Manager;
 * `path` _string_: the computed path;
 * `object` _string_: the "short" object name.
