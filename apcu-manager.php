@@ -114,7 +114,7 @@ function apcm_uninstall() {
 function apcm_run() {
 	apcm_check_earlyloading();
 	\DecaLog\Engine::initPlugin( APCM_SLUG, APCM_PRODUCT_NAME, APCM_VERSION, \APCuManager\Plugin\Core::get_base64_logo() );
-	if ( wp_using_ext_object_cache() && defined( 'APCU_BOOTSTRAPPED' ) && APCU_BOOTSTRAPPED ) {
+	if ( wp_using_ext_object_cache() && defined( 'APCM_BOOTSTRAPPED' ) && APCM_BOOTSTRAPPED ) {
 		if ( class_exists( '\WP_Object_Cache' ) ) {
 			if ( method_exists('\WP_Object_Cache', 'set_events_logger' ) ) {
 				\WP_Object_Cache::set_events_logger( \DecaLog\Engine::eventsLogger( APCM_SLUG ) );
