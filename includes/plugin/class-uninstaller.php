@@ -34,6 +34,7 @@ class Uninstaller {
 		User::delete_all_meta();
 		$schema = new Schema();
 		$schema->finalize();
+		wp_cache_flush();
 	}
 
 }

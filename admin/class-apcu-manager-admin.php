@@ -323,6 +323,7 @@ class Apcu_Manager_Admin {
 				Option::network_set( 'earlyloading', $new_earlyloading );
 				$ecode = 0;
 				if ( $old_earlyloading !== $new_earlyloading ) {
+					wp_cache_flush();
 					apcm_check_earlyloading();
 					if ( $new_earlyloading ) {
 						$emessage = esc_html__( 'APCu Manager is now the WordPress object cache handler.', 'apcu-manager' );

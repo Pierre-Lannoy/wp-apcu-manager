@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - There's now `apcm_objects_list_actions_for_object` and `apcm_objects_list_actions_for_ttl` filters to add custom actions to objects list view.
 
 ### Changed
+- Activating/deactivating object cache setting now forces APCu flush. 
+- Deactivating/uninstalling the plugin now forces APCu flush (thanks to [Renaud Pacouil](https://www.laboiteare.fr) for the idea).
 - Site Health page now presents a much more realistic test about object caching.
 - Improves coexistence behaviour with other cache management plugins.
 
