@@ -31,129 +31,70 @@ if ( ! defined( 'APCM_BOOTSTRAPPED' ) ) {
 }
 
 /**
- * Adds data to the cache, if the cache key does not already exist.
- *
- * @param int|string $key The cache key to use for retrieval later
- * @param mixed $data The data to add to the cache store
- * @param string $group The group to add the cache to
- * @param int $expire When the cache data should be expired
- *
- * @return bool False if cache key and group already exist, true on success
- */
-function wp_cache_add( $key, $data, $group = 'default', $expire = 0 ) {
-	return WP_Object_Cache::instance()->add( $key, $data, $group, $expire );
-}
-
-/**
- * Closes the cache.
- *
- * This function has ceased to do anything since WordPress 2.5. The
- * functionality was removed along with the rest of the persistent cache. This
- * does not mean that plugins can't implement this function when they need to
- * make sure that the cache is cleaned up after WordPress no longer needs it.
- *
- * @return bool Always returns True
- */
-function wp_cache_close() {
-	return true;
-}
-
-/**
- * Decrement numeric cache item's value
- *
- * @param int|string $key The cache key to increment
- * @param int $offset The amount by which to decrement the item's value. Default is 1.
- * @param string $group The group the key is in.
- *
- * @return false|int False on failure, the item's new value on success.
- */
-function wp_cache_decr( $key, $offset = 1, $group = 'default' ) {
-	return WP_Object_Cache::instance()->decr( $key, $offset, $group );
-}
-
-/**
- * Removes the cache contents matching key and group.
- *
- * @param int|string $key What the contents in the cache are called
- * @param string $group Where the cache contents are grouped
- *
- * @return bool True on successful removal, false on failure
- */
-function wp_cache_delete( $key, $group = 'default' ) {
-	return WP_Object_Cache::instance()->delete( $key, $group );
-}
-
-/**
- * Removes all cache items.
- *
- * @return bool False on failure, true on success
- */
-function wp_cache_flush() {
-	return WP_Object_Cache::instance()->flush();
-}
-
-/**
- * Retrieves the cache contents from the cache by key and group.
- *
- * @param int|string $key What the contents in the cache are called
- * @param string $group Where the cache contents are grouped
- * @param bool $force Does nothing with APCu object cache
- * @param bool       &$found Whether key was found in the cache. Disambiguates a return of false, a storable value.
- *
- * @return bool|mixed False on failure to retrieve contents or the cache contents on success
- */
-function wp_cache_get( $key, $group = 'default', $force = false, &$found = null ) {
-	return WP_Object_Cache::instance()->get( $key, $group, $force, $found );
-}
-
-/**
- * Retrieve multiple values from cache.
- *
- * Gets multiple values from cache, including across multiple groups
- *
- * Usage: array( 'group0' => array( 'key0', 'key1', 'key2', ), 'group1' => array( 'key0' ) )
- *
- * @param array $groups Array of groups and keys to retrieve
- *
- * @return array Array of cached values as
- *    array( 'group0' => array( 'key0' => 'value0', 'key1' => 'value1', 'key2' => 'value2', ) )
- *    Non-existent keys are not returned.
- */
-function wp_cache_get_multi( $groups ) {
-	return WP_Object_Cache::instance()->get_multi( $groups );
-}
-
-/**
- * Increment numeric cache item's value
- *
- * @param int|string $key The cache key to increment
- * @param int $offset The amount by which to increment the item's value. Default is 1.
- * @param string $group The group the key is in.
- *
- * @return false|int False on failure, the item's new value on success.
- */
-function wp_cache_incr( $key, $offset = 1, $group = 'default' ) {
-	return WP_Object_Cache::instance()->incr( $key, $offset, $group );
-}
-
-/**
  * Sets up Object Cache Global and assigns it.
  *
- * @global WP_Object_Cache $wp_object_cache WordPress Object Cache
+ * @since 3.0.0
+ *
+ * @global WP_Object_Cache $wp_object_cache
  */
 function wp_cache_init() {
 	$GLOBALS['wp_object_cache'] = WP_Object_Cache::instance();
 }
 
 /**
+ * Adds data to the cache, if the cache key doesn't already exist.
+ *
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::add()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int|string $key    The cache key to use for retrieval later.
+ * @param mixed      $data   The data to add to the cache.
+ * @param string     $group  Optional. The group to add the cache to. Enables the same key
+ *                           to be used across groups. Default empty.
+ * @param int        $expire Optional. When the cache data should expire, in seconds.
+ *                           Default 0 (no expiration).
+ * @return bool True on success, false if cache key and group already exist.
+ */
+function wp_cache_add( $key, $data, $group = 'default', $expire = 0 ) {
+	return WP_Object_Cache::instance()->add( $key, $data, $group, $expire );
+}
+
+/**
+ * Adds multiple values to the cache in one call.
+ *
+ * @since 3.1.0
+ *
+ * @see WP_Object_Cache::add_multiple()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param array  $data   Array of keys and values to be set.
+ * @param string $group  Optional. Where the cache contents are grouped. Default empty.
+ * @param int    $expire Optional. When to expire the cache contents, in seconds.
+ *                       Default 0 (no expiration).
+ * @return bool[] Array of return values, grouped by key. Each value is either
+ *                true on success, or false if cache key and group already exist.
+ */
+function wp_cache_add_multiple( $data, $group = 'default', $expire = 0 ) {
+	return WP_Object_Cache::instance()->add_multiple( $data, $group, $expire );
+}
+
+/**
  * Replaces the contents of the cache with new data.
  *
- * @param int|string $key What to call the contents in the cache
- * @param mixed $data The contents to store in the cache
- * @param string $group Where to group the cache contents
- * @param int $expire When to expire the cache contents
+ * @since 3.0.0
  *
- * @return bool False if not exists, true if contents were replaced
+ * @see WP_Object_Cache::replace()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int|string $key    The key for the cache data that should be replaced.
+ * @param mixed      $data   The new data to store in the cache.
+ * @param string     $group  Optional. The group for the cache data that should be replaced.
+ *                           Default empty.
+ * @param int        $expire Optional. When to expire the cache contents, in seconds.
+ *                           Default 0 (no expiration).
+ * @return bool True if contents were replaced, false if original value does not exist.
  */
 function wp_cache_replace( $key, $data, $group = 'default', $expire = 0 ) {
 	return WP_Object_Cache::instance()->replace( $key, $data, $group, $expire );
@@ -162,32 +103,192 @@ function wp_cache_replace( $key, $data, $group = 'default', $expire = 0 ) {
 /**
  * Saves the data to the cache.
  *
- * @param int|string $key What to call the contents in the cache
- * @param mixed $data The contents to store in the cache
- * @param string $group Where to group the cache contents
- * @param int $expire When to expire the cache contents
+ * Differs from wp_cache_add() and wp_cache_replace() in that it will always write data.
  *
- * @return bool False on failure, true on success
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::set()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int|string $key    The cache key to use for retrieval later.
+ * @param mixed      $data   The contents to store in the cache.
+ * @param string     $group  Optional. Where to group the cache contents. Enables the same key
+ *                           to be used across groups. Default empty.
+ * @param int        $expire Optional. When to expire the cache contents, in seconds.
+ *                           Default 0 (no expiration).
+ * @return bool True on success, false on failure.
  */
 function wp_cache_set( $key, $data, $group = 'default', $expire = 0 ) {
 	return WP_Object_Cache::instance()->set( $key, $data, $group, $expire );
 }
 
 /**
- * Switch the internal blog id.
+ * Sets multiple values to the cache in one call.
  *
- * This changes the blog id used to create keys in blog specific groups.
+ * @since 3.1.0
  *
- * @param int $blog_id Blog ID
+ * @see WP_Object_Cache::set_multiple()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param array  $data   Array of keys and values to be set.
+ * @param string $group  Optional. Where the cache contents are grouped. Default empty.
+ * @param int    $expire Optional. When to expire the cache contents, in seconds.
+ *                       Default 0 (no expiration).
+ * @return bool[] Array of return values, grouped by key. Each value is either
+ *                true on success, or false on failure.
  */
-function wp_cache_switch_to_blog( $blog_id ) {
-	WP_Object_Cache::instance()->switch_to_blog( $blog_id );
+function wp_cache_set_multiple( $data, $group = 'default', $expire = 0 ) {
+	return WP_Object_Cache::instance()->set_multiple( $data, $group, $expire );
+}
+
+/**
+ * Retrieves the cache contents from the cache by key and group.
+ *
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::get()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int|string $key   The key under which the cache contents are stored.
+ * @param string     $group Optional. Where the cache contents are grouped. Default empty.
+ * @param bool       $force Optional. Whether to force an update of the local cache
+ *                          from the persistent cache. Default false.
+ * @param bool       $found Optional. Whether the key was found in the cache (passed by reference).
+ *                          Disambiguates a return of false, a storable value. Default null.
+ * @return mixed|false The cache contents on success, false on failure to retrieve contents.
+ */
+function wp_cache_get( $key, $group = 'default', $force = false, &$found = null ) {
+	return WP_Object_Cache::instance()->get( $key, $group, $force, $found );
+}
+
+/**
+ * Retrieves multiple values from the cache in one call.
+ *
+ * @since 3.1.0
+ *
+ * @see WP_Object_Cache::get_multiple()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param array  $keys  Array of keys under which the cache contents are stored.
+ * @param string $group Optional. Where the cache contents are grouped. Default empty.
+ * @param bool   $force Optional. Whether to force an update of the local cache
+ *                      from the persistent cache. Default false.
+ * @return array Array of return values, grouped by key. Each value is either
+ *               the cache contents on success, or false on failure.
+ */
+function wp_cache_get_multiple( $keys, $group = 'default', $force = false ) {
+	return WP_Object_Cache::instance()->get_multiple( $keys, $group, $force );
+}
+
+/**
+ * Removes the cache contents matching key and group.
+ *
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::delete()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int|string $key   What the contents in the cache are called.
+ * @param string     $group Optional. Where the cache contents are grouped. Default empty.
+ * @return bool True on successful removal, false on failure.
+ */
+function wp_cache_delete( $key, $group = 'default' ) {
+	return WP_Object_Cache::instance()->delete( $key, $group );
+}
+
+/**
+ * Deletes multiple values from the cache in one call.
+ *
+ * @since 3.1.0
+ *
+ * @see WP_Object_Cache::delete_multiple()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param array  $keys  Array of keys under which the cache to deleted.
+ * @param string $group Optional. Where the cache contents are grouped. Default empty.
+ * @return bool[] Array of return values, grouped by key. Each value is either
+ *                true on success, or false if the contents were not deleted.
+ */
+function wp_cache_delete_multiple( $keys, $group = 'default' ) {
+	return WP_Object_Cache::instance()->delete_multiple( $keys, $group );
+}
+
+/**
+ * Increments numeric cache item's value.
+ *
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::incr()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int|string $key    The key for the cache contents that should be incremented.
+ * @param int        $offset Optional. The amount by which to increment the item's value.
+ *                           Default 1.
+ * @param string     $group  Optional. The group the key is in. Default empty.
+ * @return int|false The item's new value on success, false on failure.
+ */
+function wp_cache_incr( $key, $offset = 1, $group = 'default' ) {
+	return WP_Object_Cache::instance()->incr( $key, $offset, $group );
+}
+
+/**
+ * Decrements numeric cache item's value.
+ *
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::decr()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int|string $key    The cache key to decrement.
+ * @param int        $offset Optional. The amount by which to decrement the item's value.
+ *                           Default 1.
+ * @param string     $group  Optional. The group the key is in. Default empty.
+ * @return int|false The item's new value on success, false on failure.
+ */
+function wp_cache_decr( $key, $offset = 1, $group = 'default' ) {
+	return WP_Object_Cache::instance()->decr( $key, $offset, $group );
+}
+
+/**
+ * Removes all cache items.
+ *
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::flush()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @return bool True on success, false on failure.
+ */
+function wp_cache_flush() {
+	return WP_Object_Cache::instance()->flush();
+}
+
+/**
+ * Closes the cache.
+ *
+ * This function has ceased to do anything since WordPress 2.5. The
+ * functionality was removed along with the rest of the persistent cache.
+ *
+ * This does not mean that plugins can't implement this function when they need
+ * to make sure that the cache is cleaned up after WordPress no longer needs it.
+ *
+ * @since 3.0.0
+ *
+ * @return true Always returns true.
+ */
+function wp_cache_close() {
+	return true;
 }
 
 /**
  * Adds a group or set of groups to the list of global groups.
  *
- * @param string|array $groups A group or an array of groups to add
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::add_global_groups()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param string|string[] $groups A group or an array of groups to add.
  */
 function wp_cache_add_global_groups( $groups ) {
 	WP_Object_Cache::instance()->add_global_groups( $groups );
@@ -196,40 +297,49 @@ function wp_cache_add_global_groups( $groups ) {
 /**
  * Adds a group or set of groups to the list of non-persistent groups.
  *
- * @param string|array $groups A group or an array of groups to add
+ * @since 3.0.0
+ *
+ * @param string|string[] $groups A group or an array of groups to add.
  */
 function wp_cache_add_non_persistent_groups( $groups ) {
 	WP_Object_Cache::instance()->add_non_persistent_groups( $groups );
 }
 
 /**
- * Function was depreciated and now does nothing
+ * Switches the internal blog ID.
  *
- * @return bool Always returns false
+ * This changes the blog id used to create keys in blog specific groups.
+ *
+ * @since 3.0.0
+ *
+ * @see WP_Object_Cache::switch_to_blog()
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
+ *
+ * @param int $blog_id Site ID.
+ */
+function wp_cache_switch_to_blog( $blog_id ) {
+	WP_Object_Cache::instance()->switch_to_blog( $blog_id );
+}
+
+/**
+ * Resets internal cache keys and structures.
+ *
+ * If the cache back end uses global blog or site IDs as part of its cache keys,
+ * this function instructs the back end to reset those keys and perform any cleanup
+ * since blog or site IDs have changed since cache init.
+ *
+ * This function is deprecated. Use wp_cache_switch_to_blog() instead of this
+ * function when preparing the cache for a blog switch. For clearing the cache
+ * during unit tests, consider using wp_cache_init(). wp_cache_init() is not
+ * recommended outside of unit tests as the performance penalty for using it is high.
+ *
+ * @since 3.0.0
+ * @deprecated 3.5.0 Use wp_cache_switch_to_blog()
+ * @see WP_Object_Cache::reset()
+ *
+ * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  */
 function wp_cache_reset() {
 	_deprecated_function( __FUNCTION__, '3.5', 'wp_cache_switch_to_blog()' );
 	return false;
-}
-
-/**
- * Invalidate a site's object cache
- *
- * @param mixed $sites Sites ID's that want flushing.
- *
- * @return bool
- */
-function wp_cache_flush_site( $sites = null ) {
-	return WP_Object_Cache::instance()->flush_sites( $sites );
-}
-
-/**
- * Invalidate a groups object cache
- *
- * @param mixed $groups A group or an array of groups to invalidate
- *
- * @return bool
- */
-function wp_cache_flush_group( $groups = 'default' ) {
-	return WP_Object_Cache::instance()->flush_groups( $groups );
 }
