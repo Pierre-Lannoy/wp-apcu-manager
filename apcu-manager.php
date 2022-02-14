@@ -100,7 +100,6 @@ function apcm_reset_earlyloading() {
  * @since 1.0.0
  */
 function apcm_activate() {
-	apcm_reset_earlyloading();
 	APCuManager\Plugin\Activator::activate();
 }
 
@@ -120,7 +119,6 @@ function apcm_deactivate() {
  * @since 1.0.0
  */
 function apcm_uninstall() {
-	apcm_reset_earlyloading();
 	APCuManager\Plugin\Uninstaller::uninstall();
 }
 

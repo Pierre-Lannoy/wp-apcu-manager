@@ -30,6 +30,7 @@ class Activator {
 	public static function activate() {
 		$schema = new Schema();
 		$schema->initialize();
+		wp_cache_flush();
 	}
 
 }
