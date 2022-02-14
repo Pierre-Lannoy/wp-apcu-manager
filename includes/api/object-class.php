@@ -240,11 +240,7 @@ class WP_Object_Cache {
 				self::$events_logger->debug( self::$events_prefix . 'Metrics logger attached.' );
 			}
 		}
-		if ( Option::network_get( 'metrics' ) && isset( self::$metrics_logger ) && ! in_array( Environment::exec_mode(), [
-				1,
-				3,
-				4
-			], true ) ) {
+		if ( Option::network_get( 'metrics' ) && isset( self::$metrics_logger ) && ! in_array( Environment::exec_mode(), [ 1, 3, 4 ], true ) ) {
 			add_action( 'shutdown', [ self::instance(), 'compute_metrics' ], DECALOG_MAX_SHUTDOWN_PRIORITY - 1, 0 );
 			self::$metrics_logger->createProdGauge( 'object_cache_all_hit_ratio', 0, 'Object cache hit ratio per request, 5 min average - [percent]' );
 			self::$metrics_logger->createProdGauge( 'object_cache_all_success_ratio', 0, 'Object cache success ratio per request, 5 min average - [percent]' );
@@ -488,9 +484,9 @@ class WP_Object_Cache {
 	}
 
 	/**
-	 * gets the list of non persistent groups.
+	 * Gets the list of non persistent groups.
 	 *
-	 * @return  array   The list of groups to add.
+	 * @return  array   The list of groups to get.
 	 * @since   3.0.0
 	 */
 	public function get_non_persistent_groups() {
@@ -537,7 +533,6 @@ class WP_Object_Cache {
 		if ( isset( self::$events_logger ) ) {
 			self::$events_logger->info( self::$events_prefix . 'Full cache successfully flushed.' );
 		}
-
 		return true;
 	}
 
@@ -566,10 +561,8 @@ class WP_Object_Cache {
 			if ( isset( self::$events_logger ) ) {
 				self::$events_logger->info( self::$events_prefix . 'Sites cache successfully flushed.' );
 			}
-
 			return 0 !== $cpt;
 		}
-
 		return false;
 	}
 
@@ -606,7 +599,6 @@ class WP_Object_Cache {
 		if ( self::$debug ) {
 			self::$events_logger->debug( self::$events_prefix . sprintf( '%d keys removed in a flush operation.', $cpt ) );
 		}
-
 		return $cpt;
 	}
 
@@ -628,7 +620,6 @@ class WP_Object_Cache {
 				}
 			}
 		}
-
 		return $cpt;
 	}
 
@@ -662,7 +653,6 @@ class WP_Object_Cache {
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			return $this->add_non_persistent( $key, $var );
 		}
-
 		return $this->add_persistent( $key, $var, $ttl );
 	}
 
@@ -695,7 +685,6 @@ class WP_Object_Cache {
 				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully added.', $key ) );
 			}
 		}
-
 		return $result;
 	}
 
@@ -712,7 +701,6 @@ class WP_Object_Cache {
 		if ( $this->is_non_persistent_key( $key ) ) {
 			return false;
 		}
-
 		return $this->set_non_persistent( $key, $var );
 	}
 
@@ -731,7 +719,6 @@ class WP_Object_Cache {
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			return $this->decr_non_persistent( $key, $offset );
 		}
-
 		return $this->decr_persistent( $key, $offset );
 	}
 
@@ -748,7 +735,6 @@ class WP_Object_Cache {
 		$this->get_persistent( $key, $success );
 		if ( ! $success ) {
 			$this->metrics['dec']['fail'] += 1;
-
 			return false;
 		}
 		$chrono                       = microtime( true );
@@ -769,7 +755,6 @@ class WP_Object_Cache {
 				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully decremented.', $key ) );
 			}
 		}
-
 		return $result;
 	}
 
@@ -790,7 +775,6 @@ class WP_Object_Cache {
 		$var    = $this->get_non_persitent( $key );
 		$var    = is_numeric( $var ) ? $var : 0;
 		$var    -= $offset;
-
 		return $this->set_non_persistent( $key, $var );
 	}
 
@@ -809,7 +793,6 @@ class WP_Object_Cache {
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			return $this->incr_non_persistent( $key, $offset );
 		}
-
 		return $this->incr_persistent( $key, $offset );
 	}
 
@@ -826,7 +809,6 @@ class WP_Object_Cache {
 		$this->get_persistent( $key, $success );
 		if ( ! $success ) {
 			$this->metrics['inc']['fail'] += 1;
-
 			return false;
 		}
 		$chrono                       = microtime( true );
@@ -847,7 +829,6 @@ class WP_Object_Cache {
 				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully decremented.', $key ) );
 			}
 		}
-
 		return $result;
 	}
 
@@ -868,7 +849,6 @@ class WP_Object_Cache {
 		$var    = $this->get_non_persitent( $key );
 		$var    = is_numeric( $var ) ? $var : 0;
 		$var    += $offset;
-
 		return $this->set_non_persistent( $key, $var );
 	}
 
@@ -886,7 +866,6 @@ class WP_Object_Cache {
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			return $this->delete_non_persistent( $key );
 		}
-
 		return $this->delete_persistent( $key );
 	}
 
@@ -923,7 +902,6 @@ class WP_Object_Cache {
 				}
 			}
 		}
-
 		return $result;
 	}
 
@@ -938,10 +916,8 @@ class WP_Object_Cache {
 	private function delete_non_persistent( $key ) {
 		if ( array_key_exists( $key, $this->non_persistent_cache ) ) {
 			unset( $this->non_persistent_cache[ $key ] );
-
 			return true;
 		}
-
 		return false;
 	}
 
@@ -949,9 +925,9 @@ class WP_Object_Cache {
 	 * Retrieves the cache contents, if it exists.
 	 *
 	 * @param int|string $key What the contents in the cache are called.
-	 * @param string $group Optional. Where the cache contents are grouped.
-	 * @param bool $force Not used.
-	 * @param bool        &$success Optional. Return success - or not.
+	 * @param string     $group Optional. Where the cache contents are grouped.
+	 * @param bool       $force Not used.
+	 * @param bool       &$success Optional. Return success - or not.
 	 *
 	 * @return  bool|mixed  False on failure to retrieve contents or the cache contents on success.
 	 * @since   3.0.0
@@ -963,14 +939,13 @@ class WP_Object_Cache {
 		} else {
 			$var = $this->get_persistent( $key, $success );
 		}
-
 		return $var;
 	}
 
 	/**
 	 * Retrieves the APCu cache contents, if it exists.
 	 *
-	 * @param int|string $key What the contents in the cache are called.
+	 * @param int|string  $key What the contents in the cache are called.
 	 * @param bool        &$success Optional. Return success - or not.
 	 *
 	 * @return  bool|mixed  False on failure to retrieve contents or the cache contents on success.
@@ -1003,7 +978,6 @@ class WP_Object_Cache {
 		if ( is_object( $var ) ) {
 			$var = clone $var;
 		}
-
 		return $var;
 	}
 
@@ -1019,11 +993,9 @@ class WP_Object_Cache {
 	private function get_non_persitent( $key, &$success = null ) {
 		if ( array_key_exists( $key, $this->non_persistent_cache ) ) {
 			$success = true;
-
 			return $this->non_persistent_cache[ $key ];
 		}
 		$success = false;
-
 		return false;
 	}
 
@@ -1043,7 +1015,6 @@ class WP_Object_Cache {
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			return $this->replace_non_persistent( $key, $var );
 		}
-
 		return $this->replace_persistent( $key, $var, $ttl );
 	}
 
@@ -1097,7 +1068,6 @@ class WP_Object_Cache {
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			return $this->set_non_persistent( $key, $var );
 		}
-
 		return $this->set_persistent( $key, $var, $ttl );
 	}
 
@@ -1136,7 +1106,6 @@ class WP_Object_Cache {
 				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully %s.', $key, $op_name ) );
 			}
 		}
-
 		return $success;
 	}
 
@@ -1153,7 +1122,6 @@ class WP_Object_Cache {
 		if ( is_object( $var ) ) {
 			$var = clone $var;
 		}
-
 		return $this->non_persistent_cache[ $key ] = $var;
 	}
 
@@ -1211,7 +1179,7 @@ class WP_Object_Cache {
 	public function get_multiple( $keys, $group = 'default', $force = false ) {
 		$values = [];
 		foreach ( $keys as $key ) {
-			$values[ $key ] = $this->get( $key, $group );
+			$values[ $key ] = $this->get( $key, $group, $force );
 		}
 		return $values;
 	}

@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 - New objects viewer in APCu management tools.
 - There's now `apcm_objects_list_actions_for_object` and `apcm_objects_list_actions_for_ttl` filters to add custom actions to objects list view.
+- Support for future `wp_cache_*_multi()` functions that will be available in version 6.0 of WordPress.
 
 ### Changed
 - Activating/deactivating object cache setting now forces APCu flush. 
