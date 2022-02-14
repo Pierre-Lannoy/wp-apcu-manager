@@ -37,10 +37,8 @@ class Initializer {
 	public function initialize() {
 		\APCuManager\System\Sitehealth::init();
 		\APCuManager\System\APCu::init();
-		//if ( 'en_US' !== determine_locale() ) {
-			unload_textdomain( APCM_SLUG );
-			load_plugin_textdomain( APCM_SLUG );
-		//}
+		unload_textdomain( APCM_SLUG );
+		load_plugin_textdomain( APCM_SLUG );
 	}
 
 	/**
