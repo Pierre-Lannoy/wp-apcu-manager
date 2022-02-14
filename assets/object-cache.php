@@ -47,7 +47,6 @@ function wp_cache_init() {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::add()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int|string $key    The cache key to use for retrieval later.
  * @param mixed      $data   The data to add to the cache.
@@ -67,7 +66,6 @@ function wp_cache_add( $key, $data, $group = 'default', $expire = 0 ) {
  * @since 3.1.0
  *
  * @see WP_Object_Cache::add_multiple()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param array  $data   Array of keys and values to be set.
  * @param string $group  Optional. Where the cache contents are grouped. Default empty.
@@ -86,7 +84,6 @@ function wp_cache_add_multiple( $data, $group = 'default', $expire = 0 ) {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::replace()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int|string $key    The key for the cache data that should be replaced.
  * @param mixed      $data   The new data to store in the cache.
@@ -108,7 +105,6 @@ function wp_cache_replace( $key, $data, $group = 'default', $expire = 0 ) {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::set()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int|string $key    The cache key to use for retrieval later.
  * @param mixed      $data   The contents to store in the cache.
@@ -128,7 +124,6 @@ function wp_cache_set( $key, $data, $group = 'default', $expire = 0 ) {
  * @since 3.1.0
  *
  * @see WP_Object_Cache::set_multiple()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param array  $data   Array of keys and values to be set.
  * @param string $group  Optional. Where the cache contents are grouped. Default empty.
@@ -147,7 +142,6 @@ function wp_cache_set_multiple( $data, $group = 'default', $expire = 0 ) {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::get()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int|string $key   The key under which the cache contents are stored.
  * @param string     $group Optional. Where the cache contents are grouped. Default empty.
@@ -167,7 +161,6 @@ function wp_cache_get( $key, $group = 'default', $force = false, &$found = null 
  * @since 3.1.0
  *
  * @see WP_Object_Cache::get_multiple()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param array  $keys  Array of keys under which the cache contents are stored.
  * @param string $group Optional. Where the cache contents are grouped. Default empty.
@@ -186,7 +179,6 @@ function wp_cache_get_multiple( $keys, $group = 'default', $force = false ) {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::delete()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int|string $key   What the contents in the cache are called.
  * @param string     $group Optional. Where the cache contents are grouped. Default empty.
@@ -202,7 +194,6 @@ function wp_cache_delete( $key, $group = 'default' ) {
  * @since 3.1.0
  *
  * @see WP_Object_Cache::delete_multiple()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param array  $keys  Array of keys under which the cache to deleted.
  * @param string $group Optional. Where the cache contents are grouped. Default empty.
@@ -219,7 +210,6 @@ function wp_cache_delete_multiple( $keys, $group = 'default' ) {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::incr()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int|string $key    The key for the cache contents that should be incremented.
  * @param int        $offset Optional. The amount by which to increment the item's value.
@@ -237,7 +227,6 @@ function wp_cache_incr( $key, $offset = 1, $group = 'default' ) {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::decr()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int|string $key    The cache key to decrement.
  * @param int        $offset Optional. The amount by which to decrement the item's value.
@@ -255,7 +244,6 @@ function wp_cache_decr( $key, $offset = 1, $group = 'default' ) {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::flush()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @return bool True on success, false on failure.
  */
@@ -286,7 +274,6 @@ function wp_cache_close() {
  * @since 3.0.0
  *
  * @see WP_Object_Cache::add_global_groups()
- * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param string|string[] $groups A group or an array of groups to add.
  */
