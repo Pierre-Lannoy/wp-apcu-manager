@@ -80,11 +80,27 @@ function apcm_check_earlyloading() {
 }
 
 /**
+ * Removes the file responsible to early initialization in drop-ins dir.
+ *
+ * @since 3.1.0
+ */
+function apcm_reset_earlyloading() {
+	if ( defined( 'APCM_BOOTSTRAPPED' ) ) {
+		$target = WP_CONTENT_DIR . '/object-cache.php';
+		if ( file_exists( $target ) ) {
+			// phpcs:ignore
+			@unlink( $target );
+		}
+	}
+}
+
+/**
  * The code that runs during plugin activation.
  *
  * @since 1.0.0
  */
 function apcm_activate() {
+	apcm_reset_earlyloading();
 	APCuManager\Plugin\Activator::activate();
 }
 
@@ -94,6 +110,7 @@ function apcm_activate() {
  * @since 1.0.0
  */
 function apcm_deactivate() {
+	apcm_reset_earlyloading();
 	APCuManager\Plugin\Deactivator::deactivate();
 }
 
@@ -103,6 +120,7 @@ function apcm_deactivate() {
  * @since 1.0.0
  */
 function apcm_uninstall() {
+	apcm_reset_earlyloading();
 	APCuManager\Plugin\Uninstaller::uninstall();
 }
 

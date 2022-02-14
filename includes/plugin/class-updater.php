@@ -51,6 +51,8 @@ class Updater {
 			}
 			Nag::add( 'update', 'info', $message );
 		}
+		// Updates dropin function.
+		apcm_reset_earlyloading();
 	}
 
 	/**

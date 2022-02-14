@@ -1,6 +1,6 @@
 === APCu Manager ===
 Contributors: PierreLannoy
-Tags: analytics, APCu, cache, monitor, w3tc
+Tags: APCu, cache, monitor, object cache, w3tc
 Requires at least: 5.2
 Requires PHP: 7.2
 Tested up to: 5.9
