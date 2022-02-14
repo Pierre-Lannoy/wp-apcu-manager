@@ -419,7 +419,6 @@ class WP_Object_Cache {
 				$prefix = $forced_site . '_';
 			}
 		}
-
 		return 'wordpress' . $this->cache_prefix . $prefix . $group . '_' . $key;
 	}
 
@@ -437,7 +436,6 @@ class WP_Object_Cache {
 		} catch ( \Throwable $t ) {
 			$result = 0;
 		}
-
 		return $result;
 	}
 
