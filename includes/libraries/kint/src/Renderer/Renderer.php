@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer;
+namespace APCMKint\Renderer;
 
-use Kint\Zval\InstanceValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\InstanceValue;
+use APCMKint\Zval\Value;
 
 abstract class Renderer
 {
@@ -176,7 +176,7 @@ abstract class Renderer
 
                 return \call_user_func_array('array_merge', $containers);
             case self::SORT_FULL:
-                \usort($contents, ['Kint\\Renderer\\Renderer', 'sortPropertiesFull']);
+                \usort($contents, ['APCMKint\\Renderer\\Renderer', 'sortPropertiesFull']);
                 // no break
             default:
                 return $contents;

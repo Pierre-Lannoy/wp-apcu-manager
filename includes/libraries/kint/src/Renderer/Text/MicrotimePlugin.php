@@ -23,14 +23,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Text;
+namespace APCMKint\Renderer\Text;
 
-use Kint\Renderer\PlainRenderer;
-use Kint\Renderer\Rich\MicrotimePlugin as RichPlugin;
-use Kint\Renderer\TextRenderer;
-use Kint\Utils;
-use Kint\Zval\Representation\MicrotimeRepresentation;
-use Kint\Zval\Value;
+use APCMKint\Renderer\PlainRenderer;
+use APCMKint\Renderer\Rich\MicrotimePlugin as RichPlugin;
+use APCMKint\Renderer\TextRenderer;
+use APCMKint\Utils;
+use APCMKint\Zval\Representation\MicrotimeRepresentation;
+use APCMKint\Zval\Value;
 
 class MicrotimePlugin extends Plugin
 {

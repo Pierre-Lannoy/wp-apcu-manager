@@ -23,12 +23,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Utils;
-use Kint\Zval\TraceFrameValue;
-use Kint\Zval\TraceValue;
-use Kint\Zval\Value;
+use APCMKint\Utils;
+use APCMKint\Zval\TraceFrameValue;
+use APCMKint\Zval\TraceValue;
+use APCMKint\Zval\Value;
 
 class TracePlugin extends Plugin
 {

@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Value;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Value;
 
 class SerializePlugin extends Plugin
 {
@@ -67,7 +67,7 @@ class SerializePlugin extends Plugin
 
         if (!self::$safe_mode || !\in_array($trimmed[0], ['C', 'O', 'a'], true)) {
             // Second parameter only supported on PHP 7
-            if (KINT_PHP70) {
+            if (APCMKINT_PHP70) {
                 // Suppress warnings on unserializeable variable
                 $data = @\unserialize($trimmed, self::$options);
             } else {
@@ -85,7 +85,7 @@ class SerializePlugin extends Plugin
 
         if ($o->access_path) {
             $base_obj->access_path = 'unserialize('.$o->access_path;
-            if (!KINT_PHP70 || self::$options === [true]) {
+            if (!APCMKINT_PHP70 || self::$options === [true]) {
                 $base_obj->access_path .= ')';
             } elseif (self::$options === [false]) {
                 $base_obj->access_path .= ', false)';

@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Zval;
+namespace APCMKint\Zval;
 
-use Kint\Utils;
-use Kint\Zval\Representation\DocstringRepresentation;
+use APCMKint\Utils;
+use APCMKint\Zval\Representation\DocstringRepresentation;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
 
@@ -64,7 +64,7 @@ class MethodValue extends Value
             $this->parameters[] = new ParameterValue($param);
         }
 
-        if (KINT_PHP70) {
+        if (APCMKINT_PHP70) {
             $this->returntype = $method->getReturnType();
             if ($this->returntype) {
                 $this->returntype = Utils::getTypeString($this->returntype);

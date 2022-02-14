@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Kint;
-use Kint\Zval\Representation\DocstringRepresentation;
-use Kint\Zval\Representation\Representation;
+use APCMKint\Kint;
+use APCMKint\Zval\Representation\DocstringRepresentation;
+use APCMKint\Zval\Representation\Representation;
 
 class DocstringPlugin extends Plugin implements TabPluginInterface
 {

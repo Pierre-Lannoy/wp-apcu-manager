@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Zval\TraceFrameValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\TraceFrameValue;
+use APCMKint\Zval\Value;
 
 class TraceFramePlugin extends Plugin implements ValuePluginInterface
 {

@@ -23,8 +23,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-use Kint\Kint;
-use Kint\Renderer\CliRenderer;
+use APCMKint\Kint;
+use APCMKint\Renderer\CliRenderer;
 
 if (!\function_exists('d')) {
     /**

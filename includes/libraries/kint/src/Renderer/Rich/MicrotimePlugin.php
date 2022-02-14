@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Utils;
-use Kint\Zval\Representation\MicrotimeRepresentation;
-use Kint\Zval\Representation\Representation;
+use APCMKint\Utils;
+use APCMKint\Zval\Representation\MicrotimeRepresentation;
+use APCMKint\Zval\Representation\Representation;
 
 class MicrotimePlugin extends Plugin implements TabPluginInterface
 {
@@ -63,6 +63,6 @@ class MicrotimePlugin extends Plugin implements TabPluginInterface
 
     public static function renderJs()
     {
-        return \file_get_contents(KINT_DIR.'/resources/compiled/microtime.js');
+        return \file_get_contents(APCMKINT_DIR.'/resources/compiled/microtime.js');
     }
 }

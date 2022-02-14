@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
 use DateTime;
-use Kint\Zval\DateTimeValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\DateTimeValue;
+use APCMKint\Zval\Value;
 
 class DateTimePlugin extends Plugin
 {

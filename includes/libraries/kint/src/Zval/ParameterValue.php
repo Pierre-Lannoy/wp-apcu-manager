@@ -23,9 +23,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Zval;
+namespace APCMKint\Zval;
 
-use Kint\Utils;
+use APCMKint\Utils;
 use ReflectionException;
 use ReflectionParameter;
 
@@ -40,7 +40,7 @@ class ParameterValue extends Value
     {
         parent::__construct();
 
-        if (KINT_PHP70) {
+        if (APCMKINT_PHP70) {
             if ($type = $param->getType()) {
                 $this->type_hint = Utils::getTypeString($type);
             }

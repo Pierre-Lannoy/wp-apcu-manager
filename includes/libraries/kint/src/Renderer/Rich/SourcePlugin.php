@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Representation\SourceRepresentation;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Representation\SourceRepresentation;
 
 class SourcePlugin extends Plugin implements TabPluginInterface
 {

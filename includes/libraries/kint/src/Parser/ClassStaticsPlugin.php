@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\InstanceValue;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Value;
+use APCMKint\Zval\InstanceValue;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Value;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -93,7 +93,7 @@ class ClassStaticsPlugin extends Plugin
 
             $static->setAccessible(true);
 
-            if (KINT_PHP74 && !$static->isInitialized()) {
+            if (APCMKINT_PHP74 && !$static->isInitialized()) {
                 $prop->type = 'uninitialized';
                 $statics->contents[] = $prop;
             } else {
@@ -106,7 +106,7 @@ class ClassStaticsPlugin extends Plugin
             return;
         }
 
-        \usort($statics->contents, ['Kint\\Parser\\ClassStaticsPlugin', 'sort']);
+        \usort($statics->contents, ['APCMKint\\Parser\\ClassStaticsPlugin', 'sort']);
 
         $o->addRepresentation($statics);
     }

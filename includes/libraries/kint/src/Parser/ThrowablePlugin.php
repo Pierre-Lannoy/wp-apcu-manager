@@ -23,12 +23,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
 use Exception;
-use Kint\Zval\Representation\SourceRepresentation;
-use Kint\Zval\ThrowableValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\Representation\SourceRepresentation;
+use APCMKint\Zval\ThrowableValue;
+use APCMKint\Zval\Value;
 use Throwable;
 
 class ThrowablePlugin extends Plugin
@@ -45,7 +45,7 @@ class ThrowablePlugin extends Plugin
 
     public function parse(&$var, Value &$o, $trigger)
     {
-        if (!$var instanceof Exception && (!KINT_PHP70 || !$var instanceof Throwable)) {
+        if (!$var instanceof Exception && (!APCMKINT_PHP70 || !$var instanceof Throwable)) {
             return;
         }
 

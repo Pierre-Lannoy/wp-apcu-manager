@@ -23,12 +23,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\BlobValue;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\SimpleXMLElementValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\BlobValue;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\SimpleXMLElementValue;
+use APCMKint\Zval\Value;
 use SimpleXMLElement;
 
 class SimpleXMLElementPlugin extends Plugin

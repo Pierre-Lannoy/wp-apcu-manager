@@ -23,12 +23,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer;
+namespace APCMKint\Renderer;
 
-use Kint\Kint;
-use Kint\Utils;
-use Kint\Zval\InstanceValue;
-use Kint\Zval\Value;
+use APCMKint\Kint;
+use APCMKint\Utils;
+use APCMKint\Zval\InstanceValue;
+use APCMKint\Zval\Value;
 
 class TextRenderer extends Renderer
 {
@@ -36,12 +36,12 @@ class TextRenderer extends Renderer
      * TextRenderer plugins should be instances of Kint\Renderer\Text\Plugin.
      */
     public static $plugins = [
-        'array_limit' => 'Kint\\Renderer\\Text\\ArrayLimitPlugin',
-        'blacklist' => 'Kint\\Renderer\\Text\\BlacklistPlugin',
-        'depth_limit' => 'Kint\\Renderer\\Text\\DepthLimitPlugin',
-        'microtime' => 'Kint\\Renderer\\Text\\MicrotimePlugin',
-        'recursion' => 'Kint\\Renderer\\Text\\RecursionPlugin',
-        'trace' => 'Kint\\Renderer\\Text\\TracePlugin',
+        'array_limit' => 'APCMKint\\Renderer\\Text\\ArrayLimitPlugin',
+        'blacklist' => 'APCMKint\\Renderer\\Text\\BlacklistPlugin',
+        'depth_limit' => 'APCMKint\\Renderer\\Text\\DepthLimitPlugin',
+        'microtime' => 'APCMKint\\Renderer\\Text\\MicrotimePlugin',
+        'recursion' => 'APCMKint\\Renderer\\Text\\RecursionPlugin',
+        'trace' => 'APCMKint\\Renderer\\Text\\TracePlugin',
     ];
 
     /**
@@ -49,12 +49,12 @@ class TextRenderer extends Renderer
      * it will be removed for performance reasons.
      */
     public static $parser_plugin_whitelist = [
-        'Kint\\Parser\\ArrayLimitPlugin',
-        'Kint\\Parser\\ArrayObjectPlugin',
-        'Kint\\Parser\\BlacklistPlugin',
-        'Kint\\Parser\\MicrotimePlugin',
-        'Kint\\Parser\\StreamPlugin',
-        'Kint\\Parser\\TracePlugin',
+        'APCMKint\\Parser\\ArrayLimitPlugin',
+        'APCMKint\\Parser\\ArrayObjectPlugin',
+        'APCMKint\\Parser\\BlacklistPlugin',
+        'APCMKint\\Parser\\MicrotimePlugin',
+        'APCMKint\\Parser\\StreamPlugin',
+        'APCMKint\\Parser\\TracePlugin',
     ];
 
     /**

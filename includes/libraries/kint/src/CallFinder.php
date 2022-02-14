@@ -23,7 +23,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint;
+namespace APCMKint;
 
 class CallFinder
 {
@@ -155,15 +155,15 @@ class CallFinder
             T_NS_SEPARATOR => true,
         ];
 
-        if (KINT_PHP70) {
+        if (APCMKINT_PHP70) {
             self::$operator[T_SPACESHIP] = true;
         }
 
-        if (KINT_PHP74) {
+        if (APCMKINT_PHP74) {
             self::$operator[T_COALESCE_EQUAL] = true;
         }
 
-        if (KINT_PHP80) {
+        if (APCMKINT_PHP80) {
             $up[T_ATTRIBUTE] = true;
             self::$operator[T_MATCH] = true;
             self::$strip[T_NULLSAFE_OBJECT_OPERATOR] = true;
@@ -501,7 +501,7 @@ class CallFinder
                 $token = ' ';
                 $space = true;
             } else {
-                if (KINT_PHP80 && $last && T_ATTRIBUTE == $last[0]) {
+                if (APCMKINT_PHP80 && $last && T_ATTRIBUTE == $last[0]) {
                     $attribute = true;
                 }
 

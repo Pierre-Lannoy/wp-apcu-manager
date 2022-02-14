@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Renderer\RichRenderer;
-use Kint\Zval\Value;
+use APCMKint\Renderer\RichRenderer;
+use APCMKint\Zval\Value;
 
 abstract class Plugin implements PluginInterface
 {

@@ -23,14 +23,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint;
+namespace APCMKint;
 
 use InvalidArgumentException;
-use Kint\Parser\Parser;
-use Kint\Parser\Plugin;
-use Kint\Renderer\Renderer;
-use Kint\Renderer\TextRenderer;
-use Kint\Zval\Value;
+use APCMKint\Parser\Parser;
+use APCMKint\Parser\Plugin;
+use APCMKint\Renderer\Renderer;
+use APCMKint\Renderer\TextRenderer;
+use APCMKint\Zval\Value;
 
 class Kint
 {
@@ -125,44 +125,44 @@ class Kint
      * @var array Kint aliases. Add debug functions in Kint wrappers here to fix modifiers and backtraces
      */
     public static $aliases = [
-        ['Kint\\Kint', 'dump'],
-        ['Kint\\Kint', 'trace'],
-        ['Kint\\Kint', 'dumpArray'],
+        ['APCMKint\\Kint', 'dump'],
+        ['APCMKint\\Kint', 'trace'],
+        ['APCMKint\\Kint', 'dumpArray'],
     ];
 
     /**
      * @var array<mixed, string> Array of modes to renderer class names
      */
     public static $renderers = [
-        self::MODE_RICH => 'Kint\\Renderer\\RichRenderer',
-        self::MODE_PLAIN => 'Kint\\Renderer\\PlainRenderer',
-        self::MODE_TEXT => 'Kint\\Renderer\\TextRenderer',
-        self::MODE_CLI => 'Kint\\Renderer\\CliRenderer',
+        self::MODE_RICH => 'APCMKint\\Renderer\\RichRenderer',
+        self::MODE_PLAIN => 'APCMKint\\Renderer\\PlainRenderer',
+        self::MODE_TEXT => 'APCMKint\\Renderer\\TextRenderer',
+        self::MODE_CLI => 'APCMKint\\Renderer\\CliRenderer',
     ];
 
     public static $plugins = [
-        'Kint\\Parser\\ArrayLimitPlugin',
-        'Kint\\Parser\\ArrayObjectPlugin',
-        'Kint\\Parser\\Base64Plugin',
-        'Kint\\Parser\\BlacklistPlugin',
-        'Kint\\Parser\\ClassMethodsPlugin',
-        'Kint\\Parser\\ClassStaticsPlugin',
-        'Kint\\Parser\\ClosurePlugin',
-        'Kint\\Parser\\ColorPlugin',
-        'Kint\\Parser\\DateTimePlugin',
-        'Kint\\Parser\\FsPathPlugin',
-        'Kint\\Parser\\IteratorPlugin',
-        'Kint\\Parser\\JsonPlugin',
-        'Kint\\Parser\\MicrotimePlugin',
-        'Kint\\Parser\\SimpleXMLElementPlugin',
-        'Kint\\Parser\\SplFileInfoPlugin',
-        'Kint\\Parser\\SplObjectStoragePlugin',
-        'Kint\\Parser\\StreamPlugin',
-        'Kint\\Parser\\TablePlugin',
-        'Kint\\Parser\\ThrowablePlugin',
-        'Kint\\Parser\\TimestampPlugin',
-        'Kint\\Parser\\TracePlugin',
-        'Kint\\Parser\\XmlPlugin',
+        'APCMKint\\Parser\\ArrayLimitPlugin',
+        'APCMKint\\Parser\\ArrayObjectPlugin',
+        'APCMKint\\Parser\\Base64Plugin',
+        'APCMKint\\Parser\\BlacklistPlugin',
+        'APCMKint\\Parser\\ClassMethodsPlugin',
+        'APCMKint\\Parser\\ClassStaticsPlugin',
+        'APCMKint\\Parser\\ClosurePlugin',
+        'APCMKint\\Parser\\ColorPlugin',
+        'APCMKint\\Parser\\DateTimePlugin',
+        'APCMKint\\Parser\\FsPathPlugin',
+        'APCMKint\\Parser\\IteratorPlugin',
+        'APCMKint\\Parser\\JsonPlugin',
+        'APCMKint\\Parser\\MicrotimePlugin',
+        'APCMKint\\Parser\\SimpleXMLElementPlugin',
+        'APCMKint\\Parser\\SplFileInfoPlugin',
+        'APCMKint\\Parser\\SplObjectStoragePlugin',
+        'APCMKint\\Parser\\StreamPlugin',
+        'APCMKint\\Parser\\TablePlugin',
+        'APCMKint\\Parser\\ThrowablePlugin',
+        'APCMKint\\Parser\\TimestampPlugin',
+        'APCMKint\\Parser\\TracePlugin',
+        'APCMKint\\Parser\\XmlPlugin',
     ];
 
     protected static $plugin_pool = [];
@@ -527,7 +527,7 @@ class Kint
 
         $output = $kintstance->dumpAll(
             [$trimmed_trace],
-            [Value::blank('Kint\\Kint::trace()', 'debug_backtrace()')]
+            [Value::blank('APCMKint\\Kint::trace()', 'debug_backtrace()')]
         );
 
         if (static::$return || \in_array('@', $call_info['modifiers'], true)) {
@@ -637,7 +637,7 @@ class Kint
         }
 
         // fallback to find common path with Kint dir
-        $kint = \array_values(\array_filter(\explode('/', \str_replace('\\', '/', KINT_DIR)), 'strlen'));
+        $kint = \array_values(\array_filter(\explode('/', \str_replace('\\', '/', APCMKINT_DIR)), 'strlen'));
 
         foreach ($file as $i => $part) {
             if (!isset($kint[$i]) || $kint[$i] !== $part) {

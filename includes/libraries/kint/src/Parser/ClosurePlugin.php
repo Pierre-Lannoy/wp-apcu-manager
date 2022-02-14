@@ -23,13 +23,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
 use Closure;
-use Kint\Zval\ClosureValue;
-use Kint\Zval\ParameterValue;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Value;
+use APCMKint\Zval\ClosureValue;
+use APCMKint\Zval\ParameterValue;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Value;
 use ReflectionFunction;
 
 class ClosurePlugin extends Plugin

@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\BlobValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\BlobValue;
+use APCMKint\Zval\Value;
 
 class BinaryPlugin extends Plugin
 {

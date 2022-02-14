@@ -23,12 +23,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\InstanceValue;
-use Kint\Zval\MethodValue;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Value;
+use APCMKint\Zval\InstanceValue;
+use APCMKint\Zval\MethodValue;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Value;
 use ReflectionClass;
 
 class ClassMethodsPlugin extends Plugin
@@ -59,7 +59,7 @@ class ClassMethodsPlugin extends Plugin
                 $methods[] = new MethodValue($method);
             }
 
-            \usort($methods, ['Kint\\Parser\\ClassMethodsPlugin', 'sort']);
+            \usort($methods, ['APCMKint\\Parser\\ClassMethodsPlugin', 'sort']);
 
             self::$cache[$class] = $methods;
         }

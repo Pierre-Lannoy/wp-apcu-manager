@@ -23,9 +23,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\Value;
+use APCMKint\Zval\Value;
 use Mysqli;
 use ReflectionClass;
 use Throwable;
@@ -140,7 +140,7 @@ class MysqliPlugin extends Plugin
         }
 
         // PHP81 returns an empty array when casting a Mysqli instance
-        if (KINT_PHP81) {
+        if (APCMKINT_PHP81) {
             $r = new ReflectionClass(Mysqli::class);
 
             $basepropvalues = [];

@@ -71,7 +71,7 @@ class Libraries {
 		];
 		self::$psr4_libraries['kint']  = [
 			'name'    => 'Kint',
-			'prefix'  => 'Kint',
+			'prefix'  => 'APCMKint',
 			'base'    => APCM_VENDOR_DIR . 'kint/src/',
 			'version' => '4.1.1',
 			// phpcs:ignore

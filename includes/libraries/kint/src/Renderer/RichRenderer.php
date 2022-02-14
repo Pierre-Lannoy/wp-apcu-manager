@@ -23,14 +23,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer;
+namespace APCMKint\Renderer;
 
-use Kint\Kint;
-use Kint\Utils;
-use Kint\Zval\BlobValue;
-use Kint\Zval\InstanceValue;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Value;
+use APCMKint\Kint;
+use APCMKint\Utils;
+use APCMKint\Zval\BlobValue;
+use APCMKint\Zval\InstanceValue;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Value;
 
 class RichRenderer extends Renderer
 {
@@ -38,37 +38,37 @@ class RichRenderer extends Renderer
      * RichRenderer value plugins should implement Kint\Renderer\Rich\ValuePluginInterface.
      */
     public static $value_plugins = [
-        'array_limit' => 'Kint\\Renderer\\Rich\\ArrayLimitPlugin',
-        'blacklist' => 'Kint\\Renderer\\Rich\\BlacklistPlugin',
-        'callable' => 'Kint\\Renderer\\Rich\\CallablePlugin',
-        'closure' => 'Kint\\Renderer\\Rich\\ClosurePlugin',
-        'color' => 'Kint\\Renderer\\Rich\\ColorPlugin',
-        'depth_limit' => 'Kint\\Renderer\\Rich\\DepthLimitPlugin',
-        'recursion' => 'Kint\\Renderer\\Rich\\RecursionPlugin',
-        'simplexml_element' => 'Kint\\Renderer\\Rich\\SimpleXMLElementPlugin',
-        'trace_frame' => 'Kint\\Renderer\\Rich\\TraceFramePlugin',
+        'array_limit' => 'APCMKint\\Renderer\\Rich\\ArrayLimitPlugin',
+        'blacklist' => 'APCMKint\\Renderer\\Rich\\BlacklistPlugin',
+        'callable' => 'APCMKint\\Renderer\\Rich\\CallablePlugin',
+        'closure' => 'APCMKint\\Renderer\\Rich\\ClosurePlugin',
+        'color' => 'APCMKint\\Renderer\\Rich\\ColorPlugin',
+        'depth_limit' => 'APCMKint\\Renderer\\Rich\\DepthLimitPlugin',
+        'recursion' => 'APCMKint\\Renderer\\Rich\\RecursionPlugin',
+        'simplexml_element' => 'APCMKint\\Renderer\\Rich\\SimpleXMLElementPlugin',
+        'trace_frame' => 'APCMKint\\Renderer\\Rich\\TraceFramePlugin',
     ];
 
     /**
      * RichRenderer tab plugins should implement Kint\Renderer\Rich\TabPluginInterface.
      */
     public static $tab_plugins = [
-        'binary' => 'Kint\\Renderer\\Rich\\BinaryPlugin',
-        'color' => 'Kint\\Renderer\\Rich\\ColorPlugin',
-        'docstring' => 'Kint\\Renderer\\Rich\\DocstringPlugin',
-        'microtime' => 'Kint\\Renderer\\Rich\\MicrotimePlugin',
-        'source' => 'Kint\\Renderer\\Rich\\SourcePlugin',
-        'table' => 'Kint\\Renderer\\Rich\\TablePlugin',
-        'timestamp' => 'Kint\\Renderer\\Rich\\TimestampPlugin',
+        'binary' => 'APCMKint\\Renderer\\Rich\\BinaryPlugin',
+        'color' => 'APCMKint\\Renderer\\Rich\\ColorPlugin',
+        'docstring' => 'APCMKint\\Renderer\\Rich\\DocstringPlugin',
+        'microtime' => 'APCMKint\\Renderer\\Rich\\MicrotimePlugin',
+        'source' => 'APCMKint\\Renderer\\Rich\\SourcePlugin',
+        'table' => 'APCMKint\\Renderer\\Rich\\TablePlugin',
+        'timestamp' => 'APCMKint\\Renderer\\Rich\\TimestampPlugin',
     ];
 
     public static $pre_render_sources = [
         'script' => [
-            ['Kint\\Renderer\\RichRenderer', 'renderJs'],
-            ['Kint\\Renderer\\Rich\\MicrotimePlugin', 'renderJs'],
+            ['APCMKint\\Renderer\\RichRenderer', 'renderJs'],
+            ['APCMKint\\Renderer\\Rich\\MicrotimePlugin', 'renderJs'],
         ],
         'style' => [
-            ['Kint\\Renderer\\RichRenderer', 'renderCss'],
+            ['APCMKint\\Renderer\\RichRenderer', 'renderCss'],
         ],
         'raw' => [],
     ];
@@ -614,13 +614,13 @@ class RichRenderer extends Renderer
 
     protected static function renderJs()
     {
-        return \file_get_contents(KINT_DIR.'/resources/compiled/shared.js').\file_get_contents(KINT_DIR.'/resources/compiled/rich.js');
+        return \file_get_contents(APCMKINT_DIR.'/resources/compiled/shared.js').\file_get_contents(APCMKINT_DIR.'/resources/compiled/rich.js');
     }
 
     protected static function renderCss()
     {
-        if (\file_exists(KINT_DIR.'/resources/compiled/'.self::$theme)) {
-            return \file_get_contents(KINT_DIR.'/resources/compiled/'.self::$theme);
+        if (\file_exists(APCMKINT_DIR.'/resources/compiled/'.self::$theme)) {
+            return \file_get_contents(APCMKINT_DIR.'/resources/compiled/'.self::$theme);
         }
 
         return \file_get_contents(self::$theme);

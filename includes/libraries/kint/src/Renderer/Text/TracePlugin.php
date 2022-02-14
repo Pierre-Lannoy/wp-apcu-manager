@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Text;
+namespace APCMKint\Renderer\Text;
 
-use Kint\Zval\MethodValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\MethodValue;
+use APCMKint\Zval\Value;
 
 class TracePlugin extends Plugin
 {

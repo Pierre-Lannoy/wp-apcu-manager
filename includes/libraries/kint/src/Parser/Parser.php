@@ -23,15 +23,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
 use DomainException;
 use Exception;
-use Kint\Zval\BlobValue;
-use Kint\Zval\InstanceValue;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\ResourceValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\BlobValue;
+use APCMKint\Zval\InstanceValue;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\ResourceValue;
+use APCMKint\Zval\Value;
 use ReflectionObject;
 use stdClass;
 
@@ -434,7 +434,7 @@ class Parser
 
         $rep = new Representation('Properties');
 
-        if (KINT_PHP74) {
+        if (APCMKINT_PHP74) {
             $rprops = $reflector->getProperties();
 
             foreach ($rprops as $rprop) {
@@ -505,7 +505,7 @@ class Parser
                     $child->access = Value::ACCESS_PRIVATE;
                     $child->owner_class = $split_key[1];
                 }
-            } elseif (KINT_PHP72) {
+            } elseif (APCMKINT_PHP72) {
                 $child->name = (string) $key;
             } else {
                 $child->name = $key; // @codeCoverageIgnore
@@ -514,7 +514,7 @@ class Parser
             if ($this->childHasPath($object, $child)) {
                 $child->access_path = $object->access_path;
 
-                if (!KINT_PHP72 && \is_int($child->name)) {
+                if (!APCMKINT_PHP72 && \is_int($child->name)) {
                     $child->access_path = 'array_values((array) '.$child->access_path.')['.$i.']'; // @codeCoverageIgnore
                 } elseif (\preg_match('/^[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*$/', $child->name)) {
                     $child->access_path .= '->'.$child->name;

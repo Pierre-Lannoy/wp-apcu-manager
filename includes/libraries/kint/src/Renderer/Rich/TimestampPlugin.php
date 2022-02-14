@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
 use DateTime;
 use DateTimeZone;
-use Kint\Zval\Representation\Representation;
+use APCMKint\Zval\Representation\Representation;
 
 class TimestampPlugin extends Plugin implements TabPluginInterface
 {

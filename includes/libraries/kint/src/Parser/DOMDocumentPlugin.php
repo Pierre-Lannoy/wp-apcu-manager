@@ -23,15 +23,15 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
 use DOMNamedNodeMap;
 use DOMNode;
 use DOMNodeList;
-use Kint\Zval\BlobValue;
-use Kint\Zval\InstanceValue;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Value;
+use APCMKint\Zval\BlobValue;
+use APCMKint\Zval\InstanceValue;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Value;
 
 /**
  * The DOMDocument parser plugin is particularly useful as it is both the only

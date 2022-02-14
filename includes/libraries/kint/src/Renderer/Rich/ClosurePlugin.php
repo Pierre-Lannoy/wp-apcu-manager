@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Kint;
-use Kint\Zval\ClosureValue;
-use Kint\Zval\Value;
+use APCMKint\Kint;
+use APCMKint\Zval\ClosureValue;
+use APCMKint\Zval\Value;
 
 class ClosurePlugin extends Plugin implements ValuePluginInterface
 {

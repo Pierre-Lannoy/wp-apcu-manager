@@ -23,9 +23,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint;
+namespace APCMKint;
 
-use Kint\Zval\BlobValue;
+use APCMKint\Zval\BlobValue;
 use ReflectionNamedType;
 use ReflectionType;
 
@@ -96,12 +96,12 @@ final class Utils
     {
         $extras = [];
 
-        if (0 === \strpos(KINT_DIR, 'phar://')) {
+        if (0 === \strpos(APCMKINT_DIR, 'phar://')) {
             // Only run inside phar file, so skip for code coverage
             return $extras; // @codeCoverageIgnore
         }
 
-        $folder = KINT_DIR.'/vendor';
+        $folder = APCMKINT_DIR.'/vendor';
 
         for ($i = 0; $i < 4; ++$i) {
             $installed = $folder.'/composer/installed.json';
@@ -141,12 +141,12 @@ final class Utils
     {
         $extras = self::composerGetExtras();
 
-        if (!empty($extras['disable-facade']) && !\defined('KINT_SKIP_FACADE')) {
-            \define('KINT_SKIP_FACADE', true);
+        if (!empty($extras['disable-facade']) && !\defined('APCMKINT_SKIP_FACADE')) {
+            \define('APCMKINT_SKIP_FACADE', true);
         }
 
-        if (!empty($extras['disable-helpers']) && !\defined('KINT_SKIP_HELPERS')) {
-            \define('KINT_SKIP_HELPERS', true);
+        if (!empty($extras['disable-helpers']) && !\defined('APCMKINT_SKIP_HELPERS')) {
+            \define('APCMKINT_SKIP_HELPERS', true);
         }
     }
 

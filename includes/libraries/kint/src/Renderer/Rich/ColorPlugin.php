@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Zval\Representation\ColorRepresentation;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Value;
+use APCMKint\Zval\Representation\ColorRepresentation;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Value;
 
 class ColorPlugin extends Plugin implements TabPluginInterface, ValuePluginInterface
 {

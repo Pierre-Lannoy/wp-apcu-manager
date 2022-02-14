@@ -23,9 +23,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Rich;
+namespace APCMKint\Renderer\Rich;
 
-use Kint\Zval\Value;
+use APCMKint\Zval\Value;
 
 class RecursionPlugin extends Plugin implements ValuePluginInterface
 {

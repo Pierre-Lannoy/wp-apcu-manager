@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer;
+namespace APCMKint\Renderer;
 
 use Exception;
-use Kint\Zval\Value;
+use APCMKint\Zval\Value;
 use Throwable;
 
 class CliRenderer extends TextRenderer
@@ -78,8 +78,8 @@ class CliRenderer extends TextRenderer
     {
         parent::__construct();
 
-        if (!self::$force_utf8 && KINT_WIN) {
-            if (!KINT_PHP72) {
+        if (!self::$force_utf8 && APCMKINT_WIN) {
+            if (!APCMKINT_PHP72) {
                 $this->windows_output = true;
             } else {
                 $stream = self::$windows_stream;
@@ -97,7 +97,7 @@ class CliRenderer extends TextRenderer
         }
 
         if (!self::$terminal_width) {
-            if (!KINT_WIN && self::$detect_width) {
+            if (!APCMKINT_WIN && self::$detect_width) {
                 try {
                     self::$terminal_width = \exec('tput cols');
                 } catch (Exception $e) {

@@ -23,7 +23,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Zval;
+namespace APCMKint\Zval;
 
 use Exception;
 use InvalidArgumentException;
@@ -36,7 +36,7 @@ class ThrowableValue extends InstanceValue
 
     public function __construct($throw)
     {
-        if (!$throw instanceof Exception && (!KINT_PHP70 || !$throw instanceof Throwable)) {
+        if (!$throw instanceof Exception && (!APCMKINT_PHP70 || !$throw instanceof Throwable)) {
             throw new InvalidArgumentException('ThrowableValue must be constructed with a Throwable');
         }
 

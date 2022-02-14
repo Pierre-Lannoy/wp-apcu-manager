@@ -23,21 +23,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer;
+namespace APCMKint\Renderer;
 
-use Kint\Kint;
-use Kint\Zval\BlobValue;
-use Kint\Zval\Value;
+use APCMKint\Kint;
+use APCMKint\Zval\BlobValue;
+use APCMKint\Zval\Value;
 
 class PlainRenderer extends TextRenderer
 {
     public static $pre_render_sources = [
         'script' => [
-            ['Kint\\Renderer\\PlainRenderer', 'renderJs'],
-            ['Kint\\Renderer\\Text\\MicrotimePlugin', 'renderJs'],
+            ['APCMKint\\Renderer\\PlainRenderer', 'renderJs'],
+            ['APCMKint\\Renderer\\Text\\MicrotimePlugin', 'renderJs'],
         ],
         'style' => [
-            ['Kint\\Renderer\\PlainRenderer', 'renderCss'],
+            ['APCMKint\\Renderer\\PlainRenderer', 'renderCss'],
         ],
         'raw' => [],
     ];
@@ -223,13 +223,13 @@ class PlainRenderer extends TextRenderer
 
     protected static function renderJs()
     {
-        return \file_get_contents(KINT_DIR.'/resources/compiled/shared.js').\file_get_contents(KINT_DIR.'/resources/compiled/plain.js');
+        return \file_get_contents(APCMKINT_DIR.'/resources/compiled/shared.js').\file_get_contents(APCMKINT_DIR.'/resources/compiled/plain.js');
     }
 
     protected static function renderCss()
     {
-        if (\file_exists(KINT_DIR.'/resources/compiled/'.self::$theme)) {
-            return \file_get_contents(KINT_DIR.'/resources/compiled/'.self::$theme);
+        if (\file_exists(APCMKINT_DIR.'/resources/compiled/'.self::$theme)) {
+            return \file_get_contents(APCMKINT_DIR.'/resources/compiled/'.self::$theme);
         }
 
         return \file_get_contents(self::$theme);

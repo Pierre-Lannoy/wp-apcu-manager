@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Text;
+namespace APCMKint\Renderer\Text;
 
-use Kint\Renderer\TextRenderer;
-use Kint\Zval\Value;
+use APCMKint\Renderer\TextRenderer;
+use APCMKint\Zval\Value;
 
 abstract class Plugin
 {

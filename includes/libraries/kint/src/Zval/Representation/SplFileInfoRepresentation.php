@@ -23,9 +23,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Zval\Representation;
+namespace APCMKint\Zval\Representation;
 
-use Kint\Utils;
+use APCMKint\Utils;
 use SplFileInfo;
 
 class SplFileInfoRepresentation extends Representation

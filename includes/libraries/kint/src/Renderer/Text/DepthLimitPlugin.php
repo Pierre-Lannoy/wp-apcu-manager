@@ -23,9 +23,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Renderer\Text;
+namespace APCMKint\Renderer\Text;
 
-use Kint\Zval\Value;
+use APCMKint\Zval\Value;
 
 class DepthLimitPlugin extends Plugin
 {

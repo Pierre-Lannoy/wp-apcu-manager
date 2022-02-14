@@ -23,10 +23,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\Representation\MicrotimeRepresentation;
-use Kint\Zval\Value;
+use APCMKint\Zval\Representation\MicrotimeRepresentation;
+use APCMKint\Zval\Value;
 
 class MicrotimePlugin extends Plugin
 {

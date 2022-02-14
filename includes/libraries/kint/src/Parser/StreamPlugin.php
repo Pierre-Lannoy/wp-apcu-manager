@@ -23,12 +23,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace APCMKint\Parser;
 
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\ResourceValue;
-use Kint\Zval\StreamValue;
-use Kint\Zval\Value;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\ResourceValue;
+use APCMKint\Zval\StreamValue;
+use APCMKint\Zval\Value;
 
 class StreamPlugin extends Plugin
 {

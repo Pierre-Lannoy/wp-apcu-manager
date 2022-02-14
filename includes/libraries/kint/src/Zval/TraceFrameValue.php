@@ -23,11 +23,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Zval;
+namespace APCMKint\Zval;
 
 use InvalidArgumentException;
-use Kint\Zval\Representation\Representation;
-use Kint\Zval\Representation\SourceRepresentation;
+use APCMKint\Zval\Representation\Representation;
+use APCMKint\Zval\Representation\SourceRepresentation;
 use ReflectionFunction;
 use ReflectionMethod;
 
