@@ -48,23 +48,23 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	private $global_groups = [
-		'blog-details',
-		'blog-id-cache',
-		'blog-lookup',
-		'global-posts',
-		'networks',
-		'rss',
-		'sites',
-		'site-details',
+		//'blog-details',
+		//'blog-id-cache',
+		//'blog-lookup',
+		//'global-posts',
+		//'networks',
+		//'rss',
+		//'sites',
+		//'site-details',
 		'site-lookup',
-		'site-options',
-		'site-transient',
-		'users',
-		'useremail',
-		'userlogins',
-		'usermeta',
-		'user_meta',
-		'userslugs',
+		//'site-options',
+		//'site-transient',
+		//'users',
+		//'useremail',
+		//'userlogins',
+		//'usermeta',
+		//'user_meta',
+		//'userslugs',
 	];
 
 	/**
@@ -73,7 +73,12 @@ class WP_Object_Cache {
 	 * @var     array
 	 * @since   3.0.0
 	 */
-	private $non_persistent_groups = [];
+	private $non_persistent_groups = [
+		//'counts',
+		'options',
+		//'plugins',
+		//'themes',
+	];
 
 	/**
 	 * Non persistent cache.
@@ -188,9 +193,8 @@ class WP_Object_Cache {
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			self::$instance = new WP_Object_Cache();
+			self::$instance = new static();
 		}
-
 		return self::$instance;
 	}
 
@@ -311,9 +315,10 @@ class WP_Object_Cache {
 		}
 		$metrics = Cache::get_global( 'metrics/data' );
 		$new     = [];
+		$time    = time();
 		if ( isset( $metrics ) && is_array( $metrics ) ) {
 			foreach ( $metrics as $ts => $metric ) {
-				if ( 300 >= time() - (int) $ts ) {
+				if ( 300 >= $time - (int) $ts ) {
 					$new[ $ts ] = $metric;
 				}
 			}
@@ -896,7 +901,7 @@ class WP_Object_Cache {
 			if ( $single ) {
 				$this->metrics['delete']['fail'] += 1;
 				if ( isset( self::$events_logger ) && self::$debug ) {
-					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully deleted.', $key ) );
+					self::$events_logger->error( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully deleted.', $key ) );
 				}
 			}
 		}

@@ -13,8 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - Activating/deactivating object cache setting now forces APCu flush. 
 - Deactivating/uninstalling the plugin now forces APCu flush (thanks to [Renaud Pacouil](https://www.laboiteare.fr) for the idea).
+- Improved persistent / non-persistent groups handling.
+- Improved built-in internal cache speed.
 - Site Health page now presents a much more realistic test about object caching.
-- Improves coexistence behaviour with other cache management plugins.
+- Improved coexistence behaviour with other cache management plugins.
 - The drop-in file is now updated when plugin is updated.
 
 ### Fixed

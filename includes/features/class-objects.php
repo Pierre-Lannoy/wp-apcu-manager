@@ -18,7 +18,7 @@ use APCuManager\System\Date;
 use APCuManager\System\Timezone;
 use APCuManager\System\APCu;
 use Feather\Icons;
-use Kint\Kint;
+use APCMKint\Kint;
 use APCuManager\System\Option;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
