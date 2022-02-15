@@ -23,6 +23,7 @@ APCu statistics and management right in the WordPress admin dashboard.
 * drop-in replacement for WordPress object caching;
 * individual object deletion;
 * bulk object deletion;
+* objects browsing and inspecting;
 * smart garbage collection;
 * full cache clearing.
 
@@ -118,4 +119,5 @@ Please, see [full changelog](https://perfops.one/apcu-manager-changelog).
 
 1. Daily Statistics
 2. Management Tools
-3. Quick Action in Admin Bar
+3. Object Inspection
+4. Quick Action in Admin Bar

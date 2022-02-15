@@ -15,6 +15,7 @@ __APCu Manager__ works on dedicated or shared servers. It is compatible with all
 * drop-in replacement for WordPress object caching;
 * individual object deletion;
 * bulk object deletion;
+* objects browsing and inspecting;
 * smart garbage collection;
 * full cache clearing.
 
