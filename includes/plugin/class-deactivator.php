@@ -9,6 +9,8 @@
 
 namespace APCuManager\Plugin;
 
+use APCuManager\System\Option;
+
 /**
  * Fired during plugin deactivation.
  *
@@ -27,6 +29,7 @@ class Deactivator {
 	 * @since 1.0.0
 	 */
 	public static function deactivate() {
+		Option::network_set( 'earlyloading', false );
 		wp_cache_flush();
 	}
 
