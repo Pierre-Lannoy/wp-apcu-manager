@@ -56,7 +56,7 @@ class WP_Object_Cache {
 		//'rss',
 		//'sites',
 		//'site-details',
-		'site-lookup',
+		//'site-lookup',
 		//'site-options',
 		//'site-transient',
 		//'users',

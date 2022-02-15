@@ -329,7 +329,7 @@ class Apcu_Manager_Admin {
 						$emessage = esc_html__( 'APCu Manager is now the WordPress object cache handler.', 'apcu-manager' );
 						$ecode    = 1;
 						if ( defined ( 'APCM_BOOTSTRAP_ALREADY_EXISTS_REMOVED' ) && APCM_BOOTSTRAP_ALREADY_EXISTS_REMOVED ) {
-							$emessage = '<br/>' . esc_html__( 'The previous handler has been removed.', 'apcu-manager' );
+							$emessage .= '<br/>' . esc_html__( 'The previous handler has been removed.', 'apcu-manager' );
 						}
 						if ( defined ( 'APCM_BOOTSTRAP_COPY_ERROR' ) && APCM_BOOTSTRAP_COPY_ERROR ) {
 							$emessage = esc_html__( 'Unable to activate the APCu Manager handler.', 'apcu-manager' );

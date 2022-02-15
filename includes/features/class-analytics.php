@@ -1411,7 +1411,7 @@ class Analytics {
 			case 'key':
 				$icon  = Feather\Icons::get_base64( 'key', 'none', '#73879C' );
 				$title = esc_html_x( 'Keys Saturation', 'Noun - Ratio of the allocated keys to the total available keys slots.', 'apcu-manager' );
-				$help  = esc_html__( 'Ratio of the allocated keys to the total available keys slots.', 'apcu-manager' );
+				$help  = esc_html__( 'Ratio of the allocated keys to the available slots.', 'apcu-manager' );
 				break;
 			case 'fragmentation':
 				$icon  = Feather\Icons::get_base64( 'layers', 'none', '#73879C' );

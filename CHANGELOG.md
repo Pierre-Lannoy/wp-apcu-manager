@@ -3,12 +3,13 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] - Not Yet Released
+## [3.1.0] - 2022-02-16
 
 ### Added
 - New objects viewer in APCu management tools.
 - There's now `apcm_objects_list_actions_for_object` and `apcm_objects_list_actions_for_ttl` filters to add custom actions to objects list view.
 - Support for future `wp_cache_*_multi()` functions that will be available in version 6.0 of WordPress.
+- Built-in compatibility with unusual hosting environments and poorly coded plugins or themes (thanks to [Renaud Pacouil](https://www.laboiteare.fr) for suggestion & support).
 
 ### Changed
 - Activating/deactivating object cache setting now forces APCu flush. 
@@ -22,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 - Objects at APCu root have no path in tool list view.
 - Some options may not be reset when clicking "Reset To Default" button.
+- In some conditions, the message for updated settings is incomplete.
 
 ### Removed
 - APCu metrics collation from command-line as it was meaningless and can cause issues on some hostings.

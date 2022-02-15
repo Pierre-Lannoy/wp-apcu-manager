@@ -80,8 +80,9 @@ class Option {
 		self::$defaults['earlyloading']      = false;
 		self::$defaults['forceearlyloading'] = true;
 		self::$defaults['adminbar']          = true;
+		self::$defaults['compat']            = true;
 		self::$defaults['maxsize']           = 100;
-		self::$network                       = [ 'forceearlyloading', 'earlyloading', 'version', 'use_cdn', 'use_apcu',  'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
+		self::$network                       = [ 'forceearlyloading', 'earlyloading', 'compat', 'version', 'use_cdn', 'use_apcu',  'script_in_footer', 'display_nag', 'analytics', 'history', 'gc', 'metrics', 'adminbar' ];
 	}
 	/**
 	 * Get the options infos for Site Health "info" tab.
