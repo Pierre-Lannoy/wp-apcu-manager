@@ -3,6 +3,11 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1] - Not Yet Released
+
+### Changed
+- Improved deactivation process - with failsafe.
+
 ## [3.1.0] - 2022-02-15
 
 ### Added

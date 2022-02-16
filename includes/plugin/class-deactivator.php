@@ -31,6 +31,7 @@ class Deactivator {
 	public static function deactivate() {
 		Option::network_set( 'earlyloading', false );
 		wp_cache_flush();
+		apcm_reset_earlyloading();
 	}
 
 }
