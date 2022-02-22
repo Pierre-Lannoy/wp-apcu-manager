@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [3.1.1] - Not Yet Released
 
 ### Changed
+- In list view, the object's status is now displayed.
 - Improved deactivation process - with failsafe.
 
 ## [3.1.0] - 2022-02-15

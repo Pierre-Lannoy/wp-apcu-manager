@@ -117,6 +117,14 @@ class Objects extends \WP_List_Table {
 	private $bulk = [];
 
 	/**
+	 * The fetch time.
+	 *
+	 * @since    3.1.1
+	 * @var      integer    $time    The fetch time.
+	 */
+	private $time = 0;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -136,6 +144,7 @@ class Objects extends \WP_List_Table {
 		}
 		$this->process_args();
 		$this->process_action();
+		$this->time    = time();
 		$this->objects = APCu::get_all_objects();
 		$this->plugins = apply_filters( 'perfopsone_plugin_info', [] );
 	}
@@ -226,6 +235,22 @@ class Objects extends \WP_List_Table {
 	}
 
 	/**
+	 * "status" column formatter.
+	 *
+	 * @param   array $item   The current item.
+	 * @return  string  The cell formatted, ready to print.
+	 * @since    3.1.1
+	 */
+	protected function column_status( $item ) {
+		if ( 0 < $item['ttl'] && ( $item['timestamp'] + $item['ttl'] < $this->time ) ) {
+			$status = esc_html__( 'Expired', 'apcu-manager' );
+		} else {
+			$status = esc_html__( 'Live', 'apcu-manager' );
+		}
+		return $status;
+	}
+
+	/**
 	 * "object" column formatter.
 	 *
 	 * @param   array $item   The current item.
@@ -284,6 +309,7 @@ class Objects extends \WP_List_Table {
 			'cb'        => '<input type="checkbox" />',
 			'source'    => esc_html__( 'Container', 'apcu-manager' ),
 			'object'    => esc_html__( 'Object', 'apcu-manager' ),
+			'status'    => esc_html__( 'Status', 'apcu-manager' ),
 			'timestamp' => esc_html__( 'Timestamp', 'apcu-manager' ),
 			'ttl'       => esc_html__( 'TTL', 'apcu-manager' ),
 			'hit'       => esc_html__( 'Hits', 'apcu-manager' ),
@@ -313,6 +339,7 @@ class Objects extends \WP_List_Table {
 		$sortable_columns = [
 			'source'    => [ 'source', true ],
 			'object'    => [ 'object', false ],
+			'status'    => [ 'status', false ],
 			'hit'       => [ 'hit', false ],
 			'memory'    => [ 'memory', false ],
 			'timestamp' => [ 'timestamp', false ],
