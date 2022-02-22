@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - In list view, the object's status is now displayed.
 - Improved deactivation process - with failsafe.
+- Implementation of `force` flag to force a refetch rather than relying on the local cache.
+
+### Fixed
+- The garbage collector may (wrongly) skip some objects.
 
 ## [3.1.0] - 2022-02-15
 

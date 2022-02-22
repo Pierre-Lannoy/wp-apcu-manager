@@ -59,6 +59,7 @@ class GC {
 				$infos    = apcu_cache_info( false );
 				$cpt      = 0;
 				$prefixes = APCu::get_prefixes();
+				$time     = time();
 				if ( array_key_exists( 'cache_list', $infos ) ) {
 					foreach ( $infos['cache_list'] as $object ) {
 						$oid = $object['info'];
@@ -66,10 +67,10 @@ class GC {
 							$oid = substr( $oid, strlen( substr( $oid, 0, strpos( $oid, '_' ) ) ) );
 							foreach ( $prefixes as $prefix ) {
 								if ( 0 === strpos( $oid, $prefix ) && 0 !== (int) $object['ttl'] ) {
-									if ( time() > $object['mtime'] + $object['ttl'] ) {
+									if ( $time > $object['mtime'] + $object['ttl'] ) {
 										apcu_delete( $object['info'] );
 										$cpt++;
-										break 2;
+										break;
 									}
 								}
 							}
