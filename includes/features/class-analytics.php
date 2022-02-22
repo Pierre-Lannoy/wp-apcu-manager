@@ -819,7 +819,7 @@ class Analytics {
 			} else {
 				$result .= '  axisX: {showGrid: true,labelOffset: {x: -8,y: 0},scaleMinSpace: 100, type: Chartist.FixedScaleAxis, divisor:8, labelInterpolationFnc: function (value) {var shift=0;if(moment(value).isDST()){shift=3600000};return moment(value-shift).format("HH:00");}},';
 			}
-			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
+			$result .= '  axisY: {type: Chartist.AutoScaleAxis, labelInterpolationFnc: function (value) {return value.toString() + " %";}},';
 			$result .= ' };';
 			$result .= ' new Chartist.Line("#apcm-chart-string", string_data' . $uuid . ', string_option' . $uuid . ');';
 			$result .= '});';
