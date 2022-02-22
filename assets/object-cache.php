@@ -37,7 +37,10 @@ if ( file_exists( $handler_file ) ) {
 	 * @global WP_Object_Cache $wp_object_cache
 	 */
 	function wp_cache_init() {
-		$GLOBALS['wp_object_cache'] = WP_Object_Cache::instance();
+		global $wp_object_cache;
+		if ( ! ( $wp_object_cache instanceof WP_Object_Cache ) ) {
+			$wp_object_cache = WP_Object_Cache::instance();
+		}
 	}
 
 	/**
@@ -56,7 +59,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return bool True on success, false if cache key and group already exist.
 	 */
 	function wp_cache_add( $key, $data, $group = 'default', $expire = 0 ) {
-		return WP_Object_Cache::instance()->add( $key, $data, $group, $expire );
+		global $wp_object_cache;
+		return $wp_object_cache->add( $key, $data, $group, $expire );
 	}
 
 	/**
@@ -74,7 +78,8 @@ if ( file_exists( $handler_file ) ) {
 	 *                true on success, or false if cache key and group already exist.
 	 */
 	function wp_cache_add_multiple( $data, $group = 'default', $expire = 0 ) {
-		return WP_Object_Cache::instance()->add_multiple( $data, $group, $expire );
+		global $wp_object_cache;
+		return $wp_object_cache->add_multiple( $data, $group, $expire );
 	}
 
 	/**
@@ -93,7 +98,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return bool True if contents were replaced, false if original value does not exist.
 	 */
 	function wp_cache_replace( $key, $data, $group = 'default', $expire = 0 ) {
-		return WP_Object_Cache::instance()->replace( $key, $data, $group, $expire );
+		global $wp_object_cache;
+		return $wp_object_cache->replace( $key, $data, $group, $expire );
 	}
 
 	/**
@@ -114,7 +120,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return bool True on success, false on failure.
 	 */
 	function wp_cache_set( $key, $data, $group = 'default', $expire = 0 ) {
-		return WP_Object_Cache::instance()->set( $key, $data, $group, $expire );
+		global $wp_object_cache;
+		return $wp_object_cache->set( $key, $data, $group, $expire );
 	}
 
 	/**
@@ -132,7 +139,8 @@ if ( file_exists( $handler_file ) ) {
 	 *                true on success, or false on failure.
 	 */
 	function wp_cache_set_multiple( $data, $group = 'default', $expire = 0 ) {
-		return WP_Object_Cache::instance()->set_multiple( $data, $group, $expire );
+		global $wp_object_cache;
+		return $wp_object_cache->set_multiple( $data, $group, $expire );
 	}
 
 	/**
@@ -151,7 +159,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return mixed|false The cache contents on success, false on failure to retrieve contents.
 	 */
 	function wp_cache_get( $key, $group = 'default', $force = false, &$found = null ) {
-		return WP_Object_Cache::instance()->get( $key, $group, $force, $found );
+		global $wp_object_cache;
+		return $wp_object_cache->get( $key, $group, $force, $found );
 	}
 
 	/**
@@ -169,7 +178,8 @@ if ( file_exists( $handler_file ) ) {
 	 *               the cache contents on success, or false on failure.
 	 */
 	function wp_cache_get_multiple( $keys, $group = 'default', $force = false ) {
-		return WP_Object_Cache::instance()->get_multiple( $keys, $group, $force );
+		global $wp_object_cache;
+		return $wp_object_cache->get_multiple( $keys, $group, $force );
 	}
 
 	/**
@@ -184,7 +194,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return bool True on successful removal, false on failure.
 	 */
 	function wp_cache_delete( $key, $group = 'default' ) {
-		return WP_Object_Cache::instance()->delete( $key, $group );
+		global $wp_object_cache;
+		return $wp_object_cache->delete( $key, $group );
 	}
 
 	/**
@@ -200,7 +211,8 @@ if ( file_exists( $handler_file ) ) {
 	 *                true on success, or false if the contents were not deleted.
 	 */
 	function wp_cache_delete_multiple( $keys, $group = 'default' ) {
-		return WP_Object_Cache::instance()->delete_multiple( $keys, $group );
+		global $wp_object_cache;
+		return $wp_object_cache->delete_multiple( $keys, $group );
 	}
 
 	/**
@@ -217,7 +229,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return int|false The item's new value on success, false on failure.
 	 */
 	function wp_cache_incr( $key, $offset = 1, $group = 'default' ) {
-		return WP_Object_Cache::instance()->incr( $key, $offset, $group );
+		global $wp_object_cache;
+		return $wp_object_cache->incr( $key, $offset, $group );
 	}
 
 	/**
@@ -234,7 +247,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return int|false The item's new value on success, false on failure.
 	 */
 	function wp_cache_decr( $key, $offset = 1, $group = 'default' ) {
-		return WP_Object_Cache::instance()->decr( $key, $offset, $group );
+		global $wp_object_cache;
+		return $wp_object_cache->decr( $key, $offset, $group );
 	}
 
 	/**
@@ -247,7 +261,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @return bool True on success, false on failure.
 	 */
 	function wp_cache_flush() {
-		return WP_Object_Cache::instance()->flush();
+		global $wp_object_cache;
+		return $wp_object_cache->flush();
 	}
 
 	/**
@@ -277,7 +292,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @param string|string[] $groups A group or an array of groups to add.
 	 */
 	function wp_cache_add_global_groups( $groups ) {
-		WP_Object_Cache::instance()->add_global_groups( $groups );
+		global $wp_object_cache;
+		$wp_object_cache->add_global_groups( $groups );
 	}
 
 	/**
@@ -288,7 +304,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @param string|string[] $groups A group or an array of groups to add.
 	 */
 	function wp_cache_add_non_persistent_groups( $groups ) {
-		WP_Object_Cache::instance()->add_non_persistent_groups( $groups );
+		global $wp_object_cache;
+		$wp_object_cache->add_non_persistent_groups( $groups );
 	}
 
 	/**
@@ -304,7 +321,8 @@ if ( file_exists( $handler_file ) ) {
 	 * @param int $blog_id Site ID.
 	 */
 	function wp_cache_switch_to_blog( $blog_id ) {
-		WP_Object_Cache::instance()->switch_to_blog( $blog_id );
+		global $wp_object_cache;
+		$wp_object_cache->switch_to_blog( $blog_id );
 	}
 
 	/**
