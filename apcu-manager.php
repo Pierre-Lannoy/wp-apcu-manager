@@ -129,16 +129,17 @@ function apcm_uninstall() {
 function apcm_run() {
 	apcm_check_earlyloading();
 	\DecaLog\Engine::initPlugin( APCM_SLUG, APCM_PRODUCT_NAME, APCM_VERSION, \APCuManager\Plugin\Core::get_base64_logo() );
-	if ( wp_using_ext_object_cache() && defined( 'APCM_BOOTSTRAPPED' ) && APCM_BOOTSTRAPPED ) {
-		if ( class_exists( '\WP_Object_Cache' ) ) {
-			if ( method_exists('\WP_Object_Cache', 'set_events_logger' ) ) {
-				\WP_Object_Cache::set_events_logger( \DecaLog\Engine::eventsLogger( APCM_SLUG ) );
+	if ( wp_using_ext_object_cache() ) {
+		global $wp_object_cache;
+		if ( method_exists( $wp_object_cache, 'get_manager_id' ) && 'apcm' === $wp_object_cache::get_manager_id() ) {
+			if ( method_exists( $wp_object_cache, 'set_events_logger' ) ) {
+				$wp_object_cache::set_events_logger( \DecaLog\Engine::eventsLogger( APCM_SLUG ) );
 			}
-			if ( method_exists('\WP_Object_Cache', 'set_traces_logger' ) ) {
-				\WP_Object_Cache::set_traces_logger( \DecaLog\Engine::tracesLogger( APCM_SLUG ) );
+			if ( method_exists( $wp_object_cache, 'set_traces_logger' ) ) {
+				$wp_object_cache::set_traces_logger( \DecaLog\Engine::tracesLogger( APCM_SLUG ) );
 			}
-			if ( method_exists('\WP_Object_Cache', 'set_metrics_logger' ) ) {
-				\WP_Object_Cache::set_metrics_logger( \DecaLog\Engine::metricsLogger( APCM_SLUG ) );
+			if ( method_exists( $wp_object_cache, 'set_metrics_logger' ) ) {
+				$wp_object_cache::set_metrics_logger( \DecaLog\Engine::metricsLogger( APCM_SLUG ) );
 			}
 		}
 	}
