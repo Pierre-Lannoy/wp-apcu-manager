@@ -75,7 +75,7 @@ class WP_Object_Cache {
 	 */
 	private $non_persistent_groups = [
 		//'counts',
-		'options',
+		//'options',
 		//'plugins',
 		//'themes',
 	];
@@ -196,6 +196,15 @@ class WP_Object_Cache {
 			self::$instance = new static();
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * Get object manager id.
+	 *
+	 * @since   3.1.1
+	 */
+	public static function get_manager_id() {
+		return 'apcm';
 	}
 
 	/**
@@ -901,7 +910,7 @@ class WP_Object_Cache {
 			if ( $single ) {
 				$this->metrics['delete']['fail'] += 1;
 				if ( isset( self::$events_logger ) && self::$debug ) {
-					self::$events_logger->error( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully deleted.', $key ) );
+					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully deleted.', $key ) );
 				}
 			}
 		}
@@ -929,7 +938,8 @@ class WP_Object_Cache {
 	 *
 	 * @param int|string $key What the contents in the cache are called.
 	 * @param string     $group Optional. Where the cache contents are grouped.
-	 * @param bool       $force Not used.
+	 * @param bool       $force Optional. Whether to force an update of the local cache
+	 *                          from the persistent cache. Default false.
 	 * @param bool       &$success Optional. Return success - or not.
 	 *
 	 * @return  bool|mixed  False on failure to retrieve contents or the cache contents on success.
@@ -940,7 +950,7 @@ class WP_Object_Cache {
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			$var = $this->get_non_persitent( $key, $success );
 		} else {
-			$var = $this->get_persistent( $key, $success );
+			$var = $this->get_persistent( $key, $success, $force );
 		}
 		return $var;
 	}
@@ -950,12 +960,14 @@ class WP_Object_Cache {
 	 *
 	 * @param int|string  $key What the contents in the cache are called.
 	 * @param bool        &$success Optional. Return success - or not.
+	 * @param bool       $force Optional. Whether to force an update of the local cache
+	 *                          from the persistent cache. Default false.
 	 *
 	 * @return  bool|mixed  False on failure to retrieve contents or the cache contents on success.
 	 * @since   3.0.0
 	 */
-	private function get_persistent( $key, &$success = null ) {
-		if ( array_key_exists( $key, $this->local_cache ) ) {
+	private function get_persistent( $key, &$success = null, $force = false ) {
+		if ( ! $force && array_key_exists( $key, $this->local_cache ) ) {
 			$success = true;
 			$var     = $this->local_cache[ $key ];
 		} else {
@@ -1107,6 +1119,13 @@ class WP_Object_Cache {
 			$this->metrics[ $op ]['fail'] += 1;
 			if ( isset( self::$events_logger ) && self::$debug ) {
 				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully %s.', $key, $op_name ) );
+			}
+		}
+		if ( false !== strpos( $key, 'posts_19159' ) ) {
+			if ( $success ) {
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->warning( __FUNCTION__ . $replace ? ' (replace)' : ' (set)' );
+			} else {
+				\DecaLog\Engine::eventsLogger( APCM_SLUG )->alert( __FUNCTION__ . $replace ? ' (replace)' : ' (set)' );
 			}
 		}
 		return $success;
