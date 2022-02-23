@@ -13,7 +13,7 @@ use APCuManager\System\Nag;
 use APCuManager\System\Option;
 use Exception;
 use APCuManager\Plugin\Feature\Schema;
-
+use APCuManager\System\APCu;
 use APCuManager\System\Markdown;
 
 /**
@@ -50,9 +50,10 @@ class Updater {
 				$message .= ' ' . sprintf( __( 'See <a href="%s">what\'s new</a>.', 'apcu-manager' ), admin_url( 'admin.php?page=apcm-settings&tab=about' ) );
 			}
 			Nag::add( 'update', 'info', $message );
+			// Updates dropin function.
+			apcm_reset_earlyloading();
+			APCu::reset();
 		}
-		// Updates dropin function.
-		apcm_reset_earlyloading();
 	}
 
 	/**

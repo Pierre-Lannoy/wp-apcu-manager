@@ -10,6 +10,7 @@
 namespace APCuManager\Plugin;
 
 use APCuManager\Plugin\Feature\Schema;
+use APCuManager\System\APCu;
 
 /**
  * Fired during plugin activation.
@@ -30,7 +31,7 @@ class Activator {
 	public static function activate() {
 		$schema = new Schema();
 		$schema->initialize();
-		wp_cache_flush();
+		APCu::reset();
 	}
 
 }
