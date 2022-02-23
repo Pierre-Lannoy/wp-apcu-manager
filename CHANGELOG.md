@@ -3,15 +3,19 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1.1] - Not Yet Released
+## [3.1.1] - 2022-02-23
 
 ### Changed
+- Hugely improved loading speed.
+- Improved options hit ratio.
 - In list view, the object's status is now displayed.
+- The Y-axis and legend of the fragmentation graph are now more readable.
 - Improved deactivation process - with failsafe.
 - Implementation of `force` flag to force a refetch rather than relying on the local cache.
 
 ### Fixed
 - The garbage collector may (wrongly) skip some objects.
+- Ajax calls to save/update posts may not refetch the cache value in some conditions.
 
 ## [3.1.0] - 2022-02-15
 
