@@ -1121,13 +1121,6 @@ class WP_Object_Cache {
 				self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully %s.', $key, $op_name ) );
 			}
 		}
-		if ( false !== strpos( $key, 'posts_19159' ) ) {
-			if ( $success ) {
-				\DecaLog\Engine::eventsLogger( APCM_SLUG )->warning( __FUNCTION__ . $replace ? ' (replace)' : ' (set)' );
-			} else {
-				\DecaLog\Engine::eventsLogger( APCM_SLUG )->alert( __FUNCTION__ . $replace ? ' (replace)' : ' (set)' );
-			}
-		}
 		return $success;
 	}
 
