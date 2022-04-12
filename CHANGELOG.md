@@ -5,8 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [3.2.0] - Not Yet Released
 
+### Added
+- Compatibility with WordPress 6.0.
+
 ### Changed
 - Improved preloading compatibility.
+
+### Fixed
+- [SEC002] Moment.js library updated to 2.29.2 / [CVE-2022-24785](https://github.com/advisories/GHSA-8hfj-j24r-96c4).
 
 ## [3.1.1] - 2022-02-23
 
