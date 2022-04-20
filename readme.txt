@@ -3,8 +3,8 @@ Contributors: PierreLannoy
 Tags: APCu, cache, monitor, object cache, w3tc
 Requires at least: 5.2
 Requires PHP: 7.2
-Tested up to: 5.9
-Stable tag: 3.1.1
+Tested up to: 6.0
+Stable tag: 3.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -92,6 +92,8 @@ If you like this plugin or find it useful and want to thank me for the work done
 = What are the requirements for this plugin to work? =
 
 You need at least **WordPress 5.2** and **PHP 7.2**.
+
+You need APCu enabled on your server.
 
 = Can this plugin work on multisite? =
 
