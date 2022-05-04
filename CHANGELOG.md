@@ -3,6 +3,14 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - Not Yet Released
+
+### Added
+- Support for `wp_cache_flush_runtime()` function.
+
+### Fixed
+- Flushing APCu doesn't flush the internal cache at the same time.
+
 ## [3.2.0] - 2022-04-20
 
 ### Added

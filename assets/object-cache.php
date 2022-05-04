@@ -282,6 +282,20 @@ if ( file_exists( $handler_file ) ) {
 	}
 
 	/**
+	 * Removes all cache items.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @see WP_Object_Cache::flush()
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	function wp_cache_flush_runtime() {
+		global $wp_object_cache;
+		return $wp_object_cache instanceof WP_Object_Cache && $wp_object_cache->flush_runtime();
+	}
+
+	/**
 	 * Closes the cache.
 	 *
 	 * This function has ceased to do anything since WordPress 2.5. The

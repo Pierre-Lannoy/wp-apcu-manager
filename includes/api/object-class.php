@@ -545,6 +545,16 @@ class WP_Object_Cache {
 		if ( isset( self::$events_logger ) ) {
 			self::$events_logger->info( self::$events_prefix . 'Full cache successfully flushed.' );
 		}
+		return $this->flush_runtime();
+	}
+
+	/**
+	 * Clears the internal object cache of all data.
+	 *
+	 * @return bool Always returns true.
+	 */
+	public function flush_runtime() {
+		$this->local_cache = [];
 		return true;
 	}
 
