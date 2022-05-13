@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 - Support for `wp_cache_flush_runtime()` function.
 
+### Changed
+- Improved ephemeral cache in analytics.
+
 ### Fixed
 - Flushing APCu doesn't flush the internal cache at the same time.
 

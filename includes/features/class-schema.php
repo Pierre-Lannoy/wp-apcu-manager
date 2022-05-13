@@ -314,11 +314,9 @@ class Schema {
 	public static function get_std_kpi( $filter, $cache = true, $extra_field = '', $extras = [], $not = false ) {
 		// phpcs:ignore
 		$id = Cache::id( __FUNCTION__ . serialize( $filter ) . $extra_field . serialize( $extras ) . ( $not ? 'no' : 'yes') );
-		if ( $cache ) {
-			$result = Cache::get_global( $id );
-			if ( $result ) {
-				return $result;
-			}
+		$result = Cache::get_global( $id );
+		if ( $result ) {
+			return $result;
 		}
 		$where_extra = '';
 		if ( 0 < count( $extras ) && '' !== $extra_field ) {
@@ -329,9 +327,7 @@ class Schema {
 		// phpcs:ignore
 		$result = $wpdb->get_results( $sql, ARRAY_A );
 		if ( is_array( $result ) && 1 === count( $result ) ) {
-			if ( $cache ) {
-				Cache::set_global( $id, $result[0], 'infinite' );
-			}
+			Cache::set_global( $id, $result[0], $cache ? 'infinite' : 'ephemeral' );
 			return $result[0];
 		}
 		return [];
@@ -374,11 +370,9 @@ class Schema {
 	public static function get_list( $filter, $cache = true, $extra_field = '', $extras = [], $not = false, $order = '', $limit = 0 ) {
 		// phpcs:ignore
 		$id = Cache::id( __FUNCTION__ . serialize( $filter ) . $extra_field . serialize( $extras ) . ( $not ? 'no' : 'yes') . $order . (string) $limit);
-		if ( $cache ) {
-			$result = Cache::get_global( $id );
-			if ( $result ) {
-				return $result;
-			}
+		$result = Cache::get_global( $id );
+		if ( $result ) {
+			return $result;
 		}
 		$where_extra = '';
 		if ( 0 < count( $extras ) && '' !== $extra_field ) {
@@ -389,9 +383,7 @@ class Schema {
 		// phpcs:ignore
 		$result = $wpdb->get_results( $sql, ARRAY_A );
 		if ( is_array( $result ) && 0 < count( $result ) ) {
-			if ( $cache ) {
-				Cache::set_global( $id, $result, 'infinite' );
-			}
+			Cache::set_global( $id, $result, $cache ? 'infinite' : 'ephemeral' );
 			return $result;
 		}
 		return [];
@@ -415,11 +407,9 @@ class Schema {
 	public static function get_grouped_detail( $group, $count, $filter, $cache = true, $extra_field = '', $extras = [], $not = false, $order = '', $limit = 0 ) {
 		// phpcs:ignore
 		$id = Cache::id( __FUNCTION__ . $group . serialize( $count ) . serialize( $filter ) . $extra_field . serialize( $extras ) . ( $not ? 'no' : 'yes') . $order . (string) $limit);
-		if ( $cache ) {
-			$result = Cache::get_global( $id );
-			if ( $result ) {
-				return $result;
-			}
+		$result = Cache::get_global( $id );
+		if ( $result ) {
+			return $result;
 		}
 		$where_extra = '';
 		if ( 0 < count( $extras ) && '' !== $extra_field ) {
@@ -439,9 +429,7 @@ class Schema {
 		// phpcs:ignore
 		$result = $wpdb->get_results( $sql, ARRAY_A );
 		if ( is_array( $result ) && 0 < count( $result ) ) {
-			if ( $cache ) {
-				Cache::set_global( $id, $result, 'infinite' );
-			}
+			Cache::set_global( $id, $result, $cache ? 'infinite' : 'ephemeral' );
 			return $result;
 		}
 		return [];
