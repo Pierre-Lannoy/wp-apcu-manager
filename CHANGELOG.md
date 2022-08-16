@@ -6,12 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [3.3.0] - Not Yet Released
 
 ### Added
+- Compatibility with WordPress 6.1.
 - Support for `wp_cache_flush_runtime()` function.
 
 ### Changed
 - Improved ephemeral cache in analytics.
 
 ### Fixed
+- [SEC003] Moment.js library updated to 2.29.4 / [Regular Expression Denial of Service (ReDoS)](https://github.com/moment/moment/issues/6012).
 - Flushing APCu doesn't flush the internal cache at the same time.
 
 ## [3.2.0] - 2022-04-20
