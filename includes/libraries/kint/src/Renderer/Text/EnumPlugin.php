@@ -23,53 +23,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace APCMKint\Parser;
+namespace APCMKint\Renderer\Text;
 
 use APCMKint\Zval\Value;
 
-class TimestampPlugin extends Plugin
+class EnumPlugin extends Plugin
 {
-    public static $blacklist = [
-        2147483648,
-        2147483647,
-        1073741824,
-        1073741823,
-    ];
-
-    public function getTypes()
+    public function render(Value $o)
     {
-        return ['string', 'integer'];
-    }
+        $out = '';
 
-    public function getTriggers()
-    {
-        return Parser::TRIGGER_SUCCESS;
-    }
-
-    public function parse(&$var, Value &$o, $trigger)
-    {
-        if (\is_string($var) && !\ctype_digit($var)) {
-            return;
+        if (0 == $o->depth) {
+            $out .= $this->renderer->colorTitle($this->renderer->renderTitle($o)).PHP_EOL;
         }
 
-        if ($var < 0) {
-            return;
-        }
+        $out .= $this->renderer->renderHeader($o).PHP_EOL;
 
-        if (\in_array($var, self::$blacklist, true)) {
-            return;
-        }
-
-        $len = \strlen((string) $var);
-
-        // Guess for anything between March 1973 and November 2286
-        if (9 === $len || 10 === $len) {
-            // If it's an int or string that's this short it probably has no other meaning
-            // Additionally it's highly unlikely the shortValue will be clipped for length
-            // If you're writing a plugin that interferes with this, just put your
-            // parser plugin further down the list so that it gets loaded afterwards.
-            $o->value->label = 'Timestamp';
-            $o->value->hints[] = 'timestamp';
-        }
+        return $out;
     }
 }

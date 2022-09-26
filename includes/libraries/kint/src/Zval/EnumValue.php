@@ -23,53 +23,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace APCMKint\Parser;
+namespace APCMKint\Zval;
 
-use APCMKint\Zval\Value;
+use BackedEnum;
+use UnitEnum;
 
-class TimestampPlugin extends Plugin
+class EnumValue extends InstanceValue
 {
-    public static $blacklist = [
-        2147483648,
-        2147483647,
-        1073741824,
-        1073741823,
-    ];
+    public $enumval;
 
-    public function getTypes()
+    public $hints = ['object', 'enum'];
+
+    public function __construct(UnitEnum $enumval)
     {
-        return ['string', 'integer'];
+        $this->enumval = $enumval;
     }
 
-    public function getTriggers()
+    public function getValueShort()
     {
-        return Parser::TRIGGER_SUCCESS;
+        if ($this->enumval instanceof BackedEnum) {
+            if (\is_string($this->enumval->value)) {
+                return '"'.$this->enumval->value.'"';
+            }
+            if (\is_int($this->enumval->value)) {
+                return (string) $this->enumval->value;
+            }
+        }
     }
 
-    public function parse(&$var, Value &$o, $trigger)
+    public function getType()
     {
-        if (\is_string($var) && !\ctype_digit($var)) {
-            return;
-        }
+        return $this->classname.'::'.$this->enumval->name;
+    }
 
-        if ($var < 0) {
-            return;
-        }
-
-        if (\in_array($var, self::$blacklist, true)) {
-            return;
-        }
-
-        $len = \strlen((string) $var);
-
-        // Guess for anything between March 1973 and November 2286
-        if (9 === $len || 10 === $len) {
-            // If it's an int or string that's this short it probably has no other meaning
-            // Additionally it's highly unlikely the shortValue will be clipped for length
-            // If you're writing a plugin that interferes with this, just put your
-            // parser plugin further down the list so that it gets loaded afterwards.
-            $o->value->label = 'Timestamp';
-            $o->value->hints[] = 'timestamp';
-        }
+    public function getSize()
+    {
     }
 }

@@ -25,51 +25,62 @@
 
 namespace APCMKint\Parser;
 
+use BackedEnum;
+use APCMKint\Zval\EnumValue;
+use APCMKint\Zval\Representation\Representation;
 use APCMKint\Zval\Value;
+use UnitEnum;
 
-class TimestampPlugin extends Plugin
+class EnumPlugin extends Plugin
 {
-    public static $blacklist = [
-        2147483648,
-        2147483647,
-        1073741824,
-        1073741823,
-    ];
+    private static $cache = [];
 
     public function getTypes()
     {
-        return ['string', 'integer'];
+        return ['object'];
     }
 
     public function getTriggers()
     {
+        if (!APCMKINT_PHP81) {
+            return Parser::TRIGGER_NONE;
+        }
+
         return Parser::TRIGGER_SUCCESS;
     }
 
     public function parse(&$var, Value &$o, $trigger)
     {
-        if (\is_string($var) && !\ctype_digit($var)) {
+        if (!$var instanceof UnitEnum) {
             return;
         }
 
-        if ($var < 0) {
-            return;
+        $class = \get_class($var);
+
+        if (!isset(self::$cache[$class])) {
+            $cases = new Representation('Enum values', 'enum');
+            $cases->contents = [];
+
+            foreach ($var->cases() as $case) {
+                $base_obj = Value::blank($class.'::'.$case->name, '\\'.$class.'::'.$case->name);
+                $base_obj->depth = $o->depth + 1;
+
+                if ($var instanceof BackedEnum) {
+                    $c = $case->value;
+                    $cases->contents[] = $this->parser->parse($c, $base_obj);
+                } else {
+                    $cases->contents[] = $base_obj;
+                }
+            }
+
+            self::$cache[$class] = $cases;
         }
 
-        if (\in_array($var, self::$blacklist, true)) {
-            return;
-        }
+        $object = new EnumValue($var);
+        $object->transplant($o);
 
-        $len = \strlen((string) $var);
+        $object->addRepresentation(self::$cache[$class], 0);
 
-        // Guess for anything between March 1973 and November 2286
-        if (9 === $len || 10 === $len) {
-            // If it's an int or string that's this short it probably has no other meaning
-            // Additionally it's highly unlikely the shortValue will be clipped for length
-            // If you're writing a plugin that interferes with this, just put your
-            // parser plugin further down the list so that it gets loaded afterwards.
-            $o->value->label = 'Timestamp';
-            $o->value->hints[] = 'timestamp';
-        }
+        $o = $object;
     }
 }

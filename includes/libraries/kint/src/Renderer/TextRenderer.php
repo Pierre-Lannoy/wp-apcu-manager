@@ -42,6 +42,7 @@ class TextRenderer extends Renderer
         'microtime' => 'APCMKint\\Renderer\\Text\\MicrotimePlugin',
         'recursion' => 'APCMKint\\Renderer\\Text\\RecursionPlugin',
         'trace' => 'APCMKint\\Renderer\\Text\\TracePlugin',
+        'enum' => 'APCMKint\\Renderer\\Text\\EnumPlugin',
     ];
 
     /**
@@ -55,6 +56,7 @@ class TextRenderer extends Renderer
         'APCMKint\\Parser\\MicrotimePlugin',
         'APCMKint\\Parser\\StreamPlugin',
         'APCMKint\\Parser\\TracePlugin',
+        'APCMKint\\Parser\\EnumPlugin',
     ];
 
     /**

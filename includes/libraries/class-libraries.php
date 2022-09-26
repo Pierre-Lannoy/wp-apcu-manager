@@ -73,7 +73,7 @@ class Libraries {
 			'name'    => 'Kint',
 			'prefix'  => 'APCMKint',
 			'base'    => APCM_VENDOR_DIR . 'kint/src/',
-			'version' => '4.1.1',
+			'version' => '4.2.0',
 			// phpcs:ignore
 			'author'  => sprintf( esc_html__( '%s, %s & contributors', 'apcu-manager' ), 'Jonathan Vollebregt', 'Rokas Šleinius' ),
 			'url'     => 'https://kint-php.github.io/',
