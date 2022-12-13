@@ -45,7 +45,7 @@ class Apcu_Manager_Public {
 	 * @since 1.0.0
 	 */
 	public function enqueue_styles() {
-		$this->assets->register_style( APCM_ASSETS_ID, APCM_PUBLIC_URL, 'css/apcu-manager.min.css' );
+		//$this->assets->register_style( APCM_ASSETS_ID, APCM_PUBLIC_URL, 'css/apcu-manager.min.css' );
 	}
 
 	/**
@@ -54,7 +54,7 @@ class Apcu_Manager_Public {
 	 * @since 1.0.0
 	 */
 	public function enqueue_scripts() {
-		$this->assets->register_script( APCM_ASSETS_ID, APCM_PUBLIC_URL, 'js/apcu-manager.min.js', [ 'jquery' ] );
+		//$this->assets->register_script( APCM_ASSETS_ID, APCM_PUBLIC_URL, 'js/apcu-manager.min.js', [ 'jquery' ] );
 	}
 
 }
