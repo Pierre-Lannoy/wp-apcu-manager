@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 - Improved loading by removing unneeded jQuery references in public rendering (thanks to [Kishorchand](https://github.com/Kishorchandth)).
+- [WPCLI] Improved resilience to php configuration-related errors.
 
 ## [3.3.0] - 2022-10-06
 
