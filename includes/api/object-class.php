@@ -416,7 +416,7 @@ class WP_Object_Cache {
 	 *
 	 * @param int|string $key The key.
 	 * @param string $group The group.
-	 * @param integer $forced_site Optional. Forces te site.
+	 * @param integer $forced_site Optional. Forces the site.
 	 *
 	 * @return  string  The full cache key name.
 	 * @since   3.0.0
@@ -586,6 +586,23 @@ class WP_Object_Cache {
 			return 0 !== $cpt;
 		}
 		return false;
+	}
+
+	/**
+	 * Invalidate a group cache.
+	 *
+	 * @param string|array $group Group to flush.
+	 *
+	 * @return bool
+	 */
+	public function flush_group( $group ) {
+		$seeds = [ $this->full_item_name( '', $group ) ];
+		$this->partial_flush_non_persistent( $seeds );
+		$cpt = $this->partial_flush_persistent( $seeds );
+		if ( isset( self::$events_logger ) ) {
+			self::$events_logger->info( self::$events_prefix . 'Group cache successfully flushed.' );
+		}
+		return 0 !== $cpt;
 	}
 
 	/**

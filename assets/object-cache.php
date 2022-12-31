@@ -296,6 +296,21 @@ if ( file_exists( $handler_file ) ) {
 	}
 
 	/**
+	 * Removes all cache items in a group.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @see WP_Object_Cache::flush_group()
+	 *
+	 * @param string $group Name of group to remove from cache.
+	 * @return bool True on success, false on failure.
+	 */
+	function wp_cache_flush_group( $group ) {
+		global $wp_object_cache;
+		return $wp_object_cache instanceof WP_Object_Cache && $wp_object_cache->flush_group( $group );
+	}
+
+	/**
 	 * Closes the cache.
 	 *
 	 * This function has ceased to do anything since WordPress 2.5. The
