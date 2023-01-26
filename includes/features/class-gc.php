@@ -60,7 +60,7 @@ class GC {
 				$cpt      = 0;
 				$prefixes = APCu::get_prefixes();
 				$time     = time();
-				if ( array_key_exists( 'cache_list', $infos ) ) {
+				if ( is_array( $infos ) && array_key_exists( 'cache_list', $infos ) ) {
 					foreach ( $infos['cache_list'] as $object ) {
 						$oid = $object['info'];
 						if ( 1 < strpos( $oid, '_' ) ) {

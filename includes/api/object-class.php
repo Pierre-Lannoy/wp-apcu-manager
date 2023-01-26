@@ -617,7 +617,7 @@ class WP_Object_Cache {
 		if ( $this->apcu_available && function_exists( 'apcu_cache_info' ) ) {
 			$chrono = microtime( true );
 			$infos  = apcu_cache_info( false );
-			if ( array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
+			if ( is_array( $infos ) && array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
 				foreach ( $infos['cache_list'] as $object ) {
 					$oid = $object['info'];
 					foreach ( $seeds as $prefix ) {

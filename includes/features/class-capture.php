@@ -69,7 +69,7 @@ class Capture {
 		$prefixes = APCu::get_prefixes();
 		if ( function_exists( 'apcu_cache_info' ) ) {
 			$infos  = apcu_cache_info( false );
-			if ( array_key_exists( 'cache_list', $infos ) ) {
+			if ( is_array( $infos ) && array_key_exists( 'cache_list', $infos ) ) {
 				foreach ( $infos['cache_list'] as $item ) {
 					$name = '-';
 					foreach ( $ids as $k => $id ) {
@@ -115,7 +115,7 @@ class Capture {
 					$memory  = apcu_sma_info( false );
 					$value   = apcu_cache_info( true );
 					$metrics = [];
-					if ( array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) && array_key_exists( 'mem_size', $memory ) ) {
+					if ( is_array( $memory ) && array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) && array_key_exists( 'mem_size', $memory ) ) {
 						$mem_total = (int) ( $memory['num_seg'] * $memory['seg_size'] );
 						$mem_used  = (int) $memory['mem_size'];
 						if ( 0 < $mem_total ) {
@@ -124,7 +124,7 @@ class Capture {
 							$metrics['mem'] = 0.0;
 						}
 					}
-					if ( array_key_exists( 'num_slots', $value ) && array_key_exists( 'num_entries', $value ) ) {
+					if ( is_array( $value ) && array_key_exists( 'num_slots', $value ) && array_key_exists( 'num_entries', $value ) ) {
 						$total = (int) $value['num_slots'];
 						$used  = (int) $value['num_entries'];
 						if ( 0 < $total ) {
@@ -133,7 +133,7 @@ class Capture {
 							$metrics['slot'] = 0.0;
 						}
 					}
-					if ( array_key_exists( 'num_hits', $value ) && array_key_exists( 'num_misses', $value ) && array_key_exists( 'num_inserts', $value ) ) {
+					if ( is_array( $value ) && array_key_exists( 'num_hits', $value ) && array_key_exists( 'num_misses', $value ) && array_key_exists( 'num_inserts', $value ) ) {
 						$hit  = (int) $value['num_hits'];
 						$miss = (int) $value['num_misses'];
 						$ins  = (int) $value['num_inserts'];
@@ -148,7 +148,7 @@ class Capture {
 							$metrics['ins_ratio'] = 0.0;
 						}
 					}
-					if ( array_key_exists( 'block_lists', $memory ) && is_array( $memory['block_lists'] ) ) {
+					if ( is_array( $memory ) && array_key_exists( 'block_lists', $memory ) && is_array( $memory['block_lists'] ) ) {
 						$frag_small = 0;
 						$frag_big   = 0;
 						foreach ( $memory['block_lists'] as $chunk ) {
@@ -230,28 +230,28 @@ class Capture {
 					$value['timestamp'] = $time;
 					$record['status']   = 'enabled';
 					$record['delta']    = $time - $old['timestamp'];
-					if ( array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) ) {
+					if ( is_array( $memory ) && array_key_exists( 'num_seg', $memory ) && array_key_exists( 'seg_size', $memory ) ) {
 						$record['mem_total'] = (int) ( $memory['num_seg'] * $memory['seg_size'] );
 					}
-					if ( array_key_exists( 'mem_size', $value['raw'] ) ) {
+					if ( is_array( $value ) && array_key_exists( 'mem_size', $value['raw'] ) ) {
 						$record['mem_used'] = (int) ( $value['raw']['mem_size'] );
 					}
-					if ( array_key_exists( 'num_slots', $value['raw'] ) ) {
+					if ( is_array( $value ) && array_key_exists( 'num_slots', $value['raw'] ) ) {
 						$record['slot_total'] = (int) $value['raw']['num_slots'];
 					}
-					if ( array_key_exists( 'num_entries', $value['raw'] ) ) {
+					if ( is_array( $value ) && array_key_exists( 'num_entries', $value['raw'] ) ) {
 						$record['slot_used'] = (int) $value['raw']['num_entries'];
 					}
-					if ( array_key_exists( 'num_hits', $value['raw'] ) && array_key_exists( 'num_hits', $old['raw'] ) ) {
+					if ( is_array( $value ) && array_key_exists( 'num_hits', $value['raw'] ) && array_key_exists( 'num_hits', $old['raw'] ) ) {
 						$record['hit'] = (int) $value['raw']['num_hits'] - (int) $old['raw']['num_hits'];
 					}
-					if ( array_key_exists( 'num_misses', $value['raw'] ) && array_key_exists( 'num_misses', $old['raw'] ) ) {
+					if ( is_array( $value ) && array_key_exists( 'num_misses', $value['raw'] ) && array_key_exists( 'num_misses', $old['raw'] ) ) {
 						$record['miss'] = (int) $value['raw']['num_misses'] - (int) $old['raw']['num_misses'];
 					}
-					if ( array_key_exists( 'num_inserts', $value['raw'] ) && array_key_exists( 'num_inserts', $old['raw'] ) ) {
+					if ( is_array( $value ) && array_key_exists( 'num_inserts', $value['raw'] ) && array_key_exists( 'num_inserts', $old['raw'] ) ) {
 						$record['ins'] = (int) $value['raw']['num_inserts'] - (int) $old['raw']['num_inserts'];
 					}
-					if ( array_key_exists( 'block_lists', $memory ) && is_array( $memory['block_lists'] ) ) {
+					if ( is_array( $memory ) && array_key_exists( 'block_lists', $memory ) && is_array( $memory['block_lists'] ) ) {
 						foreach ( $memory['block_lists'] as $chunk ) {
 							if ( is_array( $chunk ) ) {
 								foreach ( $chunk as $block ) {

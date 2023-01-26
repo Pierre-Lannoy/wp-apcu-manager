@@ -372,7 +372,7 @@ class Cache {
 			if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_delete' ) ) {
 				try {
 					$infos = apcu_cache_info( false );
-					if ( array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
+					if ( is_array( $infos ) && array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
 						foreach ( $infos['cache_list'] as $script ) {
 							if ( 0 === strpos( $script['info'], self::$pool_name . self::$apcu_pool_prefix ) ) {
 								apcu_delete( $script['info'] );
@@ -526,21 +526,25 @@ class Cache {
 			}
 			if ( function_exists( 'apcu_sma_info' ) && function_exists( 'apcu_cache_info' ) ) {
 				$raw = apcu_sma_info();
-				foreach ( $raw as $key => $status ) {
-					if ( ! is_array( $status ) ) {
-						$result[ 'status_' . $key ] = [
-							'label' => '[Status] ' . $key,
-							'value' => $status,
-						];
+				if ( is_array( $raw ) ) {
+					foreach ( $raw as $key => $status ) {
+						if ( ! is_array( $status ) ) {
+							$result[ 'status_' . $key ] = [
+								'label' => '[Status] ' . $key,
+								'value' => $status,
+							];
+						}
 					}
 				}
 				$raw = apcu_cache_info();
-				foreach ( $raw as $key => $status ) {
-					if ( ! is_array( $status ) ) {
-						$result[ 'status_' . $key ] = [
-							'label' => '[Status] ' . $key,
-							'value' => $status,
-						];
+				if ( is_array( $raw ) ) {
+					foreach ( $raw as $key => $status ) {
+						if ( ! is_array( $status ) ) {
+							$result[ 'status_' . $key ] = [
+								'label' => '[Status] ' . $key,
+								'value' => $status,
+							];
+						}
 					}
 				}
 			}
