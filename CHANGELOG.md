@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Better handling of hoster-specific configurations.
 
 ### Fixed
-- The plugin doesn't fully support APCu version greater than 5.1.21 (many thanks to [vgostore](https://github.com/vgostore) for helping me with this). 
+- The plugin doesn't fully support APCu version greater than 5.1.21 (many thanks to [vgostore](https://github.com/vgostore) for helping me to debunk this). 
 
 ## [3.4.0] - 2022-12-31
 
