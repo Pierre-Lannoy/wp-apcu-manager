@@ -168,7 +168,7 @@ class APCu {
 						$item['oid']       = $oid;
 						$item['hit']       = $object['num_hits'];
 						$item['memory']    = $object['mem_size'];
-						$item['timestamp'] = $object['mtime'];
+						$item['timestamp'] = apcm_unix_ts($object['mtime'] );
 						$item['used']      = $object['access_time'];
 						$item['ttl']       = $object['ttl'];
 						$is_self           = false;

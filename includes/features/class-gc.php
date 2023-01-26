@@ -67,7 +67,7 @@ class GC {
 							$oid = substr( $oid, strlen( substr( $oid, 0, strpos( $oid, '_' ) ) ) );
 							foreach ( $prefixes as $prefix ) {
 								if ( 0 === strpos( $oid, $prefix ) && 0 !== (int) $object['ttl'] ) {
-									if ( $time > $object['mtime'] + $object['ttl'] ) {
+									if ( $time > apcm_unix_ts( $object['mtime'] ) + $object['ttl'] ) {
 										apcu_delete( $object['info'] );
 										$cpt++;
 										break;
