@@ -14,6 +14,9 @@ This sponsoring is a way to keep PerfOps One plugins suite free, open source and
 ### Added
 - Compatibility with WordPress 6.2.
 
+### Fixed
+- In some edge-cases, detecting IP may produce PHP deprecation warnings (thanks to [YR Chen](https://github.com/stevapple)).
+
 ## [3.4.1] - 2023-01-26
 
 ### Changed
