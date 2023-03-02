@@ -273,6 +273,7 @@ class Apcu_Manager_Admin {
 		if ( ! ( $action = filter_input( INPUT_GET, 'action' ) ) ) {
 			$action = filter_input( INPUT_POST, 'action' );
 		}
+		$nonce = filter_input( INPUT_GET, 'nonce' );
 		if ( $action && $tab ) {
 			switch ( $tab ) {
 				case 'misc':
@@ -287,7 +288,7 @@ class Apcu_Manager_Admin {
 							}
 							break;
 						case 'install-decalog':
-							if ( class_exists( 'PerfOpsOne\Installer' ) ) {
+							if ( class_exists( 'PerfOpsOne\Installer' ) && $nonce && wp_verify_nonce( $nonce, $action ) ) {
 								$result = \PerfOpsOne\Installer::do( 'decalog', true );
 								if ( '' === $result ) {
 									add_settings_error( 'apcm_no_error', '', esc_html__( 'Plugin successfully installed and activated with default settings.', 'apcu-manager' ), 'info' );
@@ -402,7 +403,7 @@ class Apcu_Manager_Admin {
 			$help  = '<img style="width:16px;vertical-align:text-bottom;" src="' . \Feather\Icons::get_base64( 'alert-triangle', 'none', '#FF8C00' ) . '" />&nbsp;';
 			$help .= sprintf( esc_html__('Your site does not use any logging plugin. To log all events triggered in APCu Manager, I recommend you to install the excellent (and free) %s. But it is not mandatory.', 'apcu-manager' ), '<a href="https://wordpress.org/plugins/decalog/">DecaLog</a>' );
 			if ( class_exists( 'PerfOpsOne\Installer' ) && ! Environment::is_wordpress_multisite() ) {
-				$help .= '<br/><a href="' . esc_url( admin_url( 'admin.php?page=apcm-settings&tab=misc&action=install-decalog' ) ) . '" class="poo-button-install"><img style="width:16px;vertical-align:text-bottom;" src="' . \Feather\Icons::get_base64( 'download-cloud', 'none', '#FFFFFF', 3 ) . '" />&nbsp;&nbsp;' . esc_html__('Install It Now', 'apcu-manager' ) . '</a>';
+				$help .= '<br/><a href="' . wp_nonce_url( admin_url( 'admin.php?page=apcm-settings&tab=misc&action=install-decalog' ), 'install-decalog', 'nonce' ) . '" class="poo-button-install"><img style="width:16px;vertical-align:text-bottom;" src="' . \Feather\Icons::get_base64( 'download-cloud', 'none', '#FFFFFF', 3 ) . '" />&nbsp;&nbsp;' . esc_html__('Install It Now', 'apcu-manager' ) . '</a>';
 			}
 		}
 		add_settings_field(
