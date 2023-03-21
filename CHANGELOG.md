@@ -3,6 +3,17 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.2] - Not Yet Released
+
+### Changed
+- Improved objects list rendering time.
+
+### Fixed
+- Sorting objects by status produces PHP warnings.
+
+### Removed
+- The ability to try to fectch expired objects.
+
 ## [3.5.1] - 2023-03-02
 
 ### Fixed

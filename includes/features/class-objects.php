@@ -117,14 +117,6 @@ class Objects extends \WP_List_Table {
 	private $bulk = [];
 
 	/**
-	 * The fetch time.
-	 *
-	 * @since    3.1.1
-	 * @var      integer    $time    The fetch time.
-	 */
-	private $time = 0;
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -144,8 +136,15 @@ class Objects extends \WP_List_Table {
 		}
 		$this->process_args();
 		$this->process_action();
-		$this->time    = time();
-		$this->objects = APCu::get_all_objects();
+		$time = time();
+		foreach ( APCu::get_all_objects() as $object ) {
+			if ( 0 < $object['ttl'] && ( $object['timestamp'] + $object['ttl'] < $time ) ) {
+				$object['status'] = 0;
+			} else {
+				$object['status'] = 1;
+			}
+			$this->objects[] = $object;
+		}
 		$this->plugins = apply_filters( 'perfopsone_plugin_info', [] );
 	}
 
@@ -242,7 +241,7 @@ class Objects extends \WP_List_Table {
 	 * @since    3.1.1
 	 */
 	protected function column_status( $item ) {
-		if ( 0 < $item['ttl'] && ( $item['timestamp'] + $item['ttl'] < $this->time ) ) {
+		if ( 0 === $item['status'] ) {
 			$status = esc_html__( 'Expired', 'apcu-manager' );
 		} else {
 			$status = esc_html__( 'Live', 'apcu-manager' );
@@ -432,6 +431,7 @@ class Objects extends \WP_List_Table {
 				return ( 'asc' === $this->order ) ? -$result : $result;
 			}
 		);
+
 		$this->items = array_slice( $data, ( ( $current_page - 1 ) * $this->limit ), $this->limit );
 	}
 
@@ -684,6 +684,9 @@ class Objects extends \WP_List_Table {
 	 * @since   3.1.0
 	 */
 	protected function get_viewer( $item, $soft = false ) {
+		if ( 0 === $item['status'] ) {
+			return '';
+		}
 		$id = md5( (string) $item['oid'] );
 		return '<div id="apcm-oviewer-' . $id . '" style="display:none;">' . $this->get_value( $item) . '</div>&nbsp;<a title="' . esc_html__( 'Object: ', 'apcu-manager' ) . $item['oid'] . '" href="#TB_inline?&width=600&height=800&inlineId=apcm-oviewer-' . $id . '" class="thickbox"><img title="' . esc_html__( 'Display current value', 'apcu-manager' ) . '" style="width:11px;vertical-align:baseline;" src="' . Icons::get_base64( 'eye', 'none', $soft ? '#C0C0FF' : '#3333AA' ) . '" /></a>';
 	}
