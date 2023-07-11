@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - The color for `shmop` test in Site Health is now gray to not worry to much about it (was previously orange).
 
+### Fixed
+- With APCu version greater than 5.1.21, the 'used' object field may be wrongly computed.
+
 ## [3.5.2] - 2023-05-15
 
 ### Changed
