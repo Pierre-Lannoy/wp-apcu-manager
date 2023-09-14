@@ -956,12 +956,12 @@ class Analytics {
 						'dimension'   => 'none',
 						'ratio'       => [
 							'raw'      => round( $data['kpi-main-ratio'] / 100, 6 ),
-							'percent'  => round( $data['kpi-main-ratio'], 2 ),
+							'percent'  => round( $data['kpi-main-ratio'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-main-ratio'] * 10, 2 ),
 						],
 						'variation'   => [
 							'raw'      => round( $data['kpi-index-ratio'] / 100, 6 ),
-							'percent'  => round( $data['kpi-index-ratio'], 2 ),
+							'percent'  => round( $data['kpi-index-ratio'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-index-ratio'] * 10, 2 ),
 						],
 						'value'       => [
@@ -984,7 +984,7 @@ class Analytics {
 						],
 						'variation'   => [
 							'raw'      => - round( $data['kpi-index-memory'] / 100, 6 ),
-							'percent'  => - round( $data['kpi-index-memory'], 2 ),
+							'percent'  => - round( $data['kpi-index-memory'] ?? 0, 2 ),
 							'permille' => - round( $data['kpi-index-memory'] * 10, 2 ),
 						],
 						'value'       => [
@@ -1003,7 +1003,7 @@ class Analytics {
 						'ratio'       => null,
 						'variation'   => [
 							'raw'      => round( $data['kpi-index-object'] / 100, 6 ),
-							'percent'  => round( $data['kpi-index-object'], 2 ),
+							'percent'  => round( $data['kpi-index-object'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-index-object'] * 10, 2 ),
 						],
 						'value'       => [
@@ -1021,12 +1021,12 @@ class Analytics {
 						'dimension'   => 'none',
 						'ratio'       => [
 							'raw'      => round( $data['kpi-main-key'] / 100, 6 ),
-							'percent'  => round( $data['kpi-main-key'], 2 ),
+							'percent'  => round( $data['kpi-main-key'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-main-key'] * 10, 2 ),
 						],
 						'variation'   => [
 							'raw'      => round( $data['kpi-index-key'] / 100, 6 ),
-							'percent'  => round( $data['kpi-index-key'], 2 ),
+							'percent'  => round( $data['kpi-index-key'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-index-key'] * 10, 2 ),
 						],
 						'value'       => [
@@ -1044,12 +1044,12 @@ class Analytics {
 						'dimension'   => 'none',
 						'ratio'       => [
 							'raw'      => round( $data['kpi-main-fragmentation'] / 100, 6 ),
-							'percent'  => round( $data['kpi-main-fragmentation'], 2 ),
+							'percent'  => round( $data['kpi-main-fragmentation'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-main-fragmentation'] * 10, 2 ),
 						],
 						'variation'   => [
 							'raw'      => round( $data['kpi-index-fragmentation'] / 100, 6 ),
-							'percent'  => round( $data['kpi-index-fragmentation'], 2 ),
+							'percent'  => round( $data['kpi-index-fragmentation'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-index-fragmentation'] * 10, 2 ),
 						],
 						'value'       => [
@@ -1066,12 +1066,12 @@ class Analytics {
 						'dimension'   => 'time',
 						'ratio'       => [
 							'raw'      => round( $data['kpi-main-uptime'] / 100, 6 ),
-							'percent'  => round( $data['kpi-main-uptime'], 2 ),
+							'percent'  => round( $data['kpi-main-uptime'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-main-uptime'] * 10, 2 ),
 						],
 						'variation'   => [
 							'raw'      => round( $data['kpi-index-uptime'] / 100, 6 ),
-							'percent'  => round( $data['kpi-index-uptime'], 2 ),
+							'percent'  => round( $data['kpi-index-uptime'] ?? 0, 2 ),
 							'permille' => round( $data['kpi-index-uptime'] * 10, 2 ),
 						],
 						'value'       => [
