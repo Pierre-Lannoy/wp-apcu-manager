@@ -193,7 +193,7 @@ class Cache {
 	private static function get_for_full_name( $item_name ) {
 		$item_name = self::normalized_item_name( $item_name );
 		$found     = false;
-		if ( self::$apcu_available && Option::network_get( 'pl_use_apcu', false ) ) {
+		if ( self::$apcu_available && Option::network_get( 'use_apcu', true ) ) {
 			$result = apcu_fetch(  self::$pool_name . self::$apcu_pool_prefix . $item_name, $found );
 			
 		} elseif ( wp_using_ext_object_cache() ) {
@@ -264,7 +264,7 @@ class Cache {
 			$expiration = (int) $ttl;
 		}
 		if ( $expiration > 0 ) {
-			if ( self::$apcu_available && Option::network_get( 'pl_use_apcu', false ) ) {
+			if ( self::$apcu_available && Option::network_get( 'use_apcu', true ) ) {
 				$result = apcu_store( self::$pool_name . self::$apcu_pool_prefix . $item_name, $value, $expiration );
 			}  elseif ( wp_using_ext_object_cache() ) {
 				$result = wp_cache_set( $item_name, $value, self::$pool_name, $expiration );
@@ -328,7 +328,7 @@ class Cache {
 	private static function delete_for_ful_name( $item_name ) {
 		$item_name = self::normalized_item_name( $item_name );
 		$result    = 0;
-		if ( self::$apcu_available && Option::network_get( 'pl_use_apcu', false ) ) {
+		if ( self::$apcu_available && Option::network_get( 'use_apcu', true ) ) {
 			if ( strlen( $item_name ) - 1 === strpos( $item_name, '_*' ) ) {
 				return false;
 			} else {
