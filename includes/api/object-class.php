@@ -47,25 +47,7 @@ class WP_Object_Cache {
 	 * @var     array
 	 * @since   3.0.0
 	 */
-	private $global_groups = [
-		//'blog-details',
-		//'blog-id-cache',
-		//'blog-lookup',
-		//'global-posts',
-		//'networks',
-		//'rss',
-		//'sites',
-		//'site-details',
-		//'site-lookup',
-		//'site-options',
-		//'site-transient',
-		//'users',
-		//'useremail',
-		//'userlogins',
-		//'usermeta',
-		//'user_meta',
-		//'userslugs',
-	];
+	private $global_groups = [];
 
 	/**
 	 * List of non persistent groups.
@@ -73,12 +55,7 @@ class WP_Object_Cache {
 	 * @var     array
 	 * @since   3.0.0
 	 */
-	private $non_persistent_groups = [
-		//'counts',
-		//'options',
-		//'plugins',
-		//'themes',
-	];
+	private $non_persistent_groups = [];
 
 	/**
 	 * Non persistent cache.
@@ -422,6 +399,9 @@ class WP_Object_Cache {
 	 * @since   3.0.0
 	 */
 	private function full_item_name( $key, $group, $forced_site = 0 ) {
+		if ( ! is_numeric( $forced_site ) ) {
+			$forced_site = 0;
+		}
 		if ( empty( $group ) ) {
 			$group = 'default';
 		}
@@ -433,6 +413,7 @@ class WP_Object_Cache {
 				$prefix = $forced_site . '_';
 			}
 		}
+		$key = str_replace( ':', '_', $key );
 		return 'wordpress' . $this->cache_prefix . $prefix . $group . '_' . $key;
 	}
 
@@ -968,11 +949,21 @@ class WP_Object_Cache {
 	 * @param bool       $force Optional. Whether to force an update of the local cache
 	 *                          from the persistent cache. Default false.
 	 * @param bool       &$success Optional. Return success - or not.
+	 * @param bool       $is_option Optional. Is it surely a WP option.
 	 *
 	 * @return  bool|mixed  False on failure to retrieve contents or the cache contents on success.
 	 * @since   3.0.0
 	 */
-	public function get( $key, $group = 'default', $force = false, &$success = null ) {
+	public function get( $key, $group = 'default', $force = false, &$success = null, $is_option = false ) {
+		if ( ! $is_option ) {
+			// Prevent non-existent options or site-options from triggering any queries if in notoptions!
+			if ( 'options' === $group || 'site-options' === $group ) {
+				$notoptions = $this->get( 'site-options' === $group ? get_current_network_id() . ':notoptions' : 'notoptions', $group, false, $success, true );
+				if ( is_array( $notoptions ) && isset( $notoptions[ $key ] ) ) {
+					return false;
+				}
+			}
+		}
 		$key = $this->full_item_name( $key, $group );
 		if ( ! $this->apcu_available || $this->is_non_persistent_group( $group ) ) {
 			$var = $this->get_non_persitent( $key, $success );
@@ -1007,11 +998,19 @@ class WP_Object_Cache {
 					$this->metrics['fetch']['size'] += $this->size_of( $var );
 				}
 				$this->metrics['fetch']['success'] += 1;
+				/*if ( ! is_array( $this->metrics['fetch']['succeeded'] ) ) {
+					$this->metrics['fetch']['succeeded'] = [];
+				}
+				$this->metrics['fetch']['succeeded'][] = $key;*/
 				if ( isset( self::$events_logger ) && self::$debug ) {
 					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" successfully fetched.', $key ) );
 				}
 			} else {
-				$this->metrics['fetch']['fail'] += 1;
+				/*$this->metrics['fetch']['fail'] += 1;
+				if ( ! is_array( $this->metrics['fetch']['failed'] ) ) {
+					$this->metrics['fetch']['failed'] = [];
+				}
+				$this->metrics['fetch']['failed'][] = $key . ' -> ' . microtime();*/
 				if ( isset( self::$events_logger ) && self::$debug ) {
 					self::$events_logger->debug( self::$events_prefix . sprintf( 'Key "%s" unsuccessfully fetched.', $key ) );
 				}
