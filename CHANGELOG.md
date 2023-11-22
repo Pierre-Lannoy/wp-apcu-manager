@@ -3,10 +3,10 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.7.1] - Not Yet Released
+## [3.7.1] - 2023-11-22
 
 ### Changed
-- Improved options loading performances.
+- Options loading performances greatly improved.
 - Improved hit-ratio computing.
 
 ## [3.7.0] - 2023-10-25
