@@ -3,6 +3,11 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.2] - 2023-11-23
+
+### Fixed
+- In some edge-cases, multi sites instances may experience a PHP error while loading non-existent options (thanks to [Szabó József](https://github.com/er2es)).
+
 ## [3.7.1] - 2023-11-22
 
 ### Changed

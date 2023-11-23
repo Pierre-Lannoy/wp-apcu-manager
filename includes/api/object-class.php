@@ -942,6 +942,21 @@ class WP_Object_Cache {
 	}
 
 	/**
+	 * Retrieves the current network ID.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return int The ID of the current network.
+	 */
+	private function get_current_network_id() {
+		global $current_site;
+		if ( is_multisite() && isset( $current_site ) && $current_site instanceof WP_Network && isset( $current_site->id ) ) {
+			return absint( $current_site->id );
+		}
+		return 1;
+	}
+
+	/**
 	 * Retrieves the cache contents, if it exists.
 	 *
 	 * @param int|string $key What the contents in the cache are called.
@@ -958,7 +973,7 @@ class WP_Object_Cache {
 		if ( ! $is_option ) {
 			// Prevent non-existent options or site-options from triggering any queries if in notoptions!
 			if ( 'options' === $group || 'site-options' === $group ) {
-				$notoptions = $this->get( 'site-options' === $group ? get_current_network_id() . ':notoptions' : 'notoptions', $group, false, $success, true );
+				$notoptions = $this->get( 'site-options' === $group ? $this->get_current_network_id() . ':notoptions' : 'notoptions', $group, false, $success, true );
 				if ( is_array( $notoptions ) && isset( $notoptions[ $key ] ) ) {
 					return false;
 				}
