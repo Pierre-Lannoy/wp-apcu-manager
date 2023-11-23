@@ -944,9 +944,8 @@ class WP_Object_Cache {
 	/**
 	 * Retrieves the current network ID.
 	 *
-	 * @since 3.7.2
-	 *
 	 * @return int The ID of the current network.
+	 * @since 3.7.2
 	 */
 	private function get_current_network_id() {
 		global $current_site;
