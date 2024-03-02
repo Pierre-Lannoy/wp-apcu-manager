@@ -3,6 +3,15 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.8.0] - 2024-03-02
+
+### Added
+- Compatibility with WordPress 6.5.
+
+### Changed
+- Minimal required WordPress version is now 6.1.
+- Minimal required PHP version is now 8.1.
+
 ## [3.7.2] - 2023-11-23
 
 ### Fixed
