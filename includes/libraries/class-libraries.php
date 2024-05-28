@@ -94,7 +94,7 @@ class Libraries {
 		self::$psr4_libraries['psr-03']      = [
 			'name'    => 'PSR-3',
 			'prefix'  => 'Psr\\Log',
-			'base'    => APCM_VENDOR_DIR . 'psr/log/',
+			'base'    => APCM_VENDOR_DIR . 'psr/log-v1/',
 			'version' => '3.0.0',
 			'author'  => 'PHP Framework Interop Group',
 			'url'     => 'https://www.php-fig.org/',
