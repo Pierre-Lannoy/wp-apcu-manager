@@ -3,6 +3,11 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2024-09-10
+
+### Added
+- Compatibility with WordPress 6.6.
+
 ## [4.0.0] - 2024-05-28
 
 ### Added
