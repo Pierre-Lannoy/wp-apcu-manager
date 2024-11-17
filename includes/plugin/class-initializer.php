@@ -37,8 +37,6 @@ class Initializer {
 	public function initialize() {
 		\APCuManager\System\Sitehealth::init();
 		\APCuManager\System\APCu::init();
-		unload_textdomain( APCM_SLUG );
-		load_plugin_textdomain( APCM_SLUG );
 	}
 
 	/**

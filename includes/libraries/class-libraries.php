@@ -64,7 +64,7 @@ class Libraries {
 			'base'    => APCM_VENDOR_DIR . 'feather/',
 			'version' => '4.24.1',
 			// phpcs:ignore
-			'author'  => sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Cole Bemis' ),
+			'author'  => 'Cole Bemis',
 			'url'     => 'https://feathericons.com',
 			'license' => 'mit',
 			'langs'   => 'en',
@@ -75,7 +75,7 @@ class Libraries {
 			'base'    => APCM_VENDOR_DIR . 'kint/src/',
 			'version' => '4.2.0',
 			// phpcs:ignore
-			'author'  => sprintf( esc_html__( '%s, %s & contributors', 'apcu-manager' ), 'Jonathan Vollebregt', 'Rokas Šleinius' ),
+			'author'  => 'Jonathan Vollebregt, Rokas Šleinius',
 			'url'     => 'https://kint-php.github.io/',
 			'license' => 'mit',
 			'langs'   => 'en',
@@ -86,7 +86,7 @@ class Libraries {
 			'base'    => APCM_VENDOR_DIR . 'markdown/',
 			'version' => '1.2.1',
 			// phpcs:ignore
-			'author'  => sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Carsten Brandt' ),
+			'author'  => 'Carsten Brandt',
 			'url'     => 'https://github.com/cebe/markdown',
 			'license' => 'mit',
 			'langs'   => 'en',
@@ -143,7 +143,7 @@ class Libraries {
 			'base'    => APCM_VENDOR_DIR . 'spyc/',
 			'version' => '0.6.2',
 			// phpcs:ignore
-			'author'  => sprintf( esc_html__( '%s, %s & contributors', 'apcu-manager' ), 'Vlad Andersen', 'Chris Wanstrath' ),
+			'author'  => 'Vlad Andersen, Chris Wanstrath',
 			'url'     => 'https://github.com/mustangostang/spyc/',
 			'license' => 'mit',
 			'langs'   => 'en',
@@ -236,7 +236,7 @@ class Libraries {
 		$item            = [];
 		$item['name']    = 'Date Range Picker';
 		$item['version'] = '3.0.5';
-		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Dan Grossman' );
+		$item['author']  = 'Dan Grossman';
 		$item['url']     = 'https://github.com/dangrossman/daterangepicker';
 		$item['license'] = $this->license_name( 'mit' );
 		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
@@ -244,21 +244,21 @@ class Libraries {
 		$item            = [];
 		$item['name']    = 'Moment';
 		$item['version'] = '2.29.4';
-		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Tim Wood' );
+		$item['author']  = 'Tim Wood';
 		$item['url']     = 'https://github.com/moment/moment';
 		$item['license'] = $this->license_name( 'mit' );
 		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
 		$list[]          = $item;
 		$item['name']    = 'SVG-Loaders';
 		$item['version'] = '1.0.2';
-		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Sam Herbert' );
+		$item['author']  = 'Sam Herbert';
 		$item['url']     = 'https://github.com/SamHerbert/SVG-Loaders';
 		$item['license'] = $this->license_name( 'mit' );
 		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
 		$list[]          = $item;
 		$item['name']    = 'Chartist-JS';
 		$item['version'] = '0.11.4';
-		$item['author']  = sprintf( esc_html__( '%s & contributors', 'apcu-manager' ), 'Gion Kunz' );
+		$item['author']  = 'Gion Kunz';
 		$item['url']     = 'https://github.com/gionkunz/chartist-js';
 		$item['license'] = $this->license_name( 'mit' );
 		$item['langs']   = L10n::get_language_markup( [ 'en' ] );
@@ -268,7 +268,7 @@ class Libraries {
 			$items = [];
 			foreach ( $list as $library ) {
 				/* translators: as in the sentence "Product W version X by author Y (license Z)" */
-				$items[] = sprintf( __( '<a href="%1$s">%2$s %3$s</a>%4$s by %5$s (%6$s)', 'apcu-manager' ), $library['url'], $library['name'], 'v' . $library['version'], $library['langs'], $library['author'], $library['license'] );
+				$items[] = sprintf( __( '<a href="%1$s">%2$s %3$s</a>%4$s by %5$s & contributors (%6$s)', 'apcu-manager' ), $library['url'], $library['name'], 'v' . $library['version'], $library['langs'], $library['author'], $library['license'] );
 			}
 			$result = implode( ', ', $items );
 		}
