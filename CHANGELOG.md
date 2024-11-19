@@ -9,13 +9,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Compatibility with WordPress 6.6 & 6.7.
 
 ### Changed
-- a
+- Ability to self-update from Github.
 
 ### Fixed
 - a
 
 ### Removed
-- As Databeam project has been abandoned, all corresponding hooks and libraries have been removed.
+- Ability to launch a test site from wordpress.org plugin page.
+- All Databeam hooks and libraries, as the Databeam project is abandoned.
 
 ## [4.0.0] - 2024-05-28
 
