@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 - Ability to self-update from Github.
+- The plugin user agent is now more consistent and "standard".
 
 ### Fixed
 - a
