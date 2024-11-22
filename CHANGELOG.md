@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - a
 
 ### Removed
-- Ability to launch a test site from wordpress.org plugin page.
+- Test site launching from wordpress.org plugin page.
 - All Databeam hooks and libraries, as the Databeam project is abandoned.
 
 ## [4.0.0] - 2024-05-28

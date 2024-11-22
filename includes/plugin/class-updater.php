@@ -12,6 +12,7 @@ namespace APCuManager\Plugin;
 use APCuManager\System\Nag;
 use APCuManager\System\Option;
 use APCuManager\System\Cache;
+use APCuManager\System\Http;
 use Exception;
 use APCuManager\Plugin\Feature\Schema;
 use APCuManager\System\APCu;
@@ -120,7 +121,8 @@ class Updater {
 				[
 					'timeout' => 10,
 					'headers' => [
-						'Accept' => 'application/vnd.github+json'
+						'Accept'     => 'application/vnd.github+json',
+						'user-agent' => Http::user_agent(),
 					]
 				]
 			);
@@ -139,8 +141,8 @@ class Updater {
 				[
 					'timeout' => 10,
 					'headers' => [
-						'Accept' => 'application/vnd.github+json'
-					]
+						'user-agent' => Http::user_agent(),
+					],
 				]
 			);
 			if ( is_wp_error( $remote ) || 200 !== wp_remote_retrieve_response_code( $remote ) || empty( wp_remote_retrieve_body( $remote ) ) ) {
