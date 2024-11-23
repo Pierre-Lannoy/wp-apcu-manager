@@ -181,7 +181,7 @@ class Schema {
 	 */
 	private function create_tables() {
 		global $wpdb;
-		$charset_collate = 'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+		$charset_collate = 'DEFAULT CHARACTER SET utf8 COLLATE utf8mb4_unicode_520_ci';
 		$sql             = 'CREATE TABLE IF NOT EXISTS ' . $wpdb->base_prefix . self::$statistics;
 		$sql            .= " (`timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',";
 		$sql            .= " `delta` int(11) UNSIGNED NOT NULL DEFAULT '0',";
@@ -200,7 +200,7 @@ class Schema {
 		$sql            .= ") $charset_collate;";
 		// phpcs:ignore
 		$wpdb->query( $sql );
-		$charset_collate = 'DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+		$charset_collate = 'DEFAULT CHARACTER SET utf8 COLLATE utf8mb4_unicode_520_ci';
 		$sql             = 'CREATE TABLE IF NOT EXISTS ' . $wpdb->base_prefix . self::$details;
 		$sql            .= " (`timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',";
 		$sql            .= " `id` varchar(100) NOT NULL DEFAULT '-',";
