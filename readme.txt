@@ -3,7 +3,7 @@ Contributors: PierreLannoy, hosterra
 Tags: APCu, cache, monitor, object cache, w3tc
 Requires at least: 6.2
 Requires PHP: 8.1
-Tested up to: 6.6
+Tested up to: 6.7
 Stable tag: 4.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
