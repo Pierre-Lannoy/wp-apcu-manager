@@ -1177,7 +1177,8 @@ class WP_Object_Cache {
 		if ( is_object( $var ) ) {
 			$var = clone $var;
 		}
-		return $this->non_persistent_cache[ $key ] = $var;
+		$this->non_persistent_cache[ $key ] = $var;
+		return true;
 	}
 
 	/**

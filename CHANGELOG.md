@@ -3,6 +3,12 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.1] - 2025-07-18
+
+### Fixed
+- PHP triggers an "Uncaught TypeError" when using `set_non_persistent()` (thanks to [mdbstc](https://profiles.wordpress.org/mdbstc/)).
+- Versions described in readme are outdated.
+
 ## [4.2.0] - 2025-04-14
 
 ### Added
