@@ -65,7 +65,7 @@ class Updater {
 			APCu::reset();
 		}
 		if ( ! ( defined( 'POO_SELFUPDATE_BYPASS' ) && POO_SELFUPDATE_BYPASS ) ) {
-			add_filter( 'plugins_api', [ $this, 'plugin_info' ], PHP_INT_MAX, 3 );
+			add_filter( 'plugins_api', [ $this, 'plugin_info' ], PHP_INT_MIN, 3 );
 			add_filter( 'site_transient_update_plugins', [ $this, 'info_update' ] );
 			add_action( 'upgrader_process_complete', [ $this, 'info_reset' ], 10, 2 );
 			add_filter( 'clean_url', [ $this, 'filter_logo' ], PHP_INT_MAX, 3 );
@@ -130,7 +130,7 @@ class Updater {
 				return false;
 			}
 			$plugin_info             = json_decode( wp_remote_retrieve_body( $remote ), true );
-			$remotes->tested         = $plugin_info['tested'] ?? '7.0';
+			$remotes->tested         = '6.8.99999';// $plugin_info['tested'] ?? '10.0';
 			$remotes->requires       = $plugin_info['requires'] ?? '6.2';
 			$remotes->requires_php   = $plugin_info['requires_php'] ?? '7.1';
 			$remotes->author         = $plugin_info['author'] ?? '<a href="https://perfops.one">Pierre Lannoy / PerfOps One</a>';
@@ -206,8 +206,10 @@ class Updater {
 		if ( ! $infos ) {
 			return $res;
 		}
-		$md                           = new Markdown();
-		$res                          = new \stdClass();
+		$md = new Markdown();
+		if ( ! is_object( $res ) ) {
+			$res = new \stdClass();
+		}
 		$res->name                    = $this->name;
 		$res->homepage                = 'https://perfops.one/' . $this->slug;
 		$res->slug                    = $this->slug;
@@ -222,13 +224,23 @@ class Updater {
 		$res->version                 = $infos->version;
 		$res->download_link           = $infos->download_url;
 		$res->trunk                   = $infos->download_url;
-		$res->sections                = [
-			'changelog' => $md->get_inline( $infos->changelog, [] ) . '<br/><br/><p><a target="_blank" href="' . $res->homepage . '-changelog">CHANGELOG »</a></p>',
-		];
-		$res->banners                 = [
-			"low"  => str_replace( 'github.com', 'raw.githubusercontent.com', $this->product ) . '/refs/heads/master/.wordpress-org/banner-772x250.jpg',
-			"high" => str_replace( 'github.com', 'raw.githubusercontent.com', $this->product ) . '/refs/heads/master/.wordpress-org/banner-1544x500.jpg'
-		];
+		if ( isset( $res->sections['changelog'] ) ) {
+			$res->sections['changelog'] = $md->get_inline( $infos->changelog, [] ) . '<br/><br/><p><a target="_blank" href="' . $res->homepage . '-changelog">CHANGELOG »</a></p>';
+		} else {
+			$res->sections = [
+				'changelog' => $md->get_inline( $infos->changelog, [] ) . '<br/><br/><p><a target="_blank" href="' . $res->homepage . '-changelog">CHANGELOG »</a></p>',
+			];
+		}
+		if ( isset( $res->banners['low'] ) && isset( $res->banners['high'] )) {
+			$res->banners['low'] = str_replace( 'github.com', 'raw.githubusercontent.com', $this->product ) . '/refs/heads/master/.wordpress-org/banner-772x250.jpg';
+			$res->banners['high'] = str_replace( 'github.com', 'raw.githubusercontent.com', $this->product ) . '/refs/heads/master/.wordpress-org/banner-1544x500.jpg';
+		} else {
+			$res->banners                 = [
+				'low'  => str_replace( 'github.com', 'raw.githubusercontent.com', $this->product ) . '/refs/heads/master/.wordpress-org/banner-772x250.jpg',
+				'high' => str_replace( 'github.com', 'raw.githubusercontent.com', $this->product ) . '/refs/heads/master/.wordpress-org/banner-1544x500.jpg'
+			];
+		}
+
 		return $res;
 	}
 
@@ -249,7 +261,7 @@ class Updater {
 			$res->slug                           = $this->slug;
 			$res->plugin                         = $this->slug . '/' . $this->slug . '.php';
 			$res->new_version                    = $remote->version;
-			$res->tested                         = $remote->tested;
+			//$res->tested                         = $remote->tested . '.99999';
 			$res->package                        = $remote->download_url;
 			$res->icons                          = [
 				'svg' => 'https://data.' . $this->slug

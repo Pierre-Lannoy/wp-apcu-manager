@@ -51,12 +51,12 @@ class Form {
 		} else {
 			$width = '';
 		}
-		$html = '<input' . ( $enabled ? '' : ' disabled' ) . ' name="' . $id . '" type="number" step="' . $step . '" min="' . $min . '" max="' . $max . '"id="' . $id . '" value="' . $value . '"' . $width . ' class="regular-text"/>';
+		$html = '<input' . ( $enabled ? '' : ' disabled' ) . ' name="' . esc_html( $id ) . '" type="number" step="' . esc_html( $step ) . '" min="' . esc_html( $min ). '" max="' . esc_html( $max ). '"id="' .esc_html( $id ). '" value="' . esc_html( $value ). '"' . esc_html( $width ). ' class="regular-text"/>';
 		if ( isset( $unit ) ) {
-			$html .= '&nbsp;<label for="' . $id . '">' . $unit . '</label>';
+			$html .= '&nbsp;<label for="' . esc_html( $id ) . '">' . esc_html( $unit ) . '</label>';
 		}
 		if ( isset( $description ) ) {
-			$html .= '<p class="description">' . $description . '</p>';
+			$html .= '<p class="description">' . esc_html( $description ) . '</p>';
 		}
 		return $html;
 	}
@@ -68,7 +68,7 @@ class Form {
 	 * @since   1.0.0
 	 */
 	public function echo_field_input_integer( $args ) {
-		echo $this->field_input_integer( $args['id'], $args['value'], $args['min'], $args['max'], $args['step'], $args['description'], $args['full_width'], $args['enabled'] );
+		echo $this->field_input_integer( esc_html( $args['id'] ), esc_html( $args['value'] ), esc_html( $args['min'] ), esc_html( $args['max'] ), esc_html( $args['step'] ), esc_html( $args['description'] ), esc_html( $args['full_width'] ), esc_html( $args['enabled'] ));
 	}
 
 	/**

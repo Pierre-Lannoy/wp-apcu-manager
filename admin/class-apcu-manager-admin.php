@@ -509,7 +509,7 @@ class Apcu_Manager_Admin {
 	public function plugin_features_section_callback() {
 		$apcu_available = function_exists( 'apcu_delete' ) && function_exists( 'apcu_fetch' ) && function_exists( 'apcu_store' ) && function_exists( 'apcu_add' ) && function_exists( 'apcu_dec' ) && function_exists( 'apcu_inc' );
 		if ( $apcu_available ) {
-			$note = sprintf( __( 'Note: %s is currently enabled on you %s.', 'apcu-manager' ), APCu::name(), Environment::is_wordpress_multisite() ? esc_html__( 'network', 'apcu-manager' ) : esc_html__( 'website', 'apcu-manager' ) );
+			$note = sprintf( __( 'Note: %1$s is currently enabled on you %2$s.', 'apcu-manager' ), APCu::name(), Environment::is_wordpress_multisite() ? esc_html__( 'network', 'apcu-manager' ) : esc_html__( 'website', 'apcu-manager' ) );
 		} else {
 			$note = esc_html__( 'Note: to activate it, your must have APCu enabled in PHP. It is not currently the case.', 'apcu-manager' );
 		}
