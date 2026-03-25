@@ -1,10 +1,10 @@
 === APCu Manager ===
 Contributors: PierreLannoy, hosterra
 Tags: APCu, cache, monitor, object cache, w3tc
-Requires at least: 6.2
-Requires PHP: 8.1
-Tested up to: 6.9
-Stable tag: 4.3.0
+Requires at least: 6.4
+Requires PHP: 8.2
+Tested up to: 7.0
+Stable tag: 4.4.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,11 +14,11 @@ APCu statistics and management right in the WordPress admin dashboard.
 
 **APCu statistics and management right in the WordPress admin dashboard.**
 
-**APCu Manager** is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network.
-
 **APCu Manager** offers a persistent object cache backend to WordPress: just activate the option in the settings and you will experience a real speed up of your site or network.
 
-**APCu Manager** works on dedicated or shared servers. It is compatible with all plugins using APCu, like PerfOps One suite or W3 Total Cache. Its main management features are:
+**APCu Manager** is a full featured APCu management and analytics reporting tool. It allows you to monitor and optimize APCu operations on your WordPress site or network.
+
+**APCu Manager** works on dedicated or shared servers. It is compatible with all plugins using WordPress object caching. Its main management features are:
 
 * drop-in replacement for WordPress object caching;
 * individual object deletion;
@@ -53,7 +53,7 @@ For a full help on WP-CLI commands in APCu Manager, please [read this guide](htt
 
 This plugin is free and provided without warranty of any kind. Use it at your own risk, I'm not responsible for any improper use of this plugin, nor for any damage it might cause to your site. Always backup all your data before installing a new plugin.
 
-Anyway, I'll be glad to help you if you encounter issues when using this plugin. Just use the support section of this plugin page.
+Anyway, I'll be glad to help you if you encounter issues when using this plugin. Please read carefully the FAQ at the bottom of this page before requesting support.
 
 = Privacy =
 
@@ -91,8 +91,6 @@ If you like this plugin or find it useful and want to thank me for the work done
 
 = What are the requirements for this plugin to work? =
 
-You need at least **WordPress 6.2** and **PHP 8.1**.
-
 You need APCu enabled on your server.
 
 = Can this plugin work on multisite? =
@@ -105,7 +103,7 @@ You need to have a fully operational WordPress cron. If you've set an external c
 
 = Where can I get support? =
 
-Support is provided via the official [WordPress page](https://wordpress.org/support/plugin/apcu-manager/).
+Support is provided via the official [WordPress page](https://wordpress.org/support/plugin/apcu-manager/). Because I am human myself, please note that I only answer to support requests made by humans, who behave like humans. This excludes requests or bug reports written by AI or those that do not adhere to basic rules of courtesy.
 
 = Where can I report a bug? =
  
