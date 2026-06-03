@@ -137,7 +137,7 @@ class Objects extends \WP_List_Table {
 		$this->process_args();
 		$this->process_action();
 		$time = time();
-		foreach ( APCu::get_all_objects() as $object ) {
+		foreach ( APCu::get_all_cleaned_objects() as $object ) {
 			if ( 0 < $object['ttl'] && ( $object['timestamp'] + $object['ttl'] < $time ) ) {
 				$object['status'] = 0;
 			} else {
@@ -157,7 +157,7 @@ class Objects extends \WP_List_Table {
 	 * @since    1.0.0
 	 */
 	protected function column_default( $item, $column_name ) {
-		return $item[ $column_name ];
+		return esc_html( $item[ $column_name ] );
 	}
 
 	/**
@@ -169,10 +169,11 @@ class Objects extends \WP_List_Table {
 	 */
 	public function column_cb( $item ) {
 		return sprintf(
-			'<input type="checkbox" name="bulk[]" value="%s" />',
-			$item['oid']
+			'<input ' . ( $item['is_clean'] ? '' : 'disabled=disabled ' ) . 'type="checkbox" name="bulk[]" value="%s" />',
+			esc_attr ( $item['oid'] )
 		);
 	}
+
 
 	/**
 	 * "source" column formatter.
@@ -202,6 +203,10 @@ class Objects extends \WP_List_Table {
 						$name = $this->plugins[ $item['source'] ]['name'];
 					}
 				}
+		}
+		if ( ! $item['is_clean'] ) {
+			$icon = $this->get_base64_warning_icon();
+			$name = esc_html__( 'Suspicious source', 'apcu-manager' );;
 		}
 		return '<img style="width:28px;float:left;padding-top:6px;padding-right:6px;" src="' . $icon . '" />' . $name . '<br /><span style="color:silver">' . $item['path'] . '</span>';
 	}
@@ -246,6 +251,9 @@ class Objects extends \WP_List_Table {
 		} else {
 			$status = esc_html__( 'Live', 'apcu-manager' );
 		}
+		if ( ! $item['is_clean'] ) {
+			$status = esc_html__( 'Untruthful', 'apcu-manager' );
+		}
 		return $status;
 	}
 
@@ -257,7 +265,11 @@ class Objects extends \WP_List_Table {
 	 * @since    1.0.0
 	 */
 	protected function column_object( $item ) {
-		return $item['object'] . $this->get_viewer( $item ) . $this->get_actions( 'object', $item );
+		$result = $item['object'];
+		if ( $item['is_clean'] ) {
+			$result = $item['object'] . $this->get_viewer( $item ) . $this->get_actions( 'object', $item );
+		}
+		return $result;
 	}
 
 	/**
@@ -823,7 +835,7 @@ class Objects extends \WP_List_Table {
 	 * @since 3.0.0
 	 */
 	private function get_base64_blank_icon() {
-		$source  = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd"  fill="none" width="100%" height="100%"  viewBox="0 0 100 100">';
+		$source  = '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd"  fill="none" width="100%" height="100%"  viewBox="0 0 100 100">';
 		$source .= '</svg>';
 		// phpcs:ignore
 		return 'data:image/svg+xml;base64,' . base64_encode( $source );
@@ -837,7 +849,7 @@ class Objects extends \WP_List_Table {
 	 * @since 3.1.0
 	 */
 	private function get_base64_wordpress_icon( $color = '#0073AA' ) {
-		$source  = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd"  fill="none" width="100%" height="100%"  viewBox="0 0 100 100">';
+		$source  = '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd"  fill="none" width="100%" height="100%"  viewBox="0 0 100 100">';
 		$source .= '<g transform="translate(-54,-26) scale(18,18)">';
 		$source .= '<path style="fill:' . $color . '" d="m5.8465 1.9131c0.57932 0 1.1068 0.222 1.5022 0.58547-0.1938-0.0052-0.3872 0.11-0.3952 0.3738-0.0163 0.5333 0.6377 0.6469 0.2853 1.7196l-0.2915 0.8873-0.7939-2.3386c-0.0123-0.0362 0.002-0.0568 0.0465-0.0568h0.22445c0.011665 0 0.021201-0.00996 0.021201-0.022158v-0.13294c0-0.012193-0.00956-0.022657-0.021201-0.022153-0.42505 0.018587-0.8476 0.018713-1.2676 0-0.0117-0.0005-0.0212 0.01-0.0212 0.0222v0.13294c0 0.012185 0.00954 0.022158 0.021201 0.022158h0.22568c0.050201 0 0.064256 0.016728 0.076091 0.049087l0.3262 0.8921-0.4907 1.4817-0.8066-2.3758c-0.01-0.0298 0.0021-0.0471 0.0308-0.0471h0.25715c0.011661 0 0.021197-0.00996 0.021197-0.022158v-0.13294c0-0.012193-0.00957-0.022764-0.021197-0.022153-0.2698 0.014331-0.54063 0.017213-0.79291 0.019803 0.39589-0.60984 1.0828-1.0134 1.8639-1.0134l-0.0000029-0.0000062zm1.9532 1.1633c0.17065 0.31441 0.26755 0.67464 0.26755 1.0574 0 0.84005-0.46675 1.5712-1.1549 1.9486l0.6926-1.9617c0.1073-0.3036 0.2069-0.7139 0.1947-1.0443h-0.000004zm-1.2097 3.1504c-0.2325 0.0827-0.4827 0.1278-0.7435 0.1278-0.2247 0-0.4415-0.0335-0.6459-0.0955l0.68415-1.9606 0.70524 1.9284v-1e-7zm-1.6938-0.0854c-0.75101-0.35617-1.2705-1.1213-1.2705-2.0075 0-0.32852 0.071465-0.64038 0.19955-0.92096l1.071 2.9285 0.000003-0.000003zm0.95023-4.4367c1.3413 0 2.4291 1.0878 2.4291 2.4291s-1.0878 2.4291-2.4291 2.4291-2.4291-1.0878-2.4291-2.4291 1.0878-2.4291 2.4291-2.4291zm0-0.15354c1.4261 0 2.5827 1.1566 2.5827 2.5827s-1.1566 2.5827-2.5827 2.5827-2.5827-1.1566-2.5827-2.5827 1.1566-2.5827 2.5827-2.5827z"/>';
 		$source .= '</g>';
@@ -855,11 +867,31 @@ class Objects extends \WP_List_Table {
 	 * @since 3.0.0
 	 */
 	private function get_base64_w3tc_icon( $color1 = '#3b7e83', $color2 = '#3b7e83', $color3 = '#3b7e83' ) {
-		$source  = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd"  fill="none" width="100" height="100"  viewBox="0 0 100 100">';
+		$source  = '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd"  fill="none" width="100" height="100"  viewBox="0 0 100 100">';
 		$source .= '<g transform="scale(6.4,6.4) translate(0,0)">';
 		$source .= '<path fill="' . $color1 . '" d="M10.39 6.69C10.79 6.9 11.26 6.9 11.67 6.7C12.35 6.36 13.75 5.68 14.43 5.34C14.71 5.2 14.71 4.8 14.43 4.65C13.12 3.96 9.87 2.25 8.56 1.57C8.11 1.33 7.57 1.3 7.09 1.49C6.33 1.8 4.85 2.4 4.11 2.7C3.78 2.84 3.76 3.29 4.07 3.46C5.46 4.17 8.97 5.96 10.39 6.69Z"/>';
 		$source .= '<path fill="' . $color2 . '" d="M9.02 14.58C8.7 14.76 8.33 14.45 8.46 14.11C8.97 12.77 10.26 9.32 10.81 7.87C10.92 7.57 11.13 7.33 11.41 7.19C12.17 6.8 13.89 5.92 14.62 5.54C14.83 5.44 15.06 5.64 14.99 5.86C14.55 7.17 13.45 10.49 13.02 11.79C12.89 12.19 12.62 12.53 12.25 12.73C11.42 13.21 9.78 14.15 9.02 14.58Z"/>';
 		$source .= '<path fill="' . $color3 . '" d="M3.95 3.7L10.24 6.91L10.39 7.01L10.5 7.13L10.58 7.28L10.62 7.45L10.62 7.62L10.58 7.79L8.23 14.02L8.14 14.18L8.02 14.3L7.87 14.37L7.7 14.41L7.53 14.39L7.36 14.33L1.64 10.97L1.39 10.78L1.2 10.55L1.07 10.28L1 9.99L1 9.68L1.07 9.38L3.04 4.06L3.13 3.89L3.26 3.76L3.42 3.67L3.59 3.63L3.77 3.64L3.95 3.7ZM3.76 9.39L4.66 8.34L4.66 9.93L5.06 10.11L6.23 8.91L7.38 9.51L6.79 9.86L6.91 10.05L6.98 10.2L7.02 10.33L7.01 10.42L6.95 10.49L6.84 10.53L6.74 10.51L6.62 10.43L6.48 10.29L6.3 10.11L6.15 10.11L6.01 10.1L5.89 10.1L5.79 10.11L5.7 10.11L6.1 10.65L6.47 11.04L6.82 11.27L7.15 11.35L7.45 11.28L7.76 11.03L7.88 10.74L7.86 10.47L7.75 10.24L7.61 10.11L7.7 10.04L7.82 9.94L7.97 9.82L8.17 9.68L8.39 9.51L6.18 8.19L5.22 9.16L5.13 7.66L4.73 7.44L3.9 8.42L3.9 6.9L3.28 6.58L3.28 9.09L3.76 9.39Z"/>';
+		$source .= '</g>';
+		$source .= '</svg>';
+		// phpcs:ignore
+		return 'data:image/svg+xml;base64,' . base64_encode( $source );
+	}
+	/**
+	 * Returns a base64 svg resource for the warning symbol.
+	 *
+	 * @param string $color1 Optional. Color 1 of the icon.
+	 * @param string $color2 Optional. Color 2 of the icon.
+	 * @param string $color3 Optional. Color 3 of the icon.
+	 * @return string The svg resource as a base64.
+	 * @since 3.0.0
+	 */
+	private function get_base64_warning_icon( $color1 = '#cf1f25', $color2 = '#fec901', $color3 = '#010101' ) {
+		$source  = '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd"  fill="none" width="100" height="100"  viewBox="0 0 122.88 111.54">';
+		$source .= '<g transform="scale(0.92,0.92) translate(0,0)">';
+		$source .= '<path fill="' . $color1 . '" d="M2.35,84.42,45.28,10.2l.17-.27h0A23,23,0,0,1,52.5,2.69,17,17,0,0,1,61.57,0a16.7,16.7,0,0,1,9.11,2.69,22.79,22.79,0,0,1,7,7.26q.19.32.36.63l42.23,73.34.24.44h0a22.48,22.48,0,0,1,2.37,10.19,17.63,17.63,0,0,1-2.17,8.35,15.94,15.94,0,0,1-6.93,6.6c-.19.1-.39.18-.58.26a21.19,21.19,0,0,1-9.11,1.75v0H17.61c-.22,0-.44,0-.65,0a18.07,18.07,0,0,1-6.2-1.15A16.42,16.42,0,0,1,3,104.24a17.53,17.53,0,0,1-3-9.57,23,23,0,0,1,1.57-8.74,7.66,7.66,0,0,1,.77-1.51Z"/>';
+		$source .= '<path fill="' . $color2 . '" d="M9,88.75,52.12,14.16c5.24-8.25,13.54-8.46,18.87,0l42.43,73.69c3.39,6.81,1.71,16-9.33,15.77H17.61C10.35,103.8,5.67,97.43,9,88.75Z"/>';
+		$source .= '<path fill="' . $color3 . '" d="M57.57,83.78A5.53,5.53,0,0,1,61,82.2a5.6,5.6,0,0,1,2.4.36,5.7,5.7,0,0,1,2,1.3,5.56,5.56,0,0,1,1.54,5,6.23,6.23,0,0,1-.42,1.35,5.57,5.57,0,0,1-5.22,3.26,5.72,5.72,0,0,1-2.27-.53A5.51,5.51,0,0,1,56.28,90a5.18,5.18,0,0,1-.36-1.27,5.83,5.83,0,0,1-.06-1.31h0a6.53,6.53,0,0,1,.57-2,4.7,4.7,0,0,1,1.14-1.56Zm8.15-10.24c-.19,4.79-8.31,4.8-8.49,0-.82-8.21-2.92-29.34-2.86-37.05.07-2.38,2-3.79,4.56-4.33a12.83,12.83,0,0,1,5,0c2.61.56,4.65,2,4.65,4.44v.24L65.72,73.54Z"/>';
 		$source .= '</g>';
 		$source .= '</svg>';
 		// phpcs:ignore

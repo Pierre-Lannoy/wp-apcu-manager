@@ -3,6 +3,14 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.0] - 2026-06-03
+
+### Added
+- Detection of untruthful or malformed keys.
+
+### Fixed
+- [SEC005] Stored XSS vulnerability in the objects explorer (thanks to [WPScan](https://wpscan.com)).
+
 ## [4.4.0] - 2026-03-25
 
 ### Added

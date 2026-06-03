@@ -218,4 +218,27 @@ class APCu {
 		return $result;
 	}
 
+	/**
+	 * Get the detailed list of all cleaned objects.
+	 *
+	 * @param boolean   $self_only  Optional. Restrict the list to self objects.
+	 * @return array    The detailed list.
+	 * @since   4.5.0
+	 */
+	public static function get_all_cleaned_objects( $self_only = true ) {
+		$result = [];
+		$objects = self::get_all_objects( $self_only );
+		foreach ( $objects as $object ) {
+			if ( $object['oid'] !== esc_attr( $object['oid'] ) || $object['oid'] !== esc_html( $object['oid'] ) ) {
+				$object['is_clean'] = false;
+				$object['object'] = 'N/A';
+				$object['path'] = '/';
+			} else {
+				$object['is_clean'] = true;
+			}
+			$result[] = $object;
+		}
+		return $result;
+	}
+
 }
