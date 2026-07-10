@@ -56,7 +56,7 @@ class GC {
 		$span = \DecaLog\Engine::tracesLogger( APCM_SLUG )->startSpan( 'Garbage collection', DECALOG_SPAN_MAIN_RUN );
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_delete' ) ) {
 			try {
-				$infos    = apcu_cache_info( false );
+				$infos    = apcu_cache_info(  false );
 				$cpt      = 0;
 				$prefixes = APCu::get_prefixes();
 				$time     = time();

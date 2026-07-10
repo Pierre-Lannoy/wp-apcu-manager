@@ -3,7 +3,7 @@
  * Plugin Name:         APCu Objects Cache Handler
  * Plugin URI:          https://perfops.one/apcu-manager
  * Description:         APCu statistics and management right in the WordPress admin dashboard.
- * Version:             3.x
+ * Version:             4.x-experimental
  * Author:              Pierre Lannoy / PerfOps One
  * Author URI:          https://perfops.one
  * License:             GPLv3
@@ -21,7 +21,19 @@ $handler_file = WP_PLUGIN_DIR . '/apcu-manager/includes/api/object-class.php';
 if ( ! file_exists( $handler_file ) ) {
 	$handler_file = __DIR__ . '/plugins/apcu-manager/includes/api/object-class.php';
 }
-if ( file_exists( $handler_file ) ) {
+
+function apcm_is_blacklisted_ajax_call() {
+	if ( wp_doing_ajax() ) {
+		if ( isset( $_POST['action'] ) && str_contains( $_POST['action'], 'wpmdb' ) && ! tr_contains( $_POST['action'], 'flush' ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+if ( file_exists( $handler_file ) && ! apcm_is_blacklisted_ajax_call()) {
 
 	require_once $handler_file;
 

@@ -12,6 +12,14 @@ use APCuManager\System\Option;
 use APCuManager\System\Cache;
 use APCuManager\System\Environment;
 
+if ( ! defined( 'APCU_ITERATOR_MAX_CHUNCK_SIZE' ) ) {
+	define( 'APCU_ITERATOR_MAX_CHUNCK_SIZE', 2500 );
+}
+
+if ( ! defined( 'APCU_ITERATOR_MAX_LOOP' ) ) {
+	define( 'APCU_ITERATOR_MAX_LOOP', 20 );
+}
+
 /**
  * Object cache class definition
  */
@@ -587,6 +595,35 @@ class WP_Object_Cache {
 	}
 
 	/**
+	 * Get a keys list.
+	 *
+	 * @param array $needles The fragment key name.
+	 * @return array The list of full key names.
+	 * @since   4.6.0
+	 */
+	private function list( $needles = [] ) {
+		$result  = [];
+		$regexps = [];
+		if ( [] === $needles ) {
+			$regexps = ['/.*/'];
+		} else {
+			foreach ( $needles as $needle ) {
+				$regexps[] = '/' . preg_quote( $needle, '/' ) . '/';
+			}
+		}
+		if ( ! class_exists( '\APCUIterator' ) ) {
+			return $result;
+		}
+		foreach ( $regexps as $regexp ) {
+			foreach (new \APCUIterator( $regexp, APC_ITER_KEY, APCU_ITERATOR_MAX_CHUNCK_SIZE, APC_LIST_ACTIVE) as $object ) {
+				$result[] = $object['key'];
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Remove specific data from persistent cache.
 	 *
 	 * @param array $seeds The seeds to remove.
@@ -595,27 +632,22 @@ class WP_Object_Cache {
 	 */
 	private function partial_flush_persistent( $seeds ) {
 		$cpt = 0;
-		if ( $this->apcu_available && function_exists( 'apcu_cache_info' ) ) {
-			$chrono = microtime( true );
-			$infos  = apcu_cache_info( false );
-			if ( is_array( $infos ) && array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
-				foreach ( $infos['cache_list'] as $object ) {
-					$oid = $object['info'];
-					foreach ( $seeds as $prefix ) {
-						if ( 0 === strpos( $oid, $prefix ) ) {
-							if ( $this->delete_persistent( $object['info'], false ) ) {
-								$this->metrics['flush']['success'] += 1;
-								$cpt ++;
-							} else {
-								$this->metrics['flush']['fail'] += 1;
-							}
-							break;
-						}
-					}
+		$chrono = microtime( true );
+		for ( $i = 1; $i <= APCU_ITERATOR_MAX_LOOP; $i++ ) {
+			$objects = $this->list( $seeds );
+			if ( 0 === count( $objects ) ) {
+				break;
+			}
+			foreach ( $objects as $object ) {
+				if ( $this->delete_persistent( $object['key'], false ) ) {
+					$this->metrics['flush']['success'] += 1;
+					$cpt ++;
+				} else {
+					$this->metrics['flush']['fail'] += 1;
 				}
 			}
-			$this->metrics['flush']['time'] += microtime( true ) - $chrono;
 		}
+		$this->metrics['flush']['time'] += microtime( true ) - $chrono;
 		if ( self::$debug ) {
 			self::$events_logger->debug( self::$events_prefix . sprintf( '%d keys removed in a flush operation.', $cpt ) );
 		}

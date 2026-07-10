@@ -15,6 +15,10 @@ use APCuManager\System\Cache;
 use APCuManager\Plugin\Feature\Schema;
 use APCuManager\System\APCu;
 
+if ( ! defined( 'APCU_ITERATOR_DETAIL_CHUNCK_SIZE' ) ) {
+	define( 'APCU_ITERATOR_DETAIL_CHUNCK_SIZE', 10000 );
+}
+
 /**
  * Define the captures functionality.
  *
@@ -61,41 +65,34 @@ class Capture {
 	 * @return array    The details.
 	 * @since 1.0.0
 	 */
-	private static function get_details() {
+	public static function get_details() {
 		$ids      = apply_filters( 'perfopsone_apcu_info', [ 'w3tc' => 'W3 Total Cache', 'wordpress' => 'WordPress' ] );
 		$schema   = new Schema();
 		$result   = [];
 		$details  = [];
 		$prefixes = APCu::get_prefixes();
-		if ( function_exists( 'apcu_cache_info' ) ) {
-			$infos  = apcu_cache_info( false );
-			if ( is_array( $infos ) && array_key_exists( 'cache_list', $infos ) ) {
-				foreach ( $infos['cache_list'] as $item ) {
-					$name = '-';
-					foreach ( $ids as $k => $id ) {
-						foreach ( $prefixes as $prefix ) {
-							if ( 0 === strpos( $item['info'], $k . $prefix ) ) {
-								$name = $k;
-								break 2;
-							}
-						}
-					}
-					if ( array_key_exists( $name, $details ) ) {
-						$details[ $name ]['items'] = $details[ $name ]['items'] + 1;
-						$details[ $name ]['size']  = $details[ $name ]['size'] + (int) $item['mem_size'];
+		if ( ! class_exists( '\APCUIterator' ) ) {
+			return $result;
+		}
+		foreach ( $ids as $k => $id ) {
+			foreach ( $prefixes as $prefix ) {
+				foreach ( new \APCUIterator( '/' . preg_quote( $k . $prefix, '/' ) . '/', APC_ITER_MEM_SIZE, APCU_ITERATOR_DETAIL_CHUNCK_SIZE, APC_LIST_ACTIVE ) as $object ) {
+					if ( array_key_exists( $k, $details ) ) {
+						$details[ $k ]['items'] = $details[ $k ]['items'] + 1;
+						$details[ $k ]['size']  = $details[ $k ]['size'] + (int) $object['mem_size'];
 					} else {
-						$details[ $name ]['items'] = 1;
-						$details[ $name ]['size']  = (int) $item['mem_size'];
+						$details[ $k ]['items'] = 1;
+						$details[ $k ]['size']  = (int) $object['mem_size'];
 					}
 				}
 			}
-			foreach ( $details as $key => $detail ) {
-				$d          = $schema->init_detail();
-				$d['id']    = $key;
-				$d['items'] = $detail['items'];
-				$d['size']  = $detail['size'];
-				$result[]   = $d;
-			}
+		}
+		foreach ( $details as $key => $detail ) {
+			$d          = $schema->init_detail();
+			$d['id']    = $key;
+			$d['items'] = $detail['items'];
+			$d['size']  = $detail['size'];
+			$result[]   = $d;
 		}
 		return $result;
 	}

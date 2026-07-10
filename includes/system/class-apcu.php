@@ -77,7 +77,7 @@ class APCu {
 			// phpcs:ignore
 			set_error_handler( null );
 			// phpcs:ignore
-			$info = @apcu_cache_info( false );
+			$info = @apcu_cache_info( true );
 			// phpcs:ignore
 			restore_error_handler();
 			if ( is_array( $info ) && array_key_exists( 'memory_type', $info ) ) {
@@ -114,7 +114,7 @@ class APCu {
 	 */
 	public static function reset() {
 		if ( function_exists( 'apcu_cache_info' ) && function_exists( 'apcu_delete' ) ) {
-			$infos    = apcu_cache_info( false );
+			$infos    = apcu_cache_info(  false );
 			$prefixes = self::get_prefixes();
 			if ( is_array( $infos ) && array_key_exists( 'cache_list', $infos ) && is_array( $infos['cache_list'] ) ) {
 				foreach ( $infos['cache_list'] as $object ) {
@@ -159,7 +159,7 @@ class APCu {
 		$result = [];
 		if ( function_exists( 'apcu_cache_info' ) ) {
 			try {
-				$raw      = apcu_cache_info( false );
+				$raw      = apcu_cache_info(  false );
 				$prefixes = self::get_prefixes();
 				if ( is_array( $raw ) && array_key_exists( 'cache_list', $raw ) ) {
 					foreach ( $raw['cache_list'] as $object ) {
