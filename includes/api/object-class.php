@@ -635,17 +635,17 @@ class WP_Object_Cache {
 		$chrono = microtime( true );
 		for ( $i = 1; $i <= APCU_ITERATOR_MAX_LOOP; $i++ ) {
 			$objects = $this->list( $seeds );
-			if ( is_array( $objects ) && 0 < count( $objects ) ) {
-				foreach ( $objects as $object ) {
-					if ( array_key_exists( 'key', $objects ) && $this->delete_persistent( $object['key'], false ) ) {
-						$this->metrics['flush']['success'] += 1;
-						$cpt ++;
-					} else {
-						$this->metrics['flush']['fail'] += 1;
-					}
+			if ( 0 === count( $objects ) ) {
+				break;
+			}
+			foreach ( $objects as $object ) {
+				if ( $this->delete_persistent( $object, false ) ) {
+					$this->metrics['flush']['success'] += 1;
+					$cpt ++;
+				} else {
+					$this->metrics['flush']['fail'] += 1;
 				}
 			}
-
 		}
 		$this->metrics['flush']['time'] += microtime( true ) - $chrono;
 		if ( self::$debug ) {
