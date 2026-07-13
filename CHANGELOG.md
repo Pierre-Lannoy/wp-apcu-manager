@@ -3,6 +3,11 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.2] - 2026-07-13
+
+### Fixed
+- \APCUIterator standard php class may return non properly formated lists.
+
 ## [4.5.1] - 2026-07-13
 
 ### Changed
