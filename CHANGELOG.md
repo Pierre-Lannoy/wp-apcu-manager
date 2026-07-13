@@ -3,7 +3,11 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.5.1] - Not Yet Released
+## [4.5.1] - 2026-07-13
+
+### Changed
+- Improvement for `wp_cache_delete_multiple()` and `wp_cache_flush_group()` standard WordPress functions (partial flushes).
+- Reduced memory usage for websites with huge amounts of content.
 
 ### Fixed
 - Set correct CVE number and credits for [SEC005].
