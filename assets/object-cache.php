@@ -24,7 +24,7 @@ if ( ! file_exists( $handler_file ) ) {
 
 function apcm_is_blacklisted_ajax_call() {
 	if ( wp_doing_ajax() ) {
-		if ( isset( $_POST['action'] ) && str_contains( $_POST['action'], 'wpmdb' ) && ! tr_contains( $_POST['action'], 'flush' ) ) {
+		if ( isset( $_POST['action'] ) && str_contains( $_POST['action'], 'wpmdb' ) && ! str_contains( $_POST['action'], 'flush' ) ) {
 			return true;
 		}
 	}

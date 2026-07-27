@@ -3,10 +3,15 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.4] - 2026-07-27
+
+### Fixed
+- An error occurs when using WP Migrate and forcing APCu Manager to load during a “pull” or “push” migration (please, don't do that with WP Migrate).
+
 ## [4.5.3] - 2026-07-13
 
 ### Fixed
-- The prévious fix didn't cover all cases.
+- The previous fix didn't cover all cases.
 
 ## [4.5.2] - 2026-07-13
 
