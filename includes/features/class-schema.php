@@ -206,7 +206,7 @@ class Schema {
 		$sql            .= " `id` varchar(100) NOT NULL DEFAULT '-',";
 		$sql            .= " `items` int(11) UNSIGNED NOT NULL DEFAULT '0',";
 		$sql            .= " `size` int(11) UNSIGNED NOT NULL DEFAULT '0',";
-		$sql            .= ' UNIQUE KEY u_stat (timestamp, id)';
+		$sql            .= ' PRIMARY KEY (`timestamp`, `id`)';
 		$sql            .= ") $charset_collate;";
 		// phpcs:ignore
 		$wpdb->query( $sql );
