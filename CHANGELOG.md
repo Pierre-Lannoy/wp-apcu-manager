@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [4.6.0] - Not Yet Released
 
+### Added
+- Compatibility with WordPress 7.1.
+
+### Changed
+- Collation for tables are now `utf8mb4_unicode_520_ci` (thanks to [Dareth Nhang](https://profiles.wordpress.org/d-signed/).
+
 ## [4.5.4] - 2026-07-27
 
 ### Fixed
