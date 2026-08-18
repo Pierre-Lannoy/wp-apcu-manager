@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Compatibility with WordPress 7.1.
 
 ### Changed
-- Collation for tables are now `utf8mb4_unicode_520_ci` (thanks to [Dareth Nhang](https://profiles.wordpress.org/d-signed/).
+- Collation for tables are now `utf8mb4_unicode_520_ci` (thanks to [Dareth Nhang](https://profiles.wordpress.org/d-signed/)).
 
 ## [4.5.4] - 2026-07-27
 
