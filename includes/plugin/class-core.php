@@ -84,6 +84,7 @@ class Core {
 		add_shortcode( 'apcm-statistics', [ 'APCuManager\System\Statistics', 'sc_get_raw' ] );
 		if ( Option::network_get( 'analytics' ) ) {
 			$this->loader->add_action( APCM_CRON_STATS_NAME, 'APCuManager\Plugin\Feature\Capture', 'check' );
+			$this->loader->add_action( 'rest_api_init', 'APCuManager\Plugin\Feature\Capture', 'register_rest_api' );
 		}
 		if ( ! wp_next_scheduled( APCM_CRON_STATS_NAME ) ) {
 			if ( Option::network_get( 'analytics' ) ) {

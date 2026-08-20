@@ -14,6 +14,7 @@ namespace APCuManager\Plugin\Feature;
 use APCuManager\System\Cache;
 use APCuManager\Plugin\Feature\Schema;
 use APCuManager\System\APCu;
+use APCuManager\System\Option;
 
 if ( ! defined( 'APCU_ITERATOR_DETAIL_CHUNCK_SIZE' ) ) {
 	define( 'APCU_ITERATOR_DETAIL_CHUNCK_SIZE', 10000 );
@@ -71,7 +72,7 @@ class Capture {
 		$result   = [];
 		$details  = [];
 		$prefixes = APCu::get_prefixes();
-		if ( ! class_exists( '\APCUIterator' ) ) {
+		if ( ! ( function_exists( 'apcu_enabled' ) && apcu_enabled() && class_exists( '\APCUIterator' ) ) ) {
 			return $result;
 		}
 		foreach ( $ids as $k => $id ) {
@@ -204,6 +205,28 @@ class Capture {
 	 * @since    1.0.0
 	 */
 	public static function check() {
+		// APCu is shared across the whole FPM pool. On a network, only capture on the
+		// main site; on a standard install is_main_site() is always true, so this is a no-op.
+		if ( is_multisite() && ! is_main_site() ) {
+			return;
+		}
+
+		// In CLI the local APCu segment is empty/separate, so bounce the capture back
+		// into FPM by hitting the REST door on the main site, then bail out.
+		if ( PHP_SAPI === 'cli' ) {
+			$blog_id = function_exists( 'get_main_site_id' ) ? get_main_site_id() : null;
+			$url	 = add_query_arg(
+				'secret',
+				self::get_secret_or_create(),
+				get_rest_url( $blog_id, 'apcu/v1/capture' )
+			);
+			wp_remote_get( $url, [
+				'timeout'   => 20,
+				'sslverify' => apply_filters( 'apcm_proxy_sslverify', true ),
+				'blocking'  => true, // нужен ответ, чтобы запрос реально ушёл до конца процесса
+			] );
+			return;
+		}
 		$schema = new Schema();
 		$record = $schema->init_record();
 		$time   = time();
@@ -290,4 +313,46 @@ class Capture {
 		}
 	}
 
+
+	/**
+	 * Registers rest api route for crons running via CLI wp wron.
+	 *
+	 * @since 4.6.2
+	 */
+	public static function register_rest_api() {
+		register_rest_route( 'apcu/v1', '/capture', [
+			'methods'			 => 'GET',
+			'permission_callback' => function ( \WP_REST_Request $r ) {
+				return hash_equals( self::get_secret_or_create(), (string) $r->get_param( 'secret' ) );
+			},
+			'callback'			=> function () {
+				// Guard again here in case cron fires apcm_apcu_stats directly on a sub-site.
+				if ( ! is_multisite() || is_main_site() ) {
+					do_action( APCM_CRON_STATS_NAME ); // = Capture::check(), in FPM.
+				}
+
+				return new \WP_REST_Response( null, 204 );
+			},
+		] );
+	}
+
+	/**
+	 * Reads secret from option and creates it if not exists
+	 *
+	 * @return string
+	 *
+	 * @since 4.6.2
+	 */
+	private static function get_secret_or_create() {
+		$option_name = 'rest_api_secret';
+
+		$secret = Option::network_get( $option_name );
+
+		if (! $secret) {
+			$secret = wp_generate_password( 32, false );
+			Option::network_set( $option_name, $secret );
+		}
+
+		return $secret;
+	}
 }
