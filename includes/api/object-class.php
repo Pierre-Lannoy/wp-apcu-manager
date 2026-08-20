@@ -611,7 +611,7 @@ class WP_Object_Cache {
 				$regexps[] = '/' . preg_quote( $needle, '/' ) . '/';
 			}
 		}
-		if ( ! class_exists( '\APCUIterator' ) ) {
+        if ( ! ( function_exists( 'apcu_enabled' ) && apcu_enabled() && class_exists( '\APCUIterator' ) ) ) {
 			return $result;
 		}
 		foreach ( $regexps as $regexp ) {

@@ -71,7 +71,7 @@ class Capture {
 		$result   = [];
 		$details  = [];
 		$prefixes = APCu::get_prefixes();
-		if ( ! class_exists( '\APCUIterator' ) ) {
+		if ( ! ( function_exists( 'apcu_enabled' ) && apcu_enabled() && class_exists( '\APCUIterator' ) ) ) {
 			return $result;
 		}
 		foreach ( $ids as $k => $id ) {
