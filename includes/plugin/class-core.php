@@ -98,6 +98,11 @@ class Core {
 				wp_schedule_event( time(), 'fifteen_minutes', APCM_CRON_GC_NAME );
 			}
 		}
+		if ( Option::network_get( 'autopurge_update' ) ) {
+			add_action( 'upgrader_process_complete', function( $upgrader_object, $options ) {
+				wp_cache_flush();
+			}, 10, 2 );
+		}
 	}
 
 	/**

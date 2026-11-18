@@ -317,6 +317,7 @@ class Apcu_Manager_Admin {
 				Option::network_set( 'analytics', array_key_exists( 'apcm_plugin_features_analytics', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_analytics' ) : false );
 				Option::network_set( 'metrics', array_key_exists( 'apcm_plugin_features_metrics', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_metrics' ) : false );
 				Option::network_set( 'gc', array_key_exists( 'apcm_plugin_features_gc', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_gc' ) : false );
+				Option::network_set( 'autopurge_update', array_key_exists( 'apcm_plugin_features_autopurge_update', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_features_autopurge_update' ) : false );
 				Option::network_set( 'adminbar', array_key_exists( 'apcm_plugin_options_adminbar', $_POST ) ? (bool) filter_input( INPUT_POST, 'apcm_plugin_options_adminbar' ) : false );
 				Option::network_set( 'history', array_key_exists( 'apcm_plugin_features_history', $_POST ) ? (string) filter_input( INPUT_POST, 'apcm_plugin_features_history', FILTER_SANITIZE_NUMBER_INT ) : Option::network_get( 'history' ) );
 				$old_earlyloading = Option::network_get( 'earlyloading' );
@@ -530,6 +531,8 @@ class Apcu_Manager_Admin {
 			]
 		);
 		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_earlyloading' );
+		
+		
 		if ( $apcu_available ) {
 			$note = esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' );
 		} else {
@@ -551,6 +554,22 @@ class Apcu_Manager_Admin {
 			]
 		);
 		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_gc' );
+		add_settings_field(
+			'apcm_plugin_features_autopurge_update',
+			esc_html__( 'Automatic flush', 'apcu-manager' ),
+			[ $form, 'echo_field_checkbox' ],
+			'apcm_plugin_features_section',
+			'apcm_plugin_features_section',
+			[
+				'text'        => esc_html__( 'Activated', 'apcu-manager' ),
+				'id'          => 'apcm_plugin_features_autopurge_update',
+				'checked'     => $apcu_available ? Option::network_get( 'autopurge_update' ) : false,
+				'description' => esc_html__( 'If checked, APCu Manager will flush all cached objects after core, plugin or theme update (recommended).', 'apcu-manager' ),
+				'full_width'  => false,
+				'enabled'     => $apcu_available,
+			]
+		);
+		register_setting( 'apcm_plugin_features_section', 'apcm_plugin_features_autopurge_update' );
 		if ( $apcu_available ) {
 			$note = esc_html__( 'Note: for this to work, your WordPress site must have an operational CRON.', 'apcu-manager' );
 		} else {

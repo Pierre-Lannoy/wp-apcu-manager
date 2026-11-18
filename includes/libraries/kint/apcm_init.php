@@ -20,5 +20,5 @@ Kint::$display_called_from               = false;
 Kint::$expanded                          = true;
 Kint::$plugins[]                         = 'APCMKint\\Parser\\BinaryPlugin';
 Kint::$plugins[]                         = 'APCMKint\\Parser\\SerializePlugin';
-\APCMKint\Parser\SerializePlugin::$safe_mode = false;
+\APCMKint\Parser\SerializePlugin::$safe_mode = true;
 

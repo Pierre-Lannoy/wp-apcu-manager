@@ -3,6 +3,16 @@ All notable changes to **APCu Manager** are documented in this *changelog*.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and **APCu Manager** adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.7.0] - 2026-11-24
+
+### Added
+- Compatibility with WordPress 7.2.
+- New option to force full flush in case of core, plugin or theme update.
+
+### Fixed
+- [SEC007] PHP Object Injection (thanks to [AndrewN](https://patchstack.com/database/researchers/829bdcd3-7e29-4e33-b6f8-df2849b1be4d) from [Patchstack](https://patchstack.com)).
+- [SEC006] SQL Injection vulnerability (thanks to [kta1kri](https://github.com/kta1kri)).
+
 ## [4.6.1] - 2026-08-18
 
 ### Fixed
